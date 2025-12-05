@@ -1,0 +1,41 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+SI-2 Flaw Remediation
+************************************************************************************************************
+
+Group ID:
+V-257824
+Rule ID:
+SV-257824r1044886
+STIG ID:
+RHEL-09-214035
+SRG ID:
+SRG-OS-000437-GPOS-00194
+Severity:
+CAT III
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must remove all software components after updated versions have been installed.
+Discussion:
+Previous versions of software components that are not removed from the information system after updates have been installed may be exploited by some adversaries.
+Check Text:
+Verify RHEL 9 removes all software components after updated versions have been installed with the following command:
+
+$ grep -i clean_requirements_on_remove /etc/dnf/dnf.conf
+
+clean_requirements_on_remove=True
+
+If "clean_requirements_on_remove" is not set to "True", this is a finding.
+Fix Text:
+Configure RHEL 9 to remove all software components after updated versions have been installed.
+
+Edit the file /etc/dnf/dnf.conf by adding or editing the following line:
+
+ clean_requirements_on_remove=True
+CCI-002617
+Remove previous versions of organization-defined software components after updated versions have been installed.
+NIST SP 800-53 Revision 4 :: SI-2 (6)
+NIST SP 800-53 Revision 5 :: SI-2 (6)

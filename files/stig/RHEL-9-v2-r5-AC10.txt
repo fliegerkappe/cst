@@ -1,0 +1,48 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AC-10 Concurrent Session Control
+************************************************************************************************************
+
+Group ID:
+V-258069
+Rule ID:
+SV-258069r958398
+STIG ID:
+RHEL-09-412040
+SRG ID:
+SRG-OS-000027-GPOS-00008
+Severity:
+CAT III
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must limit the number of concurrent sessions to ten for all accounts and/or account types.
+Discussion:
+Operating system management includes the ability to control the number of users and user sessions that utilize an operating system. Limiting the number of allowed users and sessions per user is helpful in reducing the risks related to denial-of-service (DoS) attacks.
+
+This requirement addresses concurrent sessions for information system accounts and does not address concurrent sessions by single users via multiple system accounts. The maximum number of concurrent sessions must be defined based on mission needs and the operational environment for each system.
+Check Text:
+Verify RHEL 9 limits the number of concurrent sessions to "10" for all accounts and/or account types with the following command:
+
+$ grep -r -s maxlogins /etc/security/limits.conf /etc/security/limits.d/*.conf
+
+/etc/security/limits.conf:* hard maxlogins 10
+
+This can be set as a global domain (with the * wildcard) but may be set differently for multiple domains.
+
+If the "maxlogins" item is missing, commented out, or the value is set greater than "10" and is not documented with the information system security officer (ISSO) as an operational requirement for all domains that have the "maxlogins" item assigned, this is a finding.
+Fix Text:
+Configure RHEL 9 to limit the number of concurrent sessions to "10" for all accounts and/or account types.
+
+Add the following line to the top of the /etc/security/limits.conf or in a ".conf" file defined in /etc/security/limits.d/:
+
+* hard maxlogins 10
+CCI-000054
+Limit the number of concurrent sessions for each organization-defined account and/or account type to an organization-defined number.
+NIST SP 800-53 :: AC-10
+NIST SP 800-53A :: AC-10.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-10
+NIST SP 800-53 Revision 5 :: AC-10
+

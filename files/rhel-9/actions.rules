@@ -1,0 +1,4 @@
+-w /etc/cron.d/ -p wa -k cronjobs
+-w /etc/sudoers -p wa -k identity
+-w /etc/sudoers.d/ -p wa -k identity
+

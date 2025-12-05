@@ -1,0 +1,304 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+SI-16 Memory Protection
+************************************************************************************************************
+
+Group ID:
+V-257794
+Rule ID:
+SV-257794r1069362
+STIG ID:
+RHEL-09-212045
+SRG ID:
+SRG-OS-000433-GPOS-00192
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must clear memory when it is freed to prevent use-after-free attacks.
+Discussion:
+Some adversaries launch attacks with the intent of executing code in nonexecutable regions of memory or in memory locations that are prohibited. Security safeguards employed to protect memory include, for example, data execution prevention and address space layout randomization. Data execution prevention safeguards can be either hardware-enforced or software-enforced with hardware providing the greater strength of mechanism.
+
+Poisoning writes an arbitrary value to freed pages, so any modification or reference to that page after being freed or before being initialized will be detected and prevented. This prevents many types of use-after-free vulnerabilities at little performance cost. Also prevents leak of data and detection of corrupted memory.
+
+init_on_free is a Linux kernel boot parameter that enhances security by initializing memory regions when they are freed, preventing data leakage. This process ensures that stale data in freed memory cannot be accessed by malicious programs.
+
+SLUB canaries add a randomized value (canary) at the end of SLUB-allocated objects to detect memory corruption caused by buffer overflows or underflows. Redzoning adds padding (red zones) around SLUB-allocated objects to detect overflows or underflows by triggering a fault when adjacent memory is accessed. SLUB canaries are often more efficient and provide stronger detection against buffer overflows compared to redzoning. SLUB canaries are supported in hardened Linux kernels like the ones provided by Linux-hardened.
+
+SLAB objects are blocks of physically contiguous memory. SLUB is the unqueued SLAB allocator.
+
+Satisfies: SRG-OS-000433-GPOS-00192, SRG-OS-000134-GPOS-00068
+Check Text:
+Verify that GRUB2 is configured to mitigate use-after-free vulnerabilities by employing memory poisoning.
+
+Inspect the "GRUB_CMDLINE_LINUX" entry of /etc/default/grub as follows:
+$ sudo grep -i grub_cmdline_linux /etc/default/grub
+GRUB_CMDLINE_LINUX="... init_on_free=1"
+
+If "init_on_free=1" is missing or commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to enable init_on_free with the following command:
+$ sudo grubby --update-kernel=ALL --args="init_on_free=1"
+
+Regenerate the GRUB configuration:
+$ sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+
+Reboot the system:
+$ sudo reboot
+CCI-001084
+Isolate security functions from nonsecurity functions.
+NIST SP 800-53 :: SC-3
+NIST SP 800-53A :: SC-3.1 (ii)
+NIST SP 800-53 Revision 4 :: SC-3
+NIST SP 800-53 Revision 5 :: SC-3
+CCI-002824
+Implement organization-defined controls to protect the system memory from unauthorized code execution.
+NIST SP 800-53 Revision 4 :: SI-16
+NIST SP 800-53 Revision 5 :: SI-16
+
+==========================================================================================================
+
+Group ID:
+V-257795
+Rule ID:
+SV-257795r1044845
+STIG ID:
+RHEL-09-212050
+SRG ID:
+SRG-OS-000433-GPOS-00193
+Severity:
+CAT III
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enable mitigations against processor-based vulnerabilities.
+Discussion:
+Kernel page-table isolation is a kernel feature that mitigates the Meltdown security vulnerability and hardens the kernel against attempts to bypass kernel address space layout randomization (KASLR).
+
+Satisfies: SRG-OS-000433-GPOS-00193, SRG-OS-000095-GPOS-00049
+Check Text:
+Verify RHEL 9 enables kernel page-table isolation with the following command:
+
+$ sudo grubby --info=ALL | grep args | grep -v 'pti=on'
+
+If any output is returned, this is a finding.
+
+Check that kernel page-table isolation is enabled by default to persist in kernel updates: 
+
+$ grep pti /etc/default/grub
+
+GRUB_CMDLINE_LINUX="pti=on"
+
+If "pti" is not set to "on", is missing or commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to enable kernel page-table isolation with the following command:
+
+$ sudo grubby --update-kernel=ALL --args="pti=on"
+
+Add or modify the following line in "/etc/default/grub" to ensure the configuration survives kernel updates:
+
+GRUB_CMDLINE_LINUX="pti=on"
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+CCI-002824
+Implement organization-defined controls to protect the system memory from unauthorized code execution.
+NIST SP 800-53 Revision 4 :: SI-16
+NIST SP 800-53 Revision 5 :: SI-16
+
+==========================================================================================================
+
+Group ID:
+V-257800
+Rule ID:
+SV-257800r1117266
+STIG ID:
+RHEL-09-213025
+SRG ID:
+SRG-OS-000132-GPOS-00067
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must restrict exposed kernel pointer addresses access.
+Discussion:
+It is detrimental for operating systems to provide, or install by default, functionality exceeding requirements or mission objectives. These unnecessary capabilities or services are often overlooked and therefore may remain unsecured. They increase the risk to the platform by providing additional attack vectors.
+
+The sysctl --system command will load settings from all system configuration files. All configuration files are sorted by their filename in lexicographic order, regardless of the directories in which they reside. If multiple files specify the same option, the entry in the file with the lexicographically latest name will take precedence. Files are read from directories in the following list from top to bottom. Once a file of a given filename is loaded, any file of the same name in subsequent directories is ignored.
+
+/etc/sysctl.d/*.conf
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+
+Satisfies: SRG-OS-000132-GPOS-00067, SRG-OS-000433-GPOS-00192, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify RHEL 9 restricts exposed kernel pointer addresses access with the following commands:
+
+$ sudo sysctl kernel.kptr_restrict
+
+kernel.kptr_restrict = 1
+
+If the returned line does not have a value of "1" or "2", or a line is not returned, this is a finding.
+
+Check that the configuration files are present to enable this network parameter.
+
+$ sudo grep -r kernel.kptr_restrict /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
+
+/etc/sysctl.d/99-sysctl.conf: kernel.kptr_restrict = 1
+
+If "kernel.kptr_restrict" is not set to "1" or "2", is missing, or commented out, this is a finding.
+
+If conflicting results are returned, this is a finding.
+Fix Text:
+Configure RHEL 9 to restrict exposed kernel pointer addresses access by adding the following line to a file in the "/etc/sysctl.d" directory:
+
+kernel.kptr_restrict = 1
+
+Remove any configurations that conflict with the above from the following locations: 
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+/etc/sysctl.d/*.conf
+
+The system configuration files need to be reloaded for the changes to take effect. To reload the contents of the files, run the following command:
+
+$ sudo sysctl --system
+CCI-001082
+Separate user functionality, including user interface services, from system management functionality.
+NIST SP 800-53 :: SC-2
+NIST SP 800-53A :: SC-2.1
+NIST SP 800-53 Revision 4 :: SC-2
+NIST SP 800-53 Revision 5 :: SC-2
+CCI-002824
+Implement organization-defined controls to protect the system memory from unauthorized code execution.
+NIST SP 800-53 Revision 4 :: SI-16
+NIST SP 800-53 Revision 5 :: SI-16
+
+==========================================================================================================
+
+Group ID:
+V-257809
+Rule ID:
+SV-257809r1106288
+STIG ID:
+RHEL-09-213070
+SRG ID:
+SRG-OS-000433-GPOS-00193
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must implement address space layout randomization (ASLR) to protect its memory from unauthorized code execution.
+Discussion:
+Some adversaries launch attacks with the intent of executing code in nonexecutable regions of memory or in memory locations that are prohibited. Security safeguards employed to protect memory include, for example, data execution prevention and address space layout randomization. Data execution prevention safeguards can be either hardware-enforced or software-enforced with hardware providing the greater strength of mechanism.
+
+Examples of attacks are buffer overflow attacks.
+
+The sysctl --system command will load settings from all system configuration files. All configuration files are sorted by their filename in lexicographic order, regardless of the directories in which they reside. If multiple files specify the same option, the entry in the file with the lexicographically latest name will take precedence. Files are read from directories in the following list from top to bottom. Once a file of a given filename is loaded, any file of the same name in subsequent directories is ignored.
+
+/etc/sysctl.d/*.conf
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+
+Satisfies: SRG-OS-000433-GPOS-00193, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify RHEL 9 implements ASLR with the following command:
+
+$ sudo sysctl kernel.randomize_va_space
+
+kernel.randomize_va_space = 2
+
+If "kernel.randomize_va_space" is not set to "2", this is a finding.
+
+Check that the configuration files are present to enable this kernel parameter.
+
+$ sudo grep -r kernel.randomize_va_space /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
+
+/etc/sysctl.d/99-sysctl.conf:kernel.randomize_va_space = 2
+
+If "kernel.randomize_va_space" is not set to "2", is missing, or commented out, this is a finding.
+
+If conflicting results are returned, this is a finding.
+Fix Text:
+Configure RHEL 9 to implement virtual address space randomization.
+
+Add or edit the following line in a system configuration file in the "/etc/sysctl.d/" directory:
+
+kernel.randomize_va_space=2
+
+Remove any configurations that conflict with the above from the following locations: 
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+/etc/sysctl.d/*.conf
+
+Issue the following command to make the changes take effect:
+
+$ sudo sysctl --system
+CCI-002824
+Implement organization-defined controls to protect the system memory from unauthorized code execution.
+NIST SP 800-53 Revision 4 :: SI-16
+NIST SP 800-53 Revision 5 :: SI-16
+
+==========================================================================================================
+
+Group ID:
+V-257817
+Rule ID:
+SV-257817r1069383
+STIG ID:
+RHEL-09-213110
+SRG ID:
+SRG-OS-000433-GPOS-00192
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must implement nonexecutable data to protect its memory from unauthorized code execution.
+Discussion:
+ExecShield uses the segmentation feature on all x86 systems to prevent execution in memory higher than a certain address. It writes an address as a limit in the code segment descriptor, to control where code can be executed, on a per-process basis. When the kernel places a process's memory regions such as the stack and heap higher than this address, the hardware prevents execution in that address range. This is enabled by default on the latest Red Hat and Fedora systems if supported by the hardware.
+
+Checking dmesg will return a false-positive if the system has generated enough kernel messages that the "(Execute Disable) protection: active" line is no longer present in the output from dmesg(1). A better way to ensure that ExecShield is enabled is to first ensure all processors support the NX feature, and then to check that noexec was not passed to the kernel command line.
+Check Text:
+Verify ExecShield is enabled on 64-bit RHEL 9 systems.
+
+Run the following command:
+
+$ grep ^flags /proc/cpuinfo | grep -Ev '([^[:alnum:]])(nx)([^[:alnum:]]|$)'
+
+If any output is returned, this is a finding.
+
+Next, run the following command:
+
+$ sudo grubby --info=ALL | grep args | grep -E '([^[:alnum:]])(noexec)([^[:alnum:]])'
+
+If any output is returned, this is a finding.
+Fix Text:
+If /proc/cpuinfo shows that one or more processors do not enable ExecShield (lack the "nx" feature flag), verify that the NX/XD feature is not disabled in the BIOS or UEFI. If it is disabled, enable it.
+
+If the noexec option is present on the kernel command line, update the GRUB 2 bootloader configuration to remove it by running the following command:
+
+$ sudo grubby --update-kernel=ALL --remove-args=noexec
+CCI-002824
+Implement organization-defined controls to protect the system memory from unauthorized code execution.
+NIST SP 800-53 Revision 4 :: SI-16
+NIST SP 800-53 Revision 5 :: SI-16

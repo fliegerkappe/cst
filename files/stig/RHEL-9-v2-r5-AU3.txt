@@ -1,0 +1,3925 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AU-3 Content of Audit Records
+************************************************************************************************************
+
+Group ID:
+V-258045
+Rule ID:
+SV-258045r958482
+STIG ID:
+RHEL-09-411030
+SRG ID:
+SRG-OS-000104-GPOS-00051
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 duplicate User IDs (UIDs) must not exist for interactive users.
+Discussion:
+To ensure accountability and prevent unauthenticated access, interactive users must be identified and authenticated to prevent potential misuse and compromise of the system.
+
+Satisfies: SRG-OS-000104-GPOS-00051, SRG-OS-000121-GPOS-00062, SRG-OS-000042-GPOS-00020
+Check Text:
+Verify that RHEL 9 contains no duplicate UIDs for interactive users with the following command:
+
+$ sudo awk -F ":" 'list[$3]++{print $1, $3}' /etc/passwd 
+
+If output is produced and the accounts listed are interactive user accounts, this is a finding.
+Fix Text:
+Edit the file "/etc/passwd" and provide each interactive user account that has a duplicate UID with a unique UID.
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000764
+Uniquely identify and authenticate organizational users and associate that unique identification with processes acting on behalf of those users.
+NIST SP 800-53 :: IA-2
+NIST SP 800-53A :: IA-2.1
+NIST SP 800-53 Revision 4 :: IA-2
+NIST SP 800-53 Revision 5 :: IA-2
+CCI-000804
+Uniquely identify and authenticate non-organizational users or processes acting on behalf of non-organizational users.
+NIST SP 800-53 :: IA-8
+NIST SP 800-53A :: IA-8.1
+NIST SP 800-53 Revision 4 :: IA-8
+NIST SP 800-53 Revision 5 :: IA-8
+
+==========================================================================================================
+
+Group ID:
+V-258161
+Rule ID:
+SV-258161r958416
+STIG ID:
+RHEL-09-653060
+SRG ID:
+SRG-OS-000039-GPOS-00017
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must label all offloaded audit logs before sending them to the central log server.
+Discussion:
+Enriched logging is needed to determine who, what, and when events occur on a system. Without this, determining root cause of an event will be much more difficult.
+
+When audit logs are not labeled before they are sent to a central log server, the audit data will not be able to be analyzed and tied back to the correct system.
+
+Satisfies: SRG-OS-000039-GPOS-00017, SRG-OS-000342-GPOS-00133, SRG-OS-000479-GPOS-00224
+Check Text:
+Verify that RHEL 9 Audit Daemon is configured to label all offloaded audit logs, with the following command:
+
+$ sudo grep name_format /etc/audit/auditd.conf
+
+name_format = hostname
+
+If the "name_format" option is not "hostname", "fqd", or "numeric", or the line is commented out, this is a finding.
+Fix Text:
+Edit the /etc/audit/auditd.conf file and add or update the "name_format" option:
+
+name_format = hostname
+
+The audit daemon must be restarted for changes to take effect.
+CCI-000132
+Ensure that audit records containing information that establishes where the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 c
+CCI-001851
+Transfer audit logs per organization-defined frequency to a different system, system component, or media than the system or system component conducting the logging.
+NIST SP 800-53 Revision 4 :: AU-4 (1)
+NIST SP 800-53 Revision 5 :: AU-4 (1)
+
+==========================================================================================================
+
+Group ID:
+V-258169
+Rule ID:
+SV-258169r991556
+STIG ID:
+RHEL-09-653100
+SRG ID:
+SRG-OS-000255-GPOS-00096
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must produce audit records containing information to establish the identity of any individual or process associated with the event.
+Discussion:
+Without establishing what type of events occurred, the source of events, where events occurred, and the outcome of events, it would be difficult to establish, correlate, and investigate the events leading up to an outage or attack.
+
+Audit record content that may be necessary to satisfy this requirement includes, for example, time stamps, source and destination addresses, user/process identifiers, event descriptions, success/fail indications, filenames involved, and access control or flow control rules invoked.
+
+Enriched logging aids in making sense of who, what, and when events occur on a system. Without this, determining root cause of an event will be much more difficult.
+
+Satisfies: SRG-OS-000255-GPOS-00096, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify that RHEL 9 audit system is configured to resolve audit information before writing to disk, with the following command:
+
+$ sudo grep log_format /etc/audit/auditd.conf
+
+log_format = ENRICHED
+
+If the "log_format" option is not "ENRICHED", or the line is commented out, this is a finding.
+Fix Text:
+Edit the /etc/audit/auditd.conf file and add or update the "log_format" option:
+
+log_format = ENRICHED
+
+The audit daemon must be restarted for changes to take effect.
+CCI-000366
+Implement the security configuration settings.
+NIST SP 800-53 :: CM-6 b
+NIST SP 800-53A :: CM-6.1 (iv)
+NIST SP 800-53 Revision 4 :: CM-6 b
+NIST SP 800-53 Revision 5 :: CM-6 b
+CCI-001487
+Ensure that audit records containing information that establishes the identity of any individuals, subjects, or objects/entities associated with the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 f
+
+==========================================================================================================
+
+Group ID:
+V-257796
+Rule ID:
+SV-257796r1044847
+STIG ID:
+RHEL-09-212055
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT III
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enable auditing of processes that start prior to the audit daemon.
+Discussion:
+Without the capability to generate audit records, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+If auditing is enabled late in the startup process, the actions of some startup processes may not be audited. Some audit systems also maintain state information only available if auditing is enabled before a given process is created.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000473-GPOS-00218, SRG-OS-000254-GPOS-00095
+Check Text:
+Verify that GRUB 2 is configured to enable auditing of processes that start prior to the audit daemon with the following commands:
+
+Check that the current GRUB 2 configuration enables auditing:
+
+$ sudo grubby --info=ALL | grep args | grep -v 'audit=1'
+
+If any output is returned, this is a finding.
+
+Check that auditing is enabled by default to persist in kernel updates: 
+
+$ grep audit /etc/default/grub
+
+GRUB_CMDLINE_LINUX="audit=1"
+
+If "audit" is not set to "1", is missing, or is commented out, this is a finding.
+Fix Text:
+Enable auditing of processes that start prior to the audit daemon with the following command:
+
+$ sudo grubby --update-kernel=ALL --args="audit=1"
+
+Add or modify the following line in "/etc/default/grub" to ensure the configuration survives kernel updates:
+
+GRUB_CMDLINE_LINUX="audit=1"
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001464
+Initiates session audits automatically at system start-up.
+NIST SP 800-53 :: AU-14 (1)
+NIST SP 800-53A :: AU-14 (1).1
+NIST SP 800-53 Revision 4 :: AU-14 (1)
+NIST SP 800-53 Revision 5 :: AU-14 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258151
+Rule ID:
+SV-258151r1045298
+STIG ID:
+RHEL-09-653010
+SRG ID:
+SRG-OS-000062-GPOS-00031
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit package must be installed.
+Discussion:
+Without establishing what type of events occurred, the source of events, where events occurred, and the outcome of events, it would be difficult to establish, correlate, and investigate the events leading up to an outage or attack.
+
+Audit record content that may be necessary to satisfy this requirement includes, for example, time stamps, source and destination addresses, user/process identifiers, event descriptions, success/fail indications, filenames involved, and access control or flow control rules invoked.
+
+Associating event types with detected events in audit logs provides a means of investigating an attack, recognizing resource utilization or capacity thresholds, or identifying an improperly configured RHEL 9 system.
+
+Satisfies: SRG-OS-000062-GPOS-00031, SRG-OS-000037-GPOS-00015, SRG-OS-000038-GPOS-00016, SRG-OS-000039-GPOS-00017, SRG-OS-000040-GPOS-00018, SRG-OS-000041-GPOS-00019, SRG-OS-000042-GPOS-00021, SRG-OS-000051-GPOS-00024, SRG-OS-000054-GPOS-00025, SRG-OS-000122-GPOS-00063, SRG-OS-000254-GPOS-00095, SRG-OS-000255-GPOS-00096, SRG-OS-000337-GPOS-00129, SRG-OS-000348-GPOS-00136, SRG-OS-000349-GPOS-00137, SRG-OS-000350-GPOS-00138, SRG-OS-000351-GPOS-00139, SRG-OS-000352-GPOS-00140, SRG-OS-000353-GPOS-00141, SRG-OS-000354-GPOS-00142, SRG-OS-000358-GPOS-00145, SRG-OS-000365-GPOS-00152, SRG-OS-000392-GPOS-00172, SRG-OS-000475-GPOS-00220, SRG-OS-000055-GPOS-00026
+Check Text:
+Verify that the RHEL 9 audit service package is installed.
+
+Check that the audit service package is installed with the following command:
+
+$ dnf list --installed audit
+
+Example output:
+
+audit-3.0.7-101.el9_0.2.x86_64
+
+If the "audit" package is not installed, this is a finding.
+Fix Text:
+Install the audit service package (if the audit service is not already installed) with the following command:
+
+$ sudo dnf install audit
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000131
+Ensure that audit records containing information that establishes when the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 b
+CCI-000132
+Ensure that audit records containing information that establishes where the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 c
+CCI-000133
+Ensure that audit records containing information that establishes the source of the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 d
+CCI-000134
+Ensure that audit records containing information that establishes the outcome of the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 e
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000154
+Provide the capability to centrally review and analyze audit records from multiple components within the system.
+NIST SP 800-53 :: AU-6 (4)
+NIST SP 800-53A :: AU-6 (4).1
+NIST SP 800-53 Revision 4 :: AU-6 (4)
+NIST SP 800-53 Revision 5 :: AU-6 (4)
+CCI-000158
+Provide the capability to process, sort, and search audit records for events of interest based on organization-defined audit fields within audit records.
+NIST SP 800-53 :: AU-7 (1)
+NIST SP 800-53A :: AU-7 (1).1
+NIST SP 800-53 Revision 4 :: AU-7 (1)
+NIST SP 800-53 Revision 5 :: AU-7 (1)
+CCI-000159
+Use internal system clocks to generate time stamps for audit records.
+NIST SP 800-53 :: AU-8
+NIST SP 800-53A :: AU-8.1
+NIST SP 800-53 Revision 4 :: AU-8 a
+NIST SP 800-53 Revision 5 :: AU-8 a
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001464
+Initiates session audits automatically at system start-up.
+NIST SP 800-53 :: AU-14 (1)
+NIST SP 800-53A :: AU-14 (1).1
+NIST SP 800-53 Revision 4 :: AU-14 (1)
+NIST SP 800-53 Revision 5 :: AU-14 (1)
+CCI-001487
+Ensure that audit records containing information that establishes the identity of any individuals, subjects, or objects/entities associated with the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 f
+CCI-003938
+Automatically generate audit records of the enforcement actions.
+NIST SP 800-53 Revision 5 :: CM-5 (1) (b)
+CCI-001875
+Provide an audit reduction capability that supports on-demand audit review and analysis.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001876
+Provide an audit reduction capability that supports on-demand reporting requirements.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001877
+Provide an audit reduction capability that supports after-the-fact investigations of incidents.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001878
+Provide a report generation capability that supports on-demand audit review and analysis.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001879
+Provide a report generation capability that supports on-demand reporting requirements.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001880
+Provide a report generation capability that supports after-the-fact investigations of security incidents.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001881
+Provide an audit reduction capability that does not alter original content or time ordering of audit records.
+NIST SP 800-53 Revision 4 :: AU-7 b
+NIST SP 800-53 Revision 5 :: AU-7 b
+CCI-001882
+Provide a report generation capability that does not alter original content or time ordering of audit records.
+NIST SP 800-53 Revision 4 :: AU-7 b
+NIST SP 800-53 Revision 5 :: AU-7 b
+CCI-001889
+Record time stamps for audit records that meet organization-defined granularity of time measurement.
+NIST SP 800-53 Revision 4 :: AU-8 b
+NIST SP 800-53 Revision 5 :: AU-8 b
+CCI-001914
+Provide the capability for organization-defined individuals or roles to change the logging to be performed on organization-defined system components based on organization-defined selectable event criteria within organization-defined time thresholds.
+NIST SP 800-53 Revision 4 :: AU-12 (3)
+NIST SP 800-53 Revision 5 :: AU-12 (3)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-001814
+The Information system supports auditing of the enforcement actions.
+NIST SP 800-53 Revision 4 :: CM-5 (1)
+
+==========================================================================================================
+
+Group ID:
+V-258152
+Rule ID:
+SV-258152r1015127
+STIG ID:
+RHEL-09-653015
+SRG ID:
+SRG-OS-000062-GPOS-00031
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit service must be enabled.
+Discussion:
+Without establishing what type of events occurred, it would be difficult to establish, correlate, and investigate the events leading up to an outage or attack. Ensuring the "auditd" service is active ensures audit records generated by the kernel are appropriately recorded.
+
+Additionally, a properly configured audit subsystem ensures that actions of individual system users can be uniquely traced to those users so they can be held accountable for their actions.
+
+Satisfies: SRG-OS-000062-GPOS-00031, SRG-OS-000037-GPOS-00015, SRG-OS-000038-GPOS-00016, SRG-OS-000039-GPOS-00017, SRG-OS-000040-GPOS-00018, SRG-OS-000041-GPOS-00019, SRG-OS-000042-GPOS-00021, SRG-OS-000051-GPOS-00024, SRG-OS-000054-GPOS-00025, SRG-OS-000122-GPOS-00063, SRG-OS-000254-GPOS-00095, SRG-OS-000255-GPOS-00096, SRG-OS-000337-GPOS-00129, SRG-OS-000348-GPOS-00136, SRG-OS-000349-GPOS-00137, SRG-OS-000350-GPOS-00138, SRG-OS-000351-GPOS-00139, SRG-OS-000352-GPOS-00140, SRG-OS-000353-GPOS-00141, SRG-OS-000354-GPOS-00142, SRG-OS-000358-GPOS-00145, SRG-OS-000365-GPOS-00152, SRG-OS-000392-GPOS-00172, SRG-OS-000475-GPOS-00220
+Check Text:
+Verify the audit service is configured to produce audit records with the following command:
+
+$ systemctl status auditd.service
+
+auditd.service - Security Auditing Service
+Loaded:loaded (/usr/lib/systemd/system/auditd.service; enabled; vendor preset: enabled)
+Active: active (running) since Tues 2022-05-24 12:56:56 EST; 4 weeks 0 days ago
+
+If the audit service is not "active" and "running", this is a finding.
+Fix Text:
+To enable the auditd service run the following command:
+
+$ sudo systemctl enable --now auditd
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000131
+Ensure that audit records containing information that establishes when the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 b
+CCI-000132
+Ensure that audit records containing information that establishes where the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 c
+CCI-000133
+Ensure that audit records containing information that establishes the source of the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 d
+CCI-000134
+Ensure that audit records containing information that establishes the outcome of the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 e
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000154
+Provide the capability to centrally review and analyze audit records from multiple components within the system.
+NIST SP 800-53 :: AU-6 (4)
+NIST SP 800-53A :: AU-6 (4).1
+NIST SP 800-53 Revision 4 :: AU-6 (4)
+NIST SP 800-53 Revision 5 :: AU-6 (4)
+CCI-000158
+Provide the capability to process, sort, and search audit records for events of interest based on organization-defined audit fields within audit records.
+NIST SP 800-53 :: AU-7 (1)
+NIST SP 800-53A :: AU-7 (1).1
+NIST SP 800-53 Revision 4 :: AU-7 (1)
+NIST SP 800-53 Revision 5 :: AU-7 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001464
+Initiates session audits automatically at system start-up.
+NIST SP 800-53 :: AU-14 (1)
+NIST SP 800-53A :: AU-14 (1).1
+NIST SP 800-53 Revision 4 :: AU-14 (1)
+NIST SP 800-53 Revision 5 :: AU-14 (1)
+CCI-001487
+Ensure that audit records containing information that establishes the identity of any individuals, subjects, or objects/entities associated with the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 f
+CCI-003938
+Automatically generate audit records of the enforcement actions.
+NIST SP 800-53 Revision 5 :: CM-5 (1) (b)
+CCI-001875
+Provide an audit reduction capability that supports on-demand audit review and analysis.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001876
+Provide an audit reduction capability that supports on-demand reporting requirements.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001877
+Provide an audit reduction capability that supports after-the-fact investigations of incidents.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001878
+Provide a report generation capability that supports on-demand audit review and analysis.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001879
+Provide a report generation capability that supports on-demand reporting requirements.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001880
+Provide a report generation capability that supports after-the-fact investigations of security incidents.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001881
+Provide an audit reduction capability that does not alter original content or time ordering of audit records.
+NIST SP 800-53 Revision 4 :: AU-7 b
+NIST SP 800-53 Revision 5 :: AU-7 b
+CCI-001882
+Provide a report generation capability that does not alter original content or time ordering of audit records.
+NIST SP 800-53 Revision 4 :: AU-7 b
+NIST SP 800-53 Revision 5 :: AU-7 b
+CCI-001889
+Record time stamps for audit records that meet organization-defined granularity of time measurement.
+NIST SP 800-53 Revision 4 :: AU-8 b
+NIST SP 800-53 Revision 5 :: AU-8 b
+CCI-001914
+Provide the capability for organization-defined individuals or roles to change the logging to be performed on organization-defined system components based on organization-defined selectable event criteria within organization-defined time thresholds.
+NIST SP 800-53 Revision 4 :: AU-12 (3)
+NIST SP 800-53 Revision 5 :: AU-12 (3)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-004188
+Monitor the use of maintenance tools that execute with increased privilege.
+NIST SP 800-53 Revision 5 :: MA-3 (5)
+CCI-001814
+The Information system supports auditing of the enforcement actions.
+NIST SP 800-53 Revision 4 :: CM-5 (1)
+
+==========================================================================================================
+
+Group ID:
+V-258177
+Rule ID:
+SV-258177r1106368
+STIG ID:
+RHEL-09-654015
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the chmod, fchmod, and fchmodat system calls.
+Discussion:
+Without generating audit records that are specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000064-GPOS-00033, SRG-OS-000466-GPOS-00210, SRG-OS-000458-GPOS-00203
+Check Text:
+Verify RHEL 9 is configured to audit the execution of the "chmod", "fchmod", and "fchmodat" system calls with the following command:
+
+$ sudo auditctl -l | grep chmod
+
+-a always,exit -S arch=b32 -S chmod,fchmod,fchmodat -F auid>=1000 -F auid!=-1 -F key=perm_mod
+-a always,exit -S arch=b64 -S chmod,fchmod,fchmodat -F auid>=1000 -F auid!=-1 -F key=perm_mod
+
+If both the "b32" and "b64" audit rules are not defined for the "chmod", "fchmod", and "fchmodat" system calls, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "chmod", "fchmod", and "fchmodat" syscalls.
+
+Add or update the following rules in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F arch=b32 -S chmod,fchmod,fchmodat -F auid>=1000 -F auid!=unset -k perm_mod
+-a always,exit -F arch=b64 -S chmod,fchmod,fchmodat -F auid>=1000 -F auid!=unset -k perm_mod
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258178
+Rule ID:
+SV-258178r1106370
+STIG ID:
+RHEL-09-654020
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the chown, fchown, fchownat, and lchown system calls.
+Discussion:
+Without generating audit records that are specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000064-GPOS-00033, SRG-OS-000466-GPOS-00210, SRG-OS-000458-GPOS-00203, SRG-OS-000474-GPOS-00219
+Check Text:
+Verify RHEL 9 is configured to audit the execution of the  "chown", "fchown", "fchownat", and "lchown" system calls with the following command:
+
+$ sudo auditctl -l | grep chown
+
+-a always,exit -S arch=b32 -S lchown,fchown,chown,fchownat -F auid>=1000 -F auid!=-1 -F key=perm_mod
+-a always,exit -S arch=b64 -S chown,fchown,lchown,fchownat -F auid>=1000 -F auid!=-1 -F key=perm_mod
+
+If both the "b32" and "b64" audit rules are not defined for the "chown", "fchown", "fchownat", and "lchown" system calls, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "chown", "fchown", "fchownat", and "lchown"" system calls.
+
+Add or update the following rules in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F arch=b32 -S chown,fchown,fchownat,lchown -F auid>=1000 -F auid!=unset -k perm_mod
+-a always,exit -F arch=b64 -S chown,fchown,fchownat,lchown -F auid>=1000 -F auid!=unset -k perm_mod
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258179
+Rule ID:
+SV-258179r1106371
+STIG ID:
+RHEL-09-654025
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the setxattr, fsetxattr, lsetxattr, removexattr, fremovexattr, and lremovexattr system calls.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000458-GPOS-00203, SRG-OS-000462-GPOS-00206, SRG-OS-000463-GPOS-00207, SRG-OS-000471-GPOS-00215, SRG-OS-000474-GPOS-00219, SRG-OS-000466-GPOS-00210, SRG-OS-000064-GPOS-00033
+Check Text:
+Verify RHEL 9 is configured to audit the execution of the "setxattr", "fsetxattr", "lsetxattr", "removexattr", "fremovexattr", and "lremovexattr" system calls with the following command:
+
+$ sudo auditctl -l | grep xattr
+
+-a always,exit -S arch=b32 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>=1000 -F auid!=-1 -F key=perm_mod
+-a always,exit -S arch=b64 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>=1000 -F auid!=-1 -F key=perm_mod
+-a always,exit -S arch=b32 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid=0 -F key=perm_mod
+-a always,exit -S arch=b64 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid=0 -F key=perm_mod
+
+If both the "b32" and "b64" audit rules are not defined for the "setxattr", "fsetxattr", "lsetxattr", "removexattr", "fremovexattr", and "lremovexattr" system calls, or any of the lines returned are commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to audit the execution of the "setxattr", "fsetxattr", "lsetxattr", "removexattr", "fremovexattr", and "lremovexattr" system calls by adding or updating the following lines to "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F arch=b32 -S setxattr,fsetxattr,lsetxattr,removexattr,fremovexattr,lremovexattr -F auid>=1000 -F auid!=unset -k perm_mod
+-a always,exit -F arch=b64 -S setxattr,fsetxattr,lsetxattr,removexattr,fremovexattr,lremovexattr -F auid>=1000 -F auid!=unset -k perm_mod
+-a always,exit -F arch=b32 -S setxattr,fsetxattr,lsetxattr,removexattr,fremovexattr,lremovexattr -F auid=0 -k perm_mod
+-a always,exit -F arch=b64 -S setxattr,fsetxattr,lsetxattr,removexattr,fremovexattr,lremovexattr -F auid=0 -k perm_mod
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258180
+Rule ID:
+SV-258180r1045325
+STIG ID:
+RHEL-09-654030
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of umount system calls.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "umount" command with the following command:
+
+$ sudo auditctl -l | grep /usr/bin/umount
+
+-a always,exit -S all -F path=/usr/bin/umount -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-mount
+
+If the command does not return an audit rule for "umount" or any of the lines returned are commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "umount" command by adding or updating the following rules in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/umount -F perm=x -F auid>=1000 -F auid!=unset -k privileged-mount
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258181
+Rule ID:
+SV-258181r1045328
+STIG ID:
+RHEL-09-654035
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the chacl command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000466-GPOS-00210
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "chacl" command with the following command:
+
+$ sudo auditctl -l | grep chacl
+
+-a always,exit -S all -F path=/usr/bin/chacl -F perm=x -F auid>=1000 -F auid!=-1 -F key=perm_mod
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "chacl" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_mod
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258182
+Rule ID:
+SV-258182r1045331
+STIG ID:
+RHEL-09-654040
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the setfacl command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "setfacl" command with the following command:
+
+$ sudo auditctl -l | grep setfacl
+
+-a always,exit -S all -F path=/usr/bin/setfacl -F perm=x -F auid>=1000 -F auid!=-1 -F key=perm_mod
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "setfacl" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_mod
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258183
+Rule ID:
+SV-258183r1045334
+STIG ID:
+RHEL-09-654045
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the chcon command.
+Discussion:
+Without generating audit records that are specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account that is being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000468-GPOS-00212, SRG-OS-000471-GPOS-00215, SRG-OS-000463-GPOS-00207, SRG-OS-000465-GPOS-00209
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "chcon" command with the following command:
+
+$ sudo auditctl -l | grep chcon
+
+-a always,exit -S all -F path=/usr/bin/chcon -F perm=x -F auid>=1000 -F auid!=-1 -F key=perm_mod
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "chcon" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>=1000 -F auid!=unset -k perm_mod
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258184
+Rule ID:
+SV-258184r1045337
+STIG ID:
+RHEL-09-654050
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the semanage command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000463-GPOS-00207, SRG-OS-000465-GPOS-00209
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "semanage" command with the following command:
+
+$ sudo auditctl -l | grep semanage
+
+-a always,exit -S all -F path=/usr/sbin/semanage -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-unix-update
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "semanage" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/sbin/semanage -F perm=x -F auid>=1000 -F auid!=unset -k privileged-unix-update
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258185
+Rule ID:
+SV-258185r1045340
+STIG ID:
+RHEL-09-654055
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the setfiles command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000463-GPOS-00207, SRG-OS-000465-GPOS-00209
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "setfiles" command with the following command:
+
+$ sudo auditctl -l | grep setfiles
+
+-a always,exit -S all -F path=/usr/sbin/setfiles -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-unix-update
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "setfiles" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/sbin/setfiles -F perm=x -F auid>=1000 -F auid!=unset -k privileged-unix-update
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258186
+Rule ID:
+SV-258186r1045343
+STIG ID:
+RHEL-09-654060
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the setsebool command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000463-GPOS-00207, SRG-OS-000465-GPOS-00209
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "setsebool" command with the following command:
+
+$ sudo auditctl -l | grep setsebool
+
+-a always,exit -S all -F path=/usr/sbin/setsebool -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate an audit event for any successful/unsuccessful use of the "setsebool " command by adding or updating the following rules in the "/etc/audit/rules.d/audit.rules" file:
+
+-a always,exit -F path=/usr/sbin/setsebool -F perm=x -F auid>=1000 -F auid!=unset -F key=privileged 
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258187
+Rule ID:
+SV-258187r1106373
+STIG ID:
+RHEL-09-654065
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the rename, unlink, rmdir, renameat, and unlinkat system calls.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000466-GPOS-00210, SRG-OS-000467-GPOS-00211, SRG-OS-000468-GPOS-00212
+Check Text:
+Verify RHEL 9 is configured to audit successful/unsuccessful attempts to use the "rename", "unlink", "rmdir", "renameat", and "unlinkat" system calls with the following command:
+
+$ sudo auditctl -l | grep 'rename\|unlink\|rmdir'
+
+-a always,exit -S arch=b32 -S unlink,rename,rmdir,unlinkat,renameat -F auid>=1000 -F auid!=-1 -F key=delete
+-a always,exit -S arch=b64 -S rename,rmdir,unlink,unlinkat,renameat -F auid>=1000 -F auid!=-1 -F key=delete
+
+If the command does not return an audit rule for "rename", "unlink", "rmdir", "renameat", and "unlinkat" or any of the lines returned are commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate an audit event for any successful/unsuccessful use of the "rename", "unlink", "rmdir", "renameat", and "unlinkat" system calls by adding or updating the following rules in the "/etc/audit/rules.d/audit.rules" file:
+
+-a always,exit -F arch=b32 -S rename,unlink,rmdir,renameat,unlinkat -F auid>=1000 -F auid!=unset -k delete
+-a always,exit -F arch=b64 -S rename,unlink,rmdir,renameat,unlinkat -F auid>=1000 -F auid!=unset -k delete
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258188
+Rule ID:
+SV-258188r1106375
+STIG ID:
+RHEL-09-654070
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the truncate, ftruncate, creat, open, openat, and open_by_handle_at system calls.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000064-GPOS-00033, SRG-OS-000458-GPOS-00203, SRG-OS-000461-GPOS-00205
+Check Text:
+Verify RHEL 9 is configured to audit successful/unsuccessful attempts to use the "truncate", "ftruncate", "creat", "open", "openat", and "open_by_handle_at" system calls with the following command:
+
+$ sudo auditctl -l | grep 'open\b\|openat\|open_by_handle_at\|truncate\|creat'
+
+-a always,exit -S arch=b32 -S open,creat,truncate,ftruncate,openat,open_by_handle_at -F exit=-EPERM -F auid>=1000 -S auid!=-1 -F key=perm_access
+-a always,exit -F arch=b64 -S open,truncate,ftruncate,creat,openat,open_by_handle_at -F exit=-EPERM -F auid>=1000 -S auid!=-1 -F key=perm_access
+-a always,exit -F arch=b32 -S open,creat,truncate,ftruncate,openat,open_by_handle_at -F exit=-EACCES -F auid>=1000 -S auid!=-1 -F key=perm_access
+-a always,exit -F arch=b64 -S open,truncate,ftruncate,creat,openat,open_by_handle_at -F exit=-EACCES -F auid>=1000 -S auid!=-1 -F key=perm_access
+
+If the output does not produce rules containing "-F exit=-EPERM", this is a finding.
+
+If the output does not produce rules containing "-F exit=-EACCES", this is a finding.
+
+If the command does not return an audit rule for "truncate", "ftruncate", "creat", "open", "openat", and "open_by_handle_at" or any of the lines returned are commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate an audit event for any successful/unsuccessful use of the "truncate", "ftruncate", "creat", "open", "openat", and "open_by_handle_at" system calls by adding or updating the following rules in the "/etc/audit/rules.d/audit.rules" file:
+
+-a always,exit -F arch=b32 -S truncate,ftruncate,creat,open,openat,open_by_handle_at -F exit=-EPERM -F auid>=1000 -F auid!=unset -k perm_access
+-a always,exit -F arch=b64 -S truncate,ftruncate,creat,open,openat,open_by_handle_at -F exit=-EPERM -F auid>=1000 -F auid!=unset -k perm_access
+
+-a always,exit -F arch=b32 -S truncate,ftruncate,creat,open,openat,open_by_handle_at -F exit=-EACCES -F auid>=1000 -F auid!=unset -k perm_access
+-a always,exit -F arch=b64 -S truncate,ftruncate,creat,open,openat,open_by_handle_at -F exit=-EACCES -F auid>=1000 -F auid!=unset -k perm_access
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258189
+Rule ID:
+SV-258189r1106377
+STIG ID:
+RHEL-09-654075
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the delete_module system call.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000471-GPOS-00216, SRG-OS-000477-GPOS-00222
+Check Text:
+Verify RHEL 9 is configured to audit the execution of the "delete_module" system call with the following command:
+
+$ sudo auditctl -l | grep delete_module
+
+-a always,exit -S arch=b32 -S delete_module -F auid>=1000 -F auid!=-1 -F key=module_chng
+-a always,exit -S arch=b64 -S delete_module -F auid>=1000 -F auid!=-1 -F key=module_chng
+
+If both the "b32" and "b64" audit rules are not defined for the "delete_module" system call, or any of the lines returned are commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate an audit event for any successful/unsuccessful use of the "delete_module" system call by adding or updating the following rules in the "/etc/audit/rules.d/audit.rules" file:
+
+-a always,exit -F arch=b32 -S delete_module -F auid>=1000 -F auid!=unset -k module_chng
+-a always,exit -F arch=b64 -S delete_module -F auid>=1000 -F auid!=unset -k module_chng
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258190
+Rule ID:
+SV-258190r1106379
+STIG ID:
+RHEL-09-654080
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the init_module and finit_module system calls.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000471-GPOS-00216, SRG-OS-000477-GPOS-00222
+Check Text:
+Verify RHEL 9 is configured to audit the execution of the "init_module" and "finit_module" system calls with the following command:
+
+$ sudo auditctl -l | grep init_module
+
+-a always,exit -S arch=b32 -S init_module,finit_module -F auid>=1000 -F auid!=-1 -F key=module_chng
+-a always,exit -S arch=b64 -S init_module,finit_module -F auid>=1000 -F auid!=-1 -F key=module_chng
+
+If both the "b32" and "b64" audit rules are not defined for the "init_module" system call, or any of the lines returned are commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate an audit event for any successful/unsuccessful use of the "init_module" and "finit_module" system calls by adding or updating the following rules in the "/etc/audit/rules.d/audit.rules" file:
+
+-a always,exit -F arch=b32 -S init_module,finit_module -F auid>=1000 -F auid!=unset -k module_chng
+-a always,exit -F arch=b64 -S init_module,finit_module -F auid>=1000 -F auid!=unset -k module_chng
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258191
+Rule ID:
+SV-258191r1045358
+STIG ID:
+RHEL-09-654085
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the chage command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000468-GPOS-00212, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "chage" command with the following command:
+
+$ sudo auditctl -l | grep chage
+
+-a always,exit -S all -F path=/usr/bin/chage -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-chage
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "chage" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/chage -F perm=x -F auid>=1000 -F auid!=unset -k privileged-chage
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258192
+Rule ID:
+SV-258192r1045361
+STIG ID:
+RHEL-09-654090
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the chsh command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "chsh" command with the following command:
+
+$ sudo auditctl -l | grep chsh
+
+-a always,exit -S all -F path=/usr/bin/chsh -F perm=x -F auid>=1000 -F auid!=-1 -F key=priv_cmd
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "chsh" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/chsh -F perm=x -F auid>=1000 -F auid!=unset -k priv_cmd
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258193
+Rule ID:
+SV-258193r1045364
+STIG ID:
+RHEL-09-654095
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the crontab command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "crontab" command with the following command:
+
+$ sudo auditctl -l | grep crontab
+
+-a always,exit -S all -F path=/usr/bin/crontab -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-crontab
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "crontab" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/crontab -F perm=x -F auid>=1000 -F auid!=unset -k privileged-crontab
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258194
+Rule ID:
+SV-258194r1045367
+STIG ID:
+RHEL-09-654100
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the gpasswd command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "gpasswd" command with the following command:
+
+$ sudo auditctl -l | grep gpasswd
+
+-a always,exit -S all -F path=/usr/bin/gpasswd -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-gpasswd
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "gpasswd" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/gpasswd -F perm=x -F auid>=1000 -F auid!=unset -k privileged-gpasswd
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258195
+Rule ID:
+SV-258195r1045370
+STIG ID:
+RHEL-09-654105
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the kmod command.
+Discussion:
+Without generating audit records that are specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000471-GPOS-00216, SRG-OS-000477-GPOS-00222
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "kmod" command with the following command:
+
+$ sudo auditctl -l | grep kmod
+
+-a always,exit -S all -F path=/usr/bin/kmod -F perm=x -F auid>=1000 -F auid!=-1 -F key=modules
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "kmod" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/kmod -F perm=x -F auid>=1000 -F auid!=unset -k modules
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258196
+Rule ID:
+SV-258196r1045373
+STIG ID:
+RHEL-09-654110
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the newgrp command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account that is being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "newgrp" command with the following command:
+
+$ sudo auditctl -l | grep newgrp
+
+-a always,exit -S all -F path=/usr/bin/newgrp -F perm=x -F auid>=1000 -F auid!=-1 -F key=priv_cmd
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "newgrp" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/newgrp -F perm=x -F auid>=1000 -F auid!=unset -k priv_cmd
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258197
+Rule ID:
+SV-258197r1045376
+STIG ID:
+RHEL-09-654115
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the pam_timestamp_check command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "pam_timestamp_check" command with the following command:
+
+$ sudo auditctl -l | grep timestamp
+
+-a always,exit -S all -F path=/usr/sbin/pam_timestamp_check -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-pam_timestamp_check
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "pam_timestamp_check" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/sbin/pam_timestamp_check -F perm=x -F auid>=1000 -F auid!=unset -k privileged-pam_timestamp_check
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258198
+Rule ID:
+SV-258198r1045379
+STIG ID:
+RHEL-09-654120
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the passwd command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/gshadow" with the following command:
+
+$ sudo auditctl -l | egrep '(/usr/bin/passwd)' 
+
+-a always,exit -S all -F path=/usr/bin/passwd -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-passwd
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "passwd" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/passwd -F perm=x -F auid>=1000 -F auid!=unset -k privileged-passwd
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258199
+Rule ID:
+SV-258199r1045382
+STIG ID:
+RHEL-09-654125
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the postdrop command.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "postdrop" command with the following command:
+
+$ sudo auditctl -l | grep postdrop
+
+-a always,exit -S all -F path=/usr/sbin/postdrop -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-unix-update
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "postdrop" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/sbin/postdrop -F perm=x -F auid>=1000 -F auid!=unset -k privileged-unix-update
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258200
+Rule ID:
+SV-258200r1045385
+STIG ID:
+RHEL-09-654130
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the postqueue command.
+Discussion:
+Without generating audit record specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "postqueue" command with the following command:
+
+$ sudo auditctl -l | grep postqueue
+
+-a always,exit -S all -F path=/usr/sbin/postqueue -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-unix-update
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "postqueue" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/sbin/postqueue -F perm=x -F auid>=1000 -F auid!=unset -k privileged-unix-update
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258201
+Rule ID:
+SV-258201r1045388
+STIG ID:
+RHEL-09-654135
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the ssh-agent command.
+Discussion:
+Without generating audit record specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "ssh-agent" command with the following command:
+
+$ sudo auditctl -l | grep ssh-agent
+
+-a always,exit -S all -F path=/usr/bin/ssh-agent -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-ssh
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "ssh-agent" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/ssh-agent -F perm=x -F auid>=1000 -F auid!=unset -k privileged-ssh
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258202
+Rule ID:
+SV-258202r1045391
+STIG ID:
+RHEL-09-654140
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the ssh-keysign command.
+Discussion:
+Without generating audit record specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "ssh-keysign" command with the following command:
+
+$ sudo auditctl -l | grep ssh-keysign
+
+-a always,exit -S all -F path=/usr/libexec/openssh/ssh-keysign -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-ssh
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "ssh-keysign" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/libexec/openssh/ssh-keysign -F perm=x -F auid>=1000 -F auid!=unset -k privileged-ssh
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258203
+Rule ID:
+SV-258203r1045394
+STIG ID:
+RHEL-09-654145
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the su command.
+Discussion:
+Without generating audit record specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000064-GPOS-00033, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000466-GPOS-00210
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "su" command with the following command:
+
+$ sudo auditctl -l | grep '/usr/bin/su\b'
+
+-a always,exit -S all -F path=/usr/bin/su -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-priv_change
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "su" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/su -F perm=x -F auid>=1000 -F auid!=unset -k privileged-priv_change
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258204
+Rule ID:
+SV-258204r1045397
+STIG ID:
+RHEL-09-654150
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the sudo command.
+Discussion:
+Without generating audit record specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000466-GPOS-00210
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "sudo" command with the following command:
+
+$ sudo auditctl -l | grep '/usr/bin/sudo\b'
+
+-a always,exit -S all -F path=/usr/bin/sudo -F perm=x -F auid>=1000 -F auid!=-1 -F key=priv_cmd
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "sudo" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/sudo -F perm=x -F auid>=1000 -F auid!=unset -k priv_cmd
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258205
+Rule ID:
+SV-258205r1045400
+STIG ID:
+RHEL-09-654155
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the sudoedit command.
+Discussion:
+Without generating audit record specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "sudoedit" command with the following command:
+
+$ sudo auditctl -l | grep /usr/bin/sudoedit
+
+-a always,exit -S all -F path=/usr/bin/sudoedit -F perm=x -F auid>=1000 -F auid!=-1 -F key=priv_cmd
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "sudoedit" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/sudoedit -F perm=x -F auid>=1000 -F auid!=unset -k priv_cmd
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258206
+Rule ID:
+SV-258206r1045403
+STIG ID:
+RHEL-09-654160
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the unix_chkpwd command.
+Discussion:
+Without generating audit record specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "unix_chkpwd" command with the following command:
+
+$ sudo auditctl -l | grep unix_chkpwd
+
+-a always,exit -S all -F path=/usr/sbin/unix_chkpwd -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-unix-update
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "unix_chkpwd" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/sbin/unix_chkpwd -F perm=x -F auid>=1000 -F auid!=unset -k privileged-unix-update
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258207
+Rule ID:
+SV-258207r1045406
+STIG ID:
+RHEL-09-654165
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the unix_update command.
+Discussion:
+Without generating audit record specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000064-GPOS-00033, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "unix_update" command with the following command:
+
+$ sudo auditctl -l | grep unix_update
+
+-a always,exit -S all -F path=/usr/sbin/unix_update -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-unix-update
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "unix_update" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/sbin/unix_update -F perm=x -F auid>=1000 -F auid!=unset -k privileged-unix-update
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258208
+Rule ID:
+SV-258208r1045409
+STIG ID:
+RHEL-09-654170
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the userhelper command.
+Discussion:
+Without generating audit record specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "userhelper" command with the following command:
+
+$ sudo auditctl -l | grep userhelper
+
+-a always,exit -S all -F path=/usr/sbin/userhelper -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-unix-update
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "userhelper" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/sbin/userhelper -F perm=x -F auid>=1000 -F auid!=unset -k privileged-unix-update
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258209
+Rule ID:
+SV-258209r1045412
+STIG ID:
+RHEL-09-654175
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the usermod command.
+Discussion:
+Without generating audit record specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000466-GPOS-00210
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "usermod" command with the following command:
+
+$ sudo auditctl -l | grep usermod
+
+-a always,exit -S all -F path=/usr/sbin/usermod -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-usermod
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "usermod " command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>=1000 -F auid!=unset -k privileged-usermod
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258210
+Rule ID:
+SV-258210r1045415
+STIG ID:
+RHEL-09-654180
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit all uses of the mount command.
+Discussion:
+Without generating audit records that are specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+When a user logs on, the auid is set to the uid of the account that is being authenticated. Daemons are not user sessions and have the loginuid set to -1. The auid representation is an unsigned 32-bit integer, which equals 4294967295. The audit system interprets -1, 4294967295, and "unset" in the same way.
+
+The system call rules are loaded into a matching engine that intercepts each system call made by all programs on the system. Therefore, it is very important to use system call rules only when absolutely necessary since these affect performance. The more rules, the bigger the performance hit. The performance can be helped, however, by combining system calls into one rule whenever possible.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify that RHEL 9 is configured to audit the execution of the "mount" command with the following command:
+
+$ sudo auditctl -l | grep /usr/bin/mount
+
+-a always,exit -S all -F path=/usr/bin/mount -F perm=x -F auid>=1000 -F auid!=-1 -F key=privileged-mount
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records upon successful/unsuccessful attempts to use the "mount" command by adding or updating the following rule in "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F path=/usr/bin/mount -F perm=x -F auid>=1000 -F auid!=unset -k privileged-mount
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258215
+Rule ID:
+SV-258215r1106381
+STIG ID:
+RHEL-09-654205
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+Successful/unsuccessful uses of the umount system call in RHEL 9 must generate an audit record.
+Discussion:
+The changing of file permissions could indicate that a user is attempting to gain access to information that would otherwise be disallowed. Auditing DAC modifications can facilitate the identification of patterns of abuse among both authorized and unauthorized users.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+Verify RHEL 9 generates an audit record for all uses of the "umount" and system call with the following command:
+
+$ sudo auditctl -l | grep b32 | grep 'umount\b'
+
+-a always,exit -S arch=b32 -S umount -F auid>=1000 -F auid!=-1 -F key=privileged-umount
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure the audit system to generate an audit event for any successful/unsuccessful use of the "umount" system call by adding or updating the following rules in "/etc/audit/audit.rules" and adding the following rules to "/etc/audit/rules.d/perm_mod.rules" or updating the existing rules in files in the "/etc/audit/rules.d/" directory:
+
+-a always,exit -F arch=b32 -S umount -F auid>=1000 -F auid!=unset -k privileged-umount
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258216
+Rule ID:
+SV-258216r1102090
+STIG ID:
+RHEL-09-654210
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+Successful/unsuccessful uses of the umount2 system call in RHEL 9 must generate an audit record.
+Discussion:
+The changing of file permissions could indicate that a user is attempting to gain access to information that would otherwise be disallowed. Auditing DAC modifications can facilitate the identification of patterns of abuse among both authorized and unauthorized users.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215
+Check Text:
+To determine if the system is configured to audit calls to the umount2 system call, run the following command:
+
+$ sudo auditctl -l | grep umount2
+
+-a always,exit -S arch=b64 -S umount2 -F auid>=1000 -F auid!=-1 -F key=privileged-umount
+-a always,exit -S arch=b32 -S umount2 -F auid>=1000 -F auid!=-1 -F key=privileged-umount
+
+If no line is returned, this is a finding.
+Fix Text:
+Configure the audit system to generate an audit event for any successful/unsuccessful use of the "umount2" system call by adding or updating the following rules in a file in "/etc/audit/rules.d".
+
+-a always,exit -F arch=b32 -S umount2 -F auid>=1000 -F auid!=unset -k privileged-umount
+-a always,exit -F arch=b64 -S umount2 -F auid>=1000 -F auid!=unset -k privileged-umount
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+
+==========================================================================================================
+
+Group ID:
+V-258217
+Rule ID:
+SV-258217r1045436
+STIG ID:
+RHEL-09-654215
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/sudoers.
+Discussion:
+The actions taken by system administrators must be audited to keep a record of what was executed on the system, as well as for accountability purposes. Editing the sudoers file may be sign of an attacker trying to establish persistent methods to a system, auditing the editing of the sudoers files mitigates this risk.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/sudoers" with the following command:
+
+$ sudo auditctl -l | grep '/etc/sudoers[^.]'
+
+-w /etc/sudoers -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/sudoers".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/sudoers -p wa -k identity
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258218
+Rule ID:
+SV-258218r1101981
+STIG ID:
+RHEL-09-654220
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/sudoers.d/ directory.
+Discussion:
+The actions taken by system administrators must be audited to keep a record of what was executed on the system, as well as for accountability purposes. Editing the sudoers file may be sign of an attacker trying to establish persistent methods to a system, auditing the editing of the sudoers files mitigates this risk.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/sudoers.d/" with the following command:
+
+$ sudo auditctl -l | grep /etc/sudoers.d
+
+-w /etc/sudoers.d/ -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/sudoers.d/".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/sudoers.d/ -p wa -k identity
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258219
+Rule ID:
+SV-258219r1015130
+STIG ID:
+RHEL-09-654225
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/group.
+Discussion:
+In addition to auditing new user and group accounts, these watches will alert the system administrator(s) to any modifications. Any unexpected users, groups, or modifications must be investigated for legitimacy.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/group" with the following command:
+
+$ sudo auditctl -l | egrep '(/etc/group)'  
+
+-w /etc/group -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/group".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/group -p wa -k identity
+
+The audit daemon must be restarted for the changes to take effect.
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258220
+Rule ID:
+SV-258220r1015131
+STIG ID:
+RHEL-09-654230
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/gshadow.
+Discussion:
+In addition to auditing new user and group accounts, these watches will alert the system administrator(s) to any modifications. Any unexpected users, groups, or modifications should be investigated for legitimacy.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/gshadow" with the following command:
+
+$ sudo auditctl -l | egrep '(/etc/gshadow)' 
+
+-w /etc/gshadow -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/gshadow".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/gshadow -p wa -k identity
+
+The audit daemon must be restarted for the changes to take effect.
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258221
+Rule ID:
+SV-258221r1015132
+STIG ID:
+RHEL-09-654235
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/opasswd.
+Discussion:
+In addition to auditing new user and group accounts, these watches will alert the system administrator(s) to any modifications. Any unexpected users, groups, or modifications should be investigated for legitimacy.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/security/opasswd" with the following command:
+
+$ sudo auditctl -l | egrep '(/etc/security/opasswd)' 
+
+-w /etc/security/opasswd -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/security/opasswd".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/security/opasswd -p wa -k identity
+
+The audit daemon must be restarted for the changes to take effect.
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258222
+Rule ID:
+SV-258222r1015133
+STIG ID:
+RHEL-09-654240
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/passwd.
+Discussion:
+In addition to auditing new user and group accounts, these watches will alert the system administrator(s) to any modifications. Any unexpected users, groups, or modifications should be investigated for legitimacy.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221, SRG-OS-000274-GPOS-00104, SRG-OS-000275-GPOS-00105, SRG-OS-000276-GPOS-00106, SRG-OS-000277-GPOS-00107
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/passwd" with the following command:
+
+$ sudo auditctl -l | egrep '(/etc/passwd)' 
+
+-w /etc/passwd -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/passwd".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/passwd -p wa -k identity
+
+The audit daemon must be restarted for the changes to take effect.
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-001683
+The information system notifies organization-defined personnel or roles for account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+CCI-001684
+The information system notifies organization-defined personnel or roles for account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+CCI-001685
+The information system notifies organization-defined personnel or roles for account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+CCI-001686
+The information system notifies organization-defined personnel or roles for account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258223
+Rule ID:
+SV-258223r1015134
+STIG ID:
+RHEL-09-654245
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/shadow.
+Discussion:
+In addition to auditing new user and group accounts, these watches will alert the system administrator(s) to any modifications. Any unexpected users, groups, or modifications should be investigated for legitimacy.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/passwd with the following command:
+
+$ sudo auditctl -l | egrep '(/etc/shadow)' 
+
+-w /etc/shadow -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/shadow".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/shadow -p wa -k identity
+
+The audit daemon must be restarted for the changes to take effect.
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258225
+Rule ID:
+SV-258225r1014990
+STIG ID:
+RHEL-09-654255
+SRG ID:
+SRG-OS-000037-GPOS-00015
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /var/log/lastlog.
+Discussion:
+Without generating audit records specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+Satisfies: SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000471-GPOS-00215, SRG-OS-000473-GPOS-00218, SRG-OS-000470-GPOS-00214
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/var/log/lastlog" with the following command:
+
+$ sudo auditctl -l | grep /var/log/lastlog
+ 
+-w /var/log/lastlog -p wa -k logins
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/var/log/lastlog".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /var/log/lastlog -p wa -k logins
+
+The audit daemon must be restarted for the changes to take effect.
+
+$ sudo service auditd restart
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)

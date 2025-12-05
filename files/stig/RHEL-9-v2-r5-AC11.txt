@@ -1,0 +1,585 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AC-11 Session Lock
+************************************************************************************************************
+
+Group ID:
+V-258019
+Rule ID:
+SV-258019r1045092
+STIG ID:
+RHEL-09-271045
+SRG ID:
+SRG-OS-000028-GPOS-00009
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be able to initiate directly a session lock for all connection types using smart card when the smart card is removed.
+Discussion:
+A session lock is a temporary action taken when a user stops work and moves away from the immediate physical vicinity of the information system but does not want to log out because of the temporary nature of the absence.
+
+The session lock is implemented at the point where session activity can be determined. Rather than be forced to wait for a period of time to expire before the user session can be locked, RHEL 9 needs to provide users with the ability to manually invoke a session lock so users can secure their session if it is necessary to temporarily vacate the immediate physical vicinity.
+
+Satisfies: SRG-OS-000028-GPOS-00009, SRG-OS-000030-GPOS-00011
+Check Text:
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, the GNOME desktop environment. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+Verify RHEL 9 enables a user's session lock until that user reestablishes access using established identification and authentication procedures with the following command:
+
+$ gsettings get org.gnome.settings-daemon.peripherals.smartcard removal-action
+ 
+'lock-screen'
+ 
+If the result is not 'lock-screen', this is a finding.
+Fix Text:
+Configure RHEL 9 to enable a user's session lock until that user re-establishes access using established identification and authentication procedures.
+
+Select or create an authselect profile and incorporate the "with-smartcard-lock-on-removal" feature with the following example:
+
+$ sudo authselect select sssd with-smartcard with-smartcard-lock-on-removal
+
+Alternatively, the dconf settings can be edited in the /etc/dconf/db/* location.
+
+Add or update the [org/gnome/settings-daemon/peripherals/smartcard] section of the /etc/dconf/db/local.d/00-security-settings" database file and add or update the following lines:
+
+[org/gnome/settings-daemon/peripherals/smartcard]
+removal-action='lock-screen'
+
+Then update the dconf system databases:
+
+$ sudo dconf update
+CCI-000056
+Retain the device lock until the user reestablishes access using established identification and authentication procedures.
+NIST SP 800-53 :: AC-11 b
+NIST SP 800-53A :: AC-11.1 (iii)
+NIST SP 800-53 Revision 4 :: AC-11 b
+NIST SP 800-53 Revision 5 :: AC-11 b
+CCI-000057
+Prevent further access to the system by initiating a device lock after organization-defined time period of inactivity; and/or requiring the user to initiate a device lock before leaving the system unattended.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-11 a
+NIST SP 800-53 Revision 5 :: AC-11 a
+CCI-000058
+The information system provides the capability for users to directly initiate session lock mechanisms.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11
+NIST SP 800-53 Revision 4 :: AC-11 a
+
+==========================================================================================================
+
+Group ID:
+V-258020
+Rule ID:
+SV-258020r1045094
+STIG ID:
+RHEL-09-271050
+SRG ID:
+SRG-OS-000028-GPOS-00009
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prevent a user from overriding the disabling of the graphical user smart card removal action.
+Discussion:
+A session lock is a temporary action taken when a user stops work and moves away from the immediate physical vicinity of the information system but does not want to log out because of the temporary nature of the absence.
+
+The session lock is implemented at the point where session activity can be determined. Rather than be forced to wait for a period of time to expire before the user session can be locked, RHEL 9 needs to provide users with the ability to manually invoke a session lock so users can secure their session if it is necessary to temporarily vacate the immediate physical vicinity.
+
+Satisfies: SRG-OS-000028-GPOS-00009, SRG-OS-000030-GPOS-00011
+Check Text:
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, the GNOME desktop environment. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+Verify RHEL 9 disables ability of the user to override the smart card removal action setting.
+
+$ gsettings writable org.gnome.settings-daemon.peripherals.smartcard removal-action
+ 
+false
+ 
+If "removal-action" is writable and the result is "true", this is a finding.
+Fix Text:
+Add the following line to "/etc/dconf/db/local.d/locks/00-security-settings-lock" to prevent user override of the smart card removal action:
+
+/org/gnome/settings-daemon/peripherals/smartcard/removal-action
+
+Then update the dconf system databases:
+
+$ sudo dconf update
+CCI-000056
+Retain the device lock until the user reestablishes access using established identification and authentication procedures.
+NIST SP 800-53 :: AC-11 b
+NIST SP 800-53A :: AC-11.1 (iii)
+NIST SP 800-53 Revision 4 :: AC-11 b
+NIST SP 800-53 Revision 5 :: AC-11 b
+CCI-000057
+Prevent further access to the system by initiating a device lock after organization-defined time period of inactivity; and/or requiring the user to initiate a device lock before leaving the system unattended.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-11 a
+NIST SP 800-53 Revision 5 :: AC-11 a
+CCI-000058
+The information system provides the capability for users to directly initiate session lock mechanisms.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11
+NIST SP 800-53 Revision 4 :: AC-11 a
+
+==========================================================================================================
+
+Group ID:
+V-258021
+Rule ID:
+SV-258021r1015088
+STIG ID:
+RHEL-09-271055
+SRG ID:
+SRG-OS-000028-GPOS-00009
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enable a user session lock until that user re-establishes access using established identification and authentication procedures for graphical user sessions.
+Discussion:
+A session lock is a temporary action taken when a user stops work and moves away from the immediate physical vicinity of the information system but does not want to log out because of the temporary nature of the absence.
+
+The session lock is implemented at the point where session activity can be determined.
+
+Regardless of where the session lock is determined and implemented, once invoked, the session lock must remain in place until the user reauthenticates. No other activity aside from reauthentication must unlock the system.
+
+Satisfies: SRG-OS-000028-GPOS-00009, SRG-OS-000030-GPOS-00011
+Check Text:
+Verify RHEL 9 enables a user's session lock until that user re-establishes access using established identification and authentication procedures with the following command:
+
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, the GNOME desktop environment. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+$ gsettings get org.gnome.desktop.screensaver lock-enabled
+
+true
+
+If the setting is "false", this is a finding.
+Fix Text:
+Configure RHEL 9 to enable a user's session lock until that user re-establishes access using established identification and authentication procedures.
+
+Create a database to contain the system-wide screensaver settings (if it does not already exist) with the following example:
+
+$ sudo vi /etc/dconf/db/local.d/00-screensaver
+
+Edit the "[org/gnome/desktop/screensaver]" section of the database file and add or update the following lines:
+
+# Set this to true to lock the screen when the screensaver activates
+lock-enabled=true
+
+Update the system databases:
+
+$ sudo dconf update
+CCI-000056
+Retain the device lock until the user reestablishes access using established identification and authentication procedures.
+NIST SP 800-53 :: AC-11 b
+NIST SP 800-53A :: AC-11.1 (iii)
+NIST SP 800-53 Revision 4 :: AC-11 b
+NIST SP 800-53 Revision 5 :: AC-11 b
+CCI-000057
+Prevent further access to the system by initiating a device lock after organization-defined time period of inactivity; and/or requiring the user to initiate a device lock before leaving the system unattended.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-11 a
+NIST SP 800-53 Revision 5 :: AC-11 a
+CCI-000058
+The information system provides the capability for users to directly initiate session lock mechanisms.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11
+NIST SP 800-53 Revision 4 :: AC-11 a
+
+==========================================================================================================
+
+Group ID:
+V-258022
+Rule ID:
+SV-258022r1045097
+STIG ID:
+RHEL-09-271060
+SRG ID:
+SRG-OS-000028-GPOS-00009
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prevent a user from overriding the screensaver lock-enabled setting for the graphical user interface.
+Discussion:
+A session time-out lock is a temporary action taken when a user stops work and moves away from the immediate physical vicinity of the information system but does not log out because of the temporary nature of the absence. Rather than relying on the user to manually lock their operating system session prior to vacating the vicinity, operating systems need to be able to identify when a user's session has idled and take action to initiate the session lock.
+
+The session lock is implemented at the point where session activity can be determined and/or controlled.
+
+Implementing session settings will have little value if a user is able to manipulate these settings from the defaults prescribed in the other requirements of this implementation guide.
+
+Satisfies: SRG-OS-000028-GPOS-00009, SRG-OS-000030-GPOS-00011
+Check Text:
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, Gnome Shell. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+Verify RHEL 9 prevents a user from overriding settings for graphical user interfaces. 
+
+$ gsettings writable org.gnome.desktop.screensaver lock-enabled
+ 
+false
+ 
+If "lock-enabled" is writable and the result is "true", this is a finding.
+Fix Text:
+Configure RHEL 9 to prevent a user from overriding settings for graphical user interfaces.
+
+Create a database to contain the systemwide screensaver settings (if it does not already exist) with the following command: 
+
+Note: The example below is using the database "local" for the system. If the system is using another database in "/etc/dconf/profile/user", the file should be created under the appropriate subdirectory.
+
+$ sudo touch /etc/dconf/db/local.d/locks/session
+
+Add the following setting to prevent nonprivileged users from modifying it:
+
+/org/gnome/desktop/screensaver/lock-enabled
+
+Run the following command to update the database:
+
+$ sudo dconf update
+CCI-000056
+Retain the device lock until the user reestablishes access using established identification and authentication procedures.
+NIST SP 800-53 :: AC-11 b
+NIST SP 800-53A :: AC-11.1 (iii)
+NIST SP 800-53 Revision 4 :: AC-11 b
+NIST SP 800-53 Revision 5 :: AC-11 b
+CCI-000057
+Prevent further access to the system by initiating a device lock after organization-defined time period of inactivity; and/or requiring the user to initiate a device lock before leaving the system unattended.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-11 a
+NIST SP 800-53 Revision 5 :: AC-11 a
+CCI-000058
+The information system provides the capability for users to directly initiate session lock mechanisms.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11
+NIST SP 800-53 Revision 4 :: AC-11 a
+
+==========================================================================================================
+
+Group ID:
+V-258023
+Rule ID:
+SV-258023r958402
+STIG ID:
+RHEL-09-271065
+SRG ID:
+SRG-OS-000029-GPOS-00010
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must automatically lock graphical user sessions after 15 minutes of inactivity.
+Discussion:
+A session time-out lock is a temporary action taken when a user stops work and moves away from the immediate physical vicinity of the information system but does not logout because of the temporary nature of the absence. Rather than relying on the user to manually lock their operating system session prior to vacating the vicinity, the GNOME desktop can be configured to identify when a user's session has idled and take action to initiate a session lock.
+
+Satisfies: SRG-OS-000029-GPOS-00010, SRG-OS-000031-GPOS-00012
+Check Text:
+Verify RHEL 9 initiates a session lock after a 15-minute period of inactivity for graphical user interfaces with the following command:
+
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, the GNOME desktop environment. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+$ sudo gsettings get org.gnome.desktop.session idle-delay
+
+uint32 900
+
+If "idle-delay" is set to "0" or a value greater than "900", this is a finding.
+Fix Text:
+Configure RHEL 9 to initiate a screensaver after a 15-minute period of inactivity for graphical user interfaces.
+
+Create a database to contain the system-wide screensaver settings (if it does not already exist) with the following command:
+
+$ sudo touch /etc/dconf/db/local.d/00-screensaver
+
+Edit /etc/dconf/db/local.d/00-screensaver and add or update the following lines:
+
+[org/gnome/desktop/session]
+# Set the lock time out to 900 seconds before the session is considered idle
+idle-delay=uint32 900
+
+Update the system databases:
+
+$ sudo dconf update
+CCI-000057
+Prevent further access to the system by initiating a device lock after organization-defined time period of inactivity; and/or requiring the user to initiate a device lock before leaving the system unattended.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-11 a
+NIST SP 800-53 Revision 5 :: AC-11 a
+CCI-000060
+Conceal, via the device lock, information previously visible on the display with a publicly viewable image.
+NIST SP 800-53 :: AC-11 (1)
+NIST SP 800-53A :: AC-11 (1).1
+NIST SP 800-53 Revision 4 :: AC-11 (1)
+NIST SP 800-53 Revision 5 :: AC-11 (1)
+
+==========================================================================================================
+
+Group ID:
+V-258024
+Rule ID:
+SV-258024r1045100
+STIG ID:
+RHEL-09-271070
+SRG ID:
+SRG-OS-000029-GPOS-00010
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prevent a user from overriding the session idle-delay setting for the graphical user interface.
+Discussion:
+A session time-out lock is a temporary action taken when a user stops work and moves away from the immediate physical vicinity of the information system but does not logout because of the temporary nature of the absence. Rather than relying on the user to manually lock their operating system session prior to vacating the vicinity, the GNOME desktop can be configured to identify when a user's session has idled and take action to initiate the session lock. As such, users should not be allowed to change session settings.
+
+Satisfies: SRG-OS-000029-GPOS-00010, SRG-OS-000031-GPOS-00012
+Check Text:
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, the GNOME desktop environment. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+Verify RHEL 9 prevents a user from overriding settings for graphical user interfaces. 
+
+$ gsettings writable org.gnome.desktop.session idle-delay
+ 
+false
+ 
+If "idle-delay" is writable and the result is "true", this is a finding.
+Fix Text:
+Configure RHEL 9 to prevent a user from overriding settings for graphical user interfaces.
+
+Create a database to contain the systemwide screensaver settings (if it does not already exist) with the following command: 
+
+Note: The example below is using the database "local" for the system. If the system is using another database in "/etc/dconf/profile/user", the file should be created under the appropriate subdirectory.
+
+$ sudo touch /etc/dconf/db/local.d/locks/session
+
+Add the following setting to prevent nonprivileged users from modifying it:
+
+/org/gnome/desktop/session/idle-delay
+
+Run the following command to update the database:
+
+$ sudo dconf update
+CCI-000057
+Prevent further access to the system by initiating a device lock after organization-defined time period of inactivity; and/or requiring the user to initiate a device lock before leaving the system unattended.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-11 a
+NIST SP 800-53 Revision 5 :: AC-11 a
+CCI-000060
+Conceal, via the device lock, information previously visible on the display with a publicly viewable image.
+NIST SP 800-53 :: AC-11 (1)
+NIST SP 800-53A :: AC-11 (1).1
+NIST SP 800-53 Revision 4 :: AC-11 (1)
+NIST SP 800-53 Revision 5 :: AC-11 (1)
+
+==========================================================================================================
+
+Group ID:
+V-258025
+Rule ID:
+SV-258025r958402
+STIG ID:
+RHEL-09-271075
+SRG ID:
+SRG-OS-000029-GPOS-00010
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must initiate a session lock for graphical user interfaces when the screensaver is activated.
+Discussion:
+A session lock is a temporary action taken when a user stops work and moves away from the immediate physical vicinity of the information system but does not want to logout because of the temporary nature of the absence.
+Check Text:
+Verify RHEL 9 initiates a session lock for graphical user interfaces when the screensaver is activated with the following command:
+
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, the GNOME desktop environment. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+$ gsettings get org.gnome.desktop.screensaver lock-delay
+
+uint32 5
+
+If the "uint32" setting is not set to "5" or less, or is missing, this is a finding.
+Fix Text:
+Configure RHEL 9 to initiate a session lock for graphical user interfaces when a screensaver is activated.
+
+Create a database to contain the system-wide screensaver settings (if it does not already exist) with the following command: 
+
+Note: The example below is using the database "local" for the system, so if the system is using another database in "/etc/dconf/profile/user", the file should be created under the appropriate subdirectory.
+
+$ sudo touch /etc/dconf/db/local.d/00-screensaver
+
+[org/gnome/desktop/screensaver]
+lock-delay=uint32 5
+
+The "uint32" must be included along with the integer key values as shown.
+
+Update the system databases:
+
+$ sudo dconf update
+CCI-000057
+Prevent further access to the system by initiating a device lock after organization-defined time period of inactivity; and/or requiring the user to initiate a device lock before leaving the system unattended.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-11 a
+NIST SP 800-53 Revision 5 :: AC-11 a
+
+==========================================================================================================
+
+Group ID:
+V-258026
+Rule ID:
+SV-258026r1045103
+STIG ID:
+RHEL-09-271080
+SRG ID:
+SRG-OS-000029-GPOS-00010
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prevent a user from overriding the session lock-delay setting for the graphical user interface.
+Discussion:
+A session time-out lock is a temporary action taken when a user stops work and moves away from the immediate physical vicinity of the information system but does not logout because of the temporary nature of the absence. Rather than relying on the user to manually lock their operating system session prior to vacating the vicinity, the GNOME desktop can be configured to identify when a user's session has idled and take action to initiate the session lock. As such, users should not be allowed to change session settings.
+Check Text:
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, the GNOME desktop environment. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+Verify RHEL 9 prevents a user from overriding settings for graphical user interfaces. 
+
+$ gsettings writable org.gnome.desktop.screensaver lock-delay
+ 
+false
+ 
+If "lock-delay" is writable and the result is "true", this is a finding.
+Fix Text:
+Configure RHEL 9 to prevent a user from overriding settings for graphical user interfaces.
+
+Create a database to contain the systemwide screensaver settings (if it does not already exist) with the following command: 
+
+Note: The example below is using the database "local" for the system. If the system is using another database in "/etc/dconf/profile/user", the file should be created under the appropriate subdirectory.
+
+$ sudo touch /etc/dconf/db/local.d/locks/session
+
+Add the following setting to prevent nonprivileged users from modifying it:
+
+/org/gnome/desktop/screensaver/lock-delay
+
+Run the following command to update the database:
+
+$ sudo dconf update
+CCI-000057
+Prevent further access to the system by initiating a device lock after organization-defined time period of inactivity; and/or requiring the user to initiate a device lock before leaving the system unattended.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-11 a
+NIST SP 800-53 Revision 5 :: AC-11 a
+
+==========================================================================================================
+
+Group ID:
+V-258027
+Rule ID:
+SV-258027r1045106
+STIG ID:
+RHEL-09-271085
+SRG ID:
+SRG-OS-000031-GPOS-00012
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must conceal, via the session lock, information previously visible on the display with a publicly viewable image.
+Discussion:
+Setting the screensaver mode to blank-only conceals the contents of the display from passersby.
+Check Text:
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, the GNOME desktop environment. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+To ensure the screensaver is configured to be blank, run the following command:
+
+$ gsettings writable org.gnome.desktop.screensaver picture-uri
+ 
+false
+ 
+If "picture-uri" is writable and the result is "true", this is a finding.
+Fix Text:
+Configure RHEL 9 to prevent a user from overriding the picture-uri setting for graphical user interfaces.
+
+In the file "/etc/dconf/db/local.d/00-security-settings", add or update the following lines:
+
+[org/gnome/desktop/screensaver]
+picture-uri=''
+
+Prevent user modification by adding the following line to "/etc/dconf/db/local.d/locks/00-security-settings-lock":
+
+/org/gnome/desktop/screensaver/picture-uri
+
+Update the dconf system databases:
+
+$ sudo dconf update
+CCI-000060
+Conceal, via the device lock, information previously visible on the display with a publicly viewable image.
+NIST SP 800-53 :: AC-11 (1)
+NIST SP 800-53A :: AC-11 (1).1
+NIST SP 800-53 Revision 4 :: AC-11 (1)
+NIST SP 800-53 Revision 5 :: AC-11 (1)
+
+==========================================================================================================
+
+Group ID:
+V-258068
+Rule ID:
+SV-258068r1101950
+STIG ID:
+RHEL-09-412035
+SRG ID:
+SRG-OS-000163-GPOS-00072
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must automatically exit interactive command shell user sessions after 10 minutes of inactivity.
+Discussion:
+Terminating an idle interactive command shell user session within a short time period reduces the window of opportunity for unauthorized personnel to take control of it when left unattended in a virtual terminal or physical console.
+
+Satisfies: SRG-OS-000163-GPOS-00072, SRG-OS-000029-GPOS-00010
+Check Text:
+Verify RHEL 9 is configured to exit interactive command shell user sessions after 10 minutes of inactivity or less with the following command:
+
+$ sudo grep -i tmout /etc/profile /etc/profile.d/*.sh
+
+/etc/profile.d/tmout.sh:declare -xr TMOUT=600
+
+If "TMOUT" is not set to "600" or less in a script located in the "/etc/'profile.d/ directory, is missing or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to exit interactive command shell user sessions after 10 minutes of inactivity.
+
+Add or edit the following line in "/etc/profile.d/tmout.sh":
+
+#!/bin/bash
+
+declare -xr TMOUT=600
+CCI-000057
+Prevent further access to the system by initiating a device lock after organization-defined time period of inactivity; and/or requiring the user to initiate a device lock before leaving the system unattended.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-11 a
+NIST SP 800-53 Revision 5 :: AC-11 a
+CCI-001133
+Terminate the network connection associated with a communications session at the end of the session or after an organization-defined time period of inactivity.
+NIST SP 800-53 :: SC-10
+NIST SP 800-53A :: SC-10.1 (ii)
+NIST SP 800-53 Revision 4 :: SC-10
+NIST SP 800-53 Revision 5 :: SC-10
+

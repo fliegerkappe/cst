@@ -1,0 +1,334 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+SC-8 Transmission Confidentiality and Integrity
+************************************************************************************************************
+
+Group ID:
+V-257979
+Rule ID:
+SV-257979r958908
+STIG ID:
+RHEL-09-255015
+SRG ID:
+SRG-OS-000423-GPOS-00187
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+All RHEL 9 networked systems must have and implement SSH to protect the confidentiality and integrity of transmitted and received information, as well as information during preparation for transmission.
+Discussion:
+Without protection of the transmitted information, confidentiality and integrity may be compromised because unprotected communications can be intercepted and either read or altered. 
+
+This requirement applies to both internal and external networks and all types of information system components from which information can be transmitted (e.g., servers, mobile devices, notebook computers, printers, copiers, scanners, and facsimile machines). Communication paths outside the physical protection of a controlled boundary are exposed to the possibility of interception and modification. 
+
+Protecting the confidentiality and integrity of organizational information can be accomplished by physical means (e.g., employing physical distribution systems) or by logical means (e.g., employing cryptographic techniques). If physical means of protection are employed, then logical means (cryptography) do not have to be employed, and vice versa.
+
+Satisfies: SRG-OS-000423-GPOS-00187, SRG-OS-000424-GPOS-00188, SRG-OS-000425-GPOS-00189, SRG-OS-000426-GPOS-00190
+Check Text:
+Verify that "sshd" is active with the following command:
+
+$ systemctl is-active sshd
+
+active
+
+If the "sshd" service is not active, this is a finding.
+Fix Text:
+To enable the sshd service run the following command:
+
+$ systemctl enable --now sshd
+CCI-002418
+Protect the confidentiality and/or integrity of transmitted information.
+NIST SP 800-53 Revision 4 :: SC-8
+NIST SP 800-53 Revision 5 :: SC-8
+CCI-002420
+Maintain the confidentiality and/or integrity of information during preparation for transmission.
+NIST SP 800-53 Revision 4 :: SC-8 (2)
+NIST SP 800-53 Revision 5 :: SC-8 (2)
+CCI-002421
+Implement cryptographic mechanisms to prevent unauthorized disclosure of information and/or detect changes to information during transmission.
+NIST SP 800-53 Revision 4 :: SC-8 (1)
+NIST SP 800-53 Revision 5 :: SC-8 (1)
+CCI-002422
+Maintain the confidentiality and/or integrity of information during reception.
+NIST SP 800-53 Revision 4 :: SC-8 (2)
+NIST SP 800-53 Revision 5 :: SC-8 (2)
+
+************************************************************************************************************
+
+Group ID:
+V-258040
+Rule ID:
+SV-258040r991568
+STIG ID:
+RHEL-09-291040
+SRG ID:
+SRG-OS-000299-GPOS-00117
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 wireless network adapters must be disabled.
+Discussion:
+This requirement applies to wireless peripheral technologies (e.g., wireless mice, keyboards, displays, etc.) used with RHEL 9 systems. Wireless peripherals (e.g., Wi-Fi/Bluetooth/IR keyboards, mice and pointing devices, and near field communications [NFC]) present a unique challenge by creating an open, unsecured port on a computer. Wireless peripherals must meet DOD requirements for wireless data transmission and be approved for use by the Authorizing Official (AO). Even though some wireless peripherals, such as mice and pointing devices, do not ordinarily carry information that need to be protected, modification of communications with these wireless peripherals may be used to compromise the RHEL 9 operating system.
+
+Satisfies: SRG-OS-000299-GPOS-00117, SRG-OS-000300-GPOS-00118, SRG-OS-000424-GPOS-00188, SRG-OS-000481-GPOS-00481
+Check Text:
+Verify there are no wireless interfaces configured on the system with the following command:
+
+Note: This requirement is Not Applicable for systems that do not have physical wireless network radios.
+
+$ nmcli device status
+
+DEVICE                    TYPE            STATE                    CONNECTION
+virbr0                      bridge         connected             virbr0
+wlp7s0                    wifi              connected            wifiSSID
+enp6s0                    ethernet     disconnected        --
+p2p-dev-wlp7s0     wifi-p2p     disconnected        --
+lo                             loopback    unmanaged           --
+virbr0-nic                tun              unmanaged          --
+
+If a wireless interface is configured and has not been documented and approved by the information system security officer (ISSO), this is a finding.
+Fix Text:
+Configure the system to disable all wireless network interfaces with the following command:
+
+$ nmcli radio all off
+CCI-001443
+Protect wireless access to the system using authentication of users and/or devices.
+NIST SP 800-53 :: AC-18 (1)
+NIST SP 800-53A :: AC-18 (1).1
+NIST SP 800-53 Revision 4 :: AC-18 (1)
+NIST SP 800-53 Revision 5 :: AC-18 (1)
+CCI-001444
+Protect wireless access to the system using encryption.
+NIST SP 800-53 :: AC-18 (1)
+NIST SP 800-53A :: AC-18 (1).1
+NIST SP 800-53 Revision 4 :: AC-18 (1)
+NIST SP 800-53 Revision 5 :: AC-18 (1)
+CCI-002418
+Protect the confidentiality and/or integrity of transmitted information.
+NIST SP 800-53 Revision 4 :: SC-8
+NIST SP 800-53 Revision 5 :: SC-8
+CCI-002421
+Implement cryptographic mechanisms to prevent unauthorized disclosure of information and/or detect changes to information during transmission.
+NIST SP 800-53 Revision 4 :: SC-8 (1)
+NIST SP 800-53 Revision 5 :: SC-8 (1)
+
+************************************************************************************************************
+
+Group ID:
+V-258230
+Rule ID:
+SV-258230r958408
+STIG ID:
+RHEL-09-671010
+SRG ID:
+SRG-OS-000033-GPOS-00014
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enable FIPS mode.
+Discussion:
+Use of weak or untested encryption algorithms undermines the purposes of utilizing encryption to protect data. The operating system must implement cryptographic modules adhering to the higher standards approved by the federal government since this provides assurance they have been tested and validated. This includes NIST FIPS-validated cryptography for the following: Provisioning digital signatures, generating cryptographic hashes, and to protect data requiring data-at-rest protections in accordance with applicable federal laws, Executive Orders, directives, policies, regulations, and standards.
+
+Satisfies: SRG-OS-000033-GPOS-00014, SRG-OS-000125-GPOS-00065, SRG-OS-000396-GPOS-00176, SRG-OS-000423-GPOS-00187, SRG-OS-000478-GPOS-00223
+Check Text:
+Verify that RHEL 9 is in FIPS mode with the following command:
+
+$ sudo fips-mode-setup --check
+
+FIPS mode is enabled.
+
+If FIPS mode is not enabled, this is a finding.
+Fix Text:
+Configure the operating system to implement FIPS mode with the following command
+
+$ sudo fips-mode-setup --enable
+
+Reboot the system for the changes to take effect.
+CCI-000068
+Implement cryptographic mechanisms to protect the confidentiality of remote access sessions.
+NIST SP 800-53 :: AC-17 (2)
+NIST SP 800-53A :: AC-17 (2).1
+NIST SP 800-53 Revision 4 :: AC-17 (2)
+NIST SP 800-53 Revision 5 :: AC-17 (2)
+CCI-000877
+Employ strong authentication in the establishment of nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 :: MA-4 c
+NIST SP 800-53A :: MA-4.1 (iv)
+NIST SP 800-53 Revision 4 :: MA-4 c
+NIST SP 800-53 Revision 5 :: MA-4 c
+CCI-002418
+Protect the confidentiality and/or integrity of transmitted information.
+NIST SP 800-53 Revision 4 :: SC-8
+NIST SP 800-53 Revision 5 :: SC-8
+CCI-002450
+Implement organization-defined types of cryptography for each specified cryptography use.
+NIST SP 800-53 Revision 4 :: SC-13
+NIST SP 800-53 Revision 5 :: SC-13 b
+
+************************************************************************************************************
+
+Group ID:
+V-258242
+Rule ID:
+SV-258242r958908
+STIG ID:
+RHEL-09-672050
+SRG ID:
+SRG-OS-000423-GPOS-00187
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must implement DOD-approved encryption in the bind package.
+Discussion:
+Without cryptographic integrity protections, information can be altered by unauthorized users without detection.
+
+Cryptographic mechanisms used for protecting the integrity of information include, for example, signed hash functions using asymmetric cryptography enabling distribution of the public key to verify the hash information while maintaining the confidentiality of the secret key used to generate the hash.
+
+RHEL 9 incorporates system-wide crypto policies by default. The employed algorithms can be viewed in the /etc/crypto-policies/back-ends/ directory.
+
+Satisfies: SRG-OS-000423-GPOS-00187, SRG-OS-000426-GPOS-00190
+Check Text:
+Verify that BIND uses the system crypto policy with the following command:
+
+Note: If the "bind" package is not installed, this requirement is Not Applicable.
+
+$ sudo grep include /etc/named.conf 
+
+include "/etc/crypto-policies/back-ends/bind.config";' 
+
+If BIND is installed and the BIND config file doesn't contain the  include "/etc/crypto-policies/back-ends/bind.config" directive, or the line is commented out, this is a finding.
+Fix Text:
+Configure BIND to use the system crypto policy.
+
+Add the following line to the "options" section in "/etc/named.conf":
+
+include "/etc/crypto-policies/back-ends/bind.config";
+CCI-002418
+Protect the confidentiality and/or integrity of transmitted information.
+NIST SP 800-53 Revision 4 :: SC-8
+NIST SP 800-53 Revision 5 :: SC-8
+CCI-002422
+Maintain the confidentiality and/or integrity of information during reception.
+NIST SP 800-53 Revision 4 :: SC-8 (2)
+NIST SP 800-53 Revision 5 :: SC-8 (2)
+
+************************************************************************************************************
+
+Group ID:
+V-257978
+Rule ID:
+SV-257978r1045013
+STIG ID:
+RHEL-09-255010
+SRG ID:
+SRG-OS-000423-GPOS-00187
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+All RHEL 9 networked systems must have SSH installed.
+Discussion:
+Without protection of the transmitted information, confidentiality and integrity may be compromised because unprotected communications can be intercepted and either read or altered. 
+
+This requirement applies to both internal and external networks and all types of information system components from which information can be transmitted (e.g., servers, mobile devices, notebook computers, printers, copiers, scanners, and facsimile machines). Communication paths outside the physical protection of a controlled boundary are exposed to the possibility of interception and modification. 
+
+Protecting the confidentiality and integrity of organizational information can be accomplished by physical means (e.g., employing physical distribution systems) or by logical means (e.g., employing cryptographic techniques). If physical means of protection are employed, then logical means (cryptography) do not have to be employed, and vice versa.
+
+Satisfies: SRG-OS-000423-GPOS-00187, SRG-OS-000424-GPOS-00188, SRG-OS-000425-GPOS-00189, SRG-OS-000426-GPOS-00190
+Check Text:
+Verify that RHEL 9 has the openssh-server package installed with the following command:
+
+$ dnf list --installed openssh-server
+
+Example output:
+
+openssh-server.x86_64          8.7p1-8.el9
+
+If the "openssh-server" package is not installed, this is a finding.
+Fix Text:
+The openssh-server package can be installed with the following command:
+ 
+$ sudo dnf install openssh-server
+CCI-002418
+Protect the confidentiality and/or integrity of transmitted information.
+NIST SP 800-53 Revision 4 :: SC-8
+NIST SP 800-53 Revision 5 :: SC-8
+CCI-002420
+Maintain the confidentiality and/or integrity of information during preparation for transmission.
+NIST SP 800-53 Revision 4 :: SC-8 (2)
+NIST SP 800-53 Revision 5 :: SC-8 (2)
+CCI-002421
+Implement cryptographic mechanisms to prevent unauthorized disclosure of information and/or detect changes to information during transmission.
+NIST SP 800-53 Revision 4 :: SC-8 (1)
+NIST SP 800-53 Revision 5 :: SC-8 (1)
+CCI-002422
+Maintain the confidentiality and/or integrity of information during reception.
+NIST SP 800-53 Revision 4 :: SC-8 (2)
+NIST SP 800-53 Revision 5 :: SC-8 (2)
+
+************************************************************************************************************
+
+Group ID:
+V-257994
+Rule ID:
+SV-257994r1045051
+STIG ID:
+RHEL-09-255090
+SRG ID:
+SRG-OS-000423-GPOS-00187
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must force a frequent session key renegotiation for SSH connections to the server.
+Discussion:
+Without protection of the transmitted information, confidentiality and integrity may be compromised because unprotected communications can be intercepted and either read or altered. 
+
+This requirement applies to both internal and external networks and all types of information system components from which information can be transmitted (e.g., servers, mobile devices, notebook computers, printers, copiers, scanners, and facsimile machines). Communication paths outside the physical protection of a controlled boundary are exposed to the possibility of interception and modification. 
+
+Protecting the confidentiality and integrity of organizational information can be accomplished by physical means (e.g., employing physical distribution systems) or by logical means (e.g., employing cryptographic techniques). If physical means of protection are employed, then logical means (cryptography) do not have to be employed, and vice versa.
+
+Session key regeneration limits the chances of a session key becoming compromised.
+
+Satisfies: SRG-OS-000423-GPOS-00187, SRG-OS-000033-GPOS-00014, SRG-OS-000424-GPOS-00188
+Check Text:
+Verify the SSH server is configured to force frequent session key renegotiation with the following command:
+
+$ sudo /usr/sbin/sshd -dd 2>&1 | awk '/filename/ {print $4}' | tr -d '\r' | tr '\n' ' ' | xargs sudo grep -iH '^\s*rekeylimit'
+
+RekeyLimit 1G 1h
+
+If "RekeyLimit" does not have a maximum data amount and maximum time defined, is missing, or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to force a frequent session key renegotiation for SSH connections to the server by adding or modifying the following line in the "/etc/ssh/sshd_config" or in a file in "/etc/ssh/sshd_config.d":
+
+RekeyLimit 1G 1h
+
+Restart the SSH daemon for the settings to take effect.
+
+$ sudo systemctl restart sshd.service
+CCI-000068
+Implement cryptographic mechanisms to protect the confidentiality of remote access sessions.
+NIST SP 800-53 :: AC-17 (2)
+NIST SP 800-53A :: AC-17 (2).1
+NIST SP 800-53 Revision 4 :: AC-17 (2)
+NIST SP 800-53 Revision 5 :: AC-17 (2)
+CCI-002418
+Protect the confidentiality and/or integrity of transmitted information.
+NIST SP 800-53 Revision 4 :: SC-8
+NIST SP 800-53 Revision 5 :: SC-8
+CCI-002421
+Implement cryptographic mechanisms to prevent unauthorized disclosure of information and/or detect changes to information during transmission.
+NIST SP 800-53 Revision 4 :: SC-8 (1)
+NIST SP 800-53 Revision 5 :: SC-8 (1)

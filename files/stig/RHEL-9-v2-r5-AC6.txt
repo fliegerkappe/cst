@@ -1,0 +1,432 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AC-6 Least Privilege
+************************************************************************************************************
+
+Group ID:
+V-257784
+Rule ID:
+SV-257784r1044832
+STIG ID:
+RHEL-09-211045
+SRG ID:
+SRG-OS-000324-GPOS-00125
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+The systemd Ctrl-Alt-Delete burst key sequence in RHEL 9 must be disabled.
+Discussion:
+A locally logged-on user who presses Ctrl-Alt-Delete when at the console can reboot the system. If accidentally pressed, as could happen in the case of a mixed OS environment, this can create the risk of short-term loss of availability of systems due to unintentional reboot. In a graphical user environment, risk of unintentional reboot from the Ctrl-Alt-Delete sequence is reduced because the user will be prompted before any action is taken.
+
+Satisfies: SRG-OS-000324-GPOS-00125, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify RHEL 9 is configured to not reboot the system when Ctrl-Alt-Delete is pressed seven times within two seconds with the following command:
+
+$ grep -i ctrl /etc/systemd/system.conf
+
+CtrlAltDelBurstAction=none
+
+If the "CtrlAltDelBurstAction" is not set to "none", commented out, or is missing, this is a finding.
+Fix Text:
+Configure the system to disable the CtrlAltDelBurstAction by added or modifying the following line in the "/etc/systemd/system.conf" configuration file:
+
+CtrlAltDelBurstAction=none
+
+Reload the daemon for this change to take effect.
+
+$ sudo systemctl daemon-reload
+CCI-002235
+Prevent non-privileged users from executing privileged functions.
+NIST SP 800-53 Revision 4 :: AC-6 (10)
+NIST SP 800-53 Revision 5 :: AC-6 (10)
+
+==========================================================================================================
+
+Group ID:
+V-257785
+Rule ID:
+SV-257785r1044833
+STIG ID:
+RHEL-09-211050
+SRG ID:
+SRG-OS-000324-GPOS-00125
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+The x86 Ctrl-Alt-Delete key sequence must be disabled on RHEL 9.
+Discussion:
+A locally logged-on user who presses Ctrl-Alt-Delete when at the console can reboot the system. If accidentally pressed, as could happen in the case of a mixed OS environment, this can create the risk of short-term loss of availability of systems due to unintentional reboot. In a graphical user environment, risk of unintentional reboot from the Ctrl-Alt-Delete sequence is reduced because the user will be prompted before any action is taken.
+
+Satisfies: SRG-OS-000324-GPOS-00125, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify RHEL 9 is not configured to reboot the system when Ctrl-Alt-Delete is pressed with the following command:
+
+$ sudo systemctl status ctrl-alt-del.target
+
+ctrl-alt-del.target
+Loaded: masked (Reason: Unit ctrl-alt-del.target is masked.)
+Active: inactive (dead)
+
+If the "ctrl-alt-del.target" is loaded and not masked, this is a finding.
+Fix Text:
+Configure RHEL 9 to disable the ctrl-alt-del.target with the following command:
+
+$ sudo systemctl disable --now ctrl-alt-del.target
+$ sudo systemctl mask --now ctrl-alt-del.target
+CCI-002235
+Prevent non-privileged users from executing privileged functions.
+NIST SP 800-53 Revision 4 :: AC-6 (10)
+NIST SP 800-53 Revision 5 :: AC-6 (10)
+
+==========================================================================================================
+
+Group ID:
+V-257786
+Rule ID:
+SV-257786r1044834
+STIG ID:
+RHEL-09-211055
+SRG ID:
+SRG-OS-000324-GPOS-00125
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 debug-shell systemd service must be disabled.
+Discussion:
+The debug-shell requires no authentication and provides root privileges to anyone who has physical access to the machine. While this feature is disabled by default, masking it adds an additional layer of assurance that it will not be enabled via a dependency in systemd. This also prevents attackers with physical access from trivially bypassing security on the machine through valid troubleshooting configurations and gaining root access when the system is rebooted.
+
+Satisfies: SRG-OS-000324-GPOS-00125, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify RHEL 9 is configured to mask the debug-shell systemd service with the following command:
+
+$ sudo systemctl status debug-shell.service
+
+debug-shell.service
+Loaded: masked (Reason: Unit debug-shell.service is masked.)
+Active: inactive (dead)
+
+If the "debug-shell.service" is loaded and not masked, this is a finding.
+Fix Text:
+Configure RHEL 9 to mask the debug-shell systemd service with the following command:
+
+$ sudo systemctl disable --now debug-shell.service
+$ sudo systemctl mask --now debug-shell.service
+CCI-002235
+Prevent non-privileged users from executing privileged functions.
+NIST SP 800-53 Revision 4 :: AC-6 (10)
+NIST SP 800-53 Revision 5 :: AC-6 (10)
+
+==========================================================================================================
+
+Group ID:
+V-257801
+Rule ID:
+SV-257801r1106279
+STIG ID:
+RHEL-09-213030
+SRG ID:
+SRG-OS-000312-GPOS-00123
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enable kernel parameters to enforce discretionary access control on hardlinks.
+Discussion:
+Discretionary Access Control (DAC) is based on the notion that individual users are "owners" of objects and therefore have discretion over who should be authorized to access the object and in which mode (e.g., read or write). Ownership is usually acquired as a consequence of creating the object or via specified ownership assignment. DAC allows the owner to determine who will have access to objects they control. An example of DAC includes user-controlled file permissions.
+
+When discretionary access control policies are implemented, subjects are not constrained with regard to what actions they can take with information for which they have already been granted access. Thus, subjects that have been granted access to information are not prevented from passing (i.e., the subjects have the discretion to pass) the information to other subjects or objects. A subject that is constrained in its operation by Mandatory Access Control policies is still able to operate under the less rigorous constraints of this requirement. Thus, while Mandatory Access Control imposes constraints preventing a subject from passing information to another subject operating at a different sensitivity level, this requirement permits the subject to pass the information to any subject at the same sensitivity level. The policy is bounded by the information system boundary. Once the information is passed outside the control of the information system, additional means may be required to ensure the constraints remain in effect. While the older, more traditional definitions of discretionary access control require identity-based access control, that limitation is not required for this use of discretionary access control.
+
+By enabling the fs.protected_hardlinks kernel parameter, users can no longer create soft or hard links to files they do not own. Disallowing such hardlinks mitigate vulnerabilities based on insecure file system accessed by privileged programs, avoiding an exploitation vector exploiting unsafe use of open() or creat().
+
+The sysctl --system command will load settings from all system configuration files. All configuration files are sorted by their filename in lexicographic order, regardless of the directories in which they reside. If multiple files specify the same option, the entry in the file with the lexicographically latest name will take precedence. Files are read from directories in the following list from top to bottom. Once a file of a given filename is loaded, any file of the same name in subsequent directories is ignored.
+
+/etc/sysctl.d/*.conf
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+
+Satisfies: SRG-OS-000312-GPOS-00122, SRG-OS-000312-GPOS-00123, SRG-OS-000312-GPOS-00124, SRG-OS-000324-GPOS-00125
+Check Text:
+Verify RHEL 9 is configured to enable DAC on hardlinks.
+
+Check the status of the fs.protected_hardlinks kernel parameter.
+
+$ sudo sysctl fs.protected_hardlinks
+
+fs.protected_hardlinks = 1
+
+If "fs.protected_hardlinks" is not set to "1" or is missing, this is a finding.
+
+Check that the configuration files are present to enable this kernel parameter.
+
+$ sudo grep -r fs.protected_hardlinks /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
+
+/etc/sysctl.d/99-sysctl.conf:fs.protected_hardlinks = 1
+
+If "fs.protected_hardlinks" is not set to "1", is missing, or commented out, this is a finding.
+
+If conflicting results are returned, this is a finding.
+Fix Text:
+Add or edit the following line in a system configuration file in the "/etc/sysctl.d/" directory:
+
+fs.protected_hardlinks = 1
+
+Remove any configurations that conflict with the above from the following locations: 
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+/etc/sysctl.d/*.conf
+
+Load settings from all system configuration files with the following command:
+
+$ sudo sysctl --system
+CCI-002165
+Enforce organization-defined discretionary access control policies over defined subjects and objects.
+NIST SP 800-53 Revision 4 :: AC-3 (4)
+NIST SP 800-53 Revision 5 :: AC-3 (4)
+CCI-002235
+Prevent non-privileged users from executing privileged functions.
+NIST SP 800-53 Revision 4 :: AC-6 (10)
+NIST SP 800-53 Revision 5 :: AC-6 (10)
+
+==========================================================================================================
+
+
+Group ID:
+V-257802
+Rule ID:
+SV-257802r1106282
+STIG ID:
+RHEL-09-213035
+SRG ID:
+SRG-OS-000312-GPOS-00123
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enable kernel parameters to enforce discretionary access control on symlinks.
+Discussion:
+Discretionary Access Control (DAC) is based on the notion that individual users are "owners" of objects and therefore have discretion over who should be authorized to access the object and in which mode (e.g., read or write). Ownership is usually acquired as a consequence of creating the object or via specified ownership assignment. DAC allows the owner to determine who will have access to objects they control. An example of DAC includes user-controlled file permissions.
+
+When discretionary access control policies are implemented, subjects are not constrained with regard to what actions they can take with information for which they have already been granted access. Thus, subjects that have been granted access to information are not prevented from passing (i.e., the subjects have the discretion to pass) the information to other subjects or objects. A subject that is constrained in its operation by Mandatory Access Control policies is still able to operate under the less rigorous constraints of this requirement. Thus, while Mandatory Access Control imposes constraints preventing a subject from passing information to another subject operating at a different sensitivity level, this requirement permits the subject to pass the information to any subject at the same sensitivity level. The policy is bounded by the information system boundary. Once the information is passed outside the control of the information system, additional means may be required to ensure the constraints remain in effect. While the older, more traditional definitions of discretionary access control require identity-based access control, that limitation is not required for this use of discretionary access control.
+
+By enabling the fs.protected_symlinks kernel parameter, symbolic links are permitted to be followed only when outside a sticky world-writable directory, or when the UID of the link and follower match, or when the directory owner matches the symlink's owner. Disallowing such symlinks helps mitigate vulnerabilities based on insecure file system accessed by privileged programs, avoiding an exploitation vector exploiting unsafe use of open() or creat().
+
+The sysctl --system command will load settings from all system configuration files. All configuration files are sorted by their filename in lexicographic order, regardless of the directories in which they reside. If multiple files specify the same option, the entry in the file with the lexicographically latest name will take precedence. Files are read from directories in the following list from top to bottom. Once a file of a given filename is loaded, any file of the same name in subsequent directories is ignored.
+
+/etc/sysctl.d/*.conf
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+
+Satisfies: SRG-OS-000312-GPOS-00122, SRG-OS-000312-GPOS-00123, SRG-OS-000312-GPOS-00124, SRG-OS-000324-GPOS-00125
+Check Text:
+Verify RHEL 9 is configured to enable DAC on symlinks.
+
+Check the status of the fs.protected_symlinks kernel parameter.
+
+$ sudo sysctl fs.protected_symlinks
+
+fs.protected_symlinks = 1
+
+If "fs.protected_symlinks" is not set to "1" or is missing, this is a finding.
+
+Check that the configuration files are present to enable this kernel parameter.
+
+$ sudo grep -r fs.protected_symlinks /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
+
+/etc/sysctl.d/99-sysctl.conf:fs.protected_symlinks = 1
+
+If "fs.protected_symlinks" is not set to "1", is missing, or commented out, this is a finding.
+
+If conflicting results are returned, this is a finding.
+Fix Text:
+Configure RHEL 9 to enable DAC on symlinks.
+
+Add or edit the following line in a system configuration file in the "/etc/sysctl.d/" directory:
+
+fs.protected_symlinks = 1
+
+Remove any configurations that conflict with the above from the following locations: 
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+/etc/sysctl.d/*.conf
+
+Load settings from all system configuration files with the following command:
+
+$ sudo sysctl --system
+CCI-002165
+Enforce organization-defined discretionary access control policies over defined subjects and objects.
+NIST SP 800-53 Revision 4 :: AC-3 (4)
+NIST SP 800-53 Revision 5 :: AC-3 (4)
+CCI-002235
+Prevent non-privileged users from executing privileged functions.
+NIST SP 800-53 Revision 4 :: AC-6 (10)
+NIST SP 800-53 Revision 5 :: AC-6 (10)
+
+==========================================================================================================
+
+Group ID:
+V-258083
+Rule ID:
+SV-258083r1045168
+STIG ID:
+RHEL-09-432010
+SRG ID:
+SRG-OS-000324-GPOS-00125
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the sudo package installed.
+Discussion:
+"sudo" is a program designed to allow a system administrator to give limited root privileges to users and log root activity. The basic philosophy is to give as few privileges as possible but still allow system users to get their work done.
+Check Text:
+Verify that RHEL 9 sudo package is installed with the following command:
+
+$ dnf list --installed sudo
+
+Example output:
+
+sudo.x86_64          1.9.5p2-7.el9
+
+If the "sudo" package is not installed, this is a finding.
+Fix Text:
+The  sudo  package can be installed with the following command:
+ 
+$ sudo dnf install sudo
+CCI-002235
+Prevent non-privileged users from executing privileged functions.
+NIST SP 800-53 Revision 4 :: AC-6 (10)
+NIST SP 800-53 Revision 5 :: AC-6 (10)
+
+==========================================================================================================
+
+Group ID:
+V-258176
+Rule ID:
+SV-258176r1106366
+STIG ID:
+RHEL-09-654010
+SRG ID:
+SRG-OS-000326-GPOS-00126
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must audit uses of the "execve" system call.
+Discussion:
+Misuse of privileged functions, either intentionally or unintentionally by authorized users, or by unauthorized external entities that have compromised information system accounts, is a serious and ongoing concern and can have significant adverse impacts on organizations. Auditing the use of privileged functions is one way to detect such misuse and identify the risk from insider threats and the advanced persistent threat.
+
+Satisfies: SRG-OS-000326-GPOS-00126, SRG-OS-000327-GPOS-00127
+Check Text:
+Verify RHEL 9 is configured to audit the execution of the "execve" system call with the following command:
+
+$ sudo auditctl -l | grep execve
+
+-a always,exit -S arch=b32 -S execve -C uid!=euid -F euid=0 -F key=execpriv
+-a always,exit -S arch=b64 -S execve -C uid!=euid -F euid=0 -F key=execpriv
+-a always,exit -S arch=b32 -S execve -C gid!=egid -F egid=0 -F key=execpriv
+-a always,exit -S arch=b64 -S execve -C gid!=egid -F egid=0 -F key=execpriv
+
+If the command does not return all lines, or the lines are commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to audit the execution of the "execve" system call.
+
+Add or update the following file system rules to "/etc/audit/rules.d/audit.rules":
+
+-a always,exit -F arch=b32 -S execve -C uid!=euid -F euid=0 -k execpriv 
+-a always,exit -F arch=b64 -S execve -C uid!=euid -F euid=0 -k execpriv
+-a always,exit -F arch=b32 -S execve -C gid!=egid -F egid=0 -k execpriv 
+-a always,exit -F arch=b64 -S execve -C gid!=egid -F egid=0 -k execpriv 
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-002233
+Prevent the organization-defined software from executing at higher privilege levels than users executing the software.
+NIST SP 800-53 Revision 4 :: AC-6 (8)
+NIST SP 800-53 Revision 5 :: AC-6 (8)
+CCI-002234
+Log the execution of privileged functions.
+NIST SP 800-53 Revision 4 :: AC-6 (9)
+NIST SP 800-53 Revision 5 :: AC-6 (9)
+
+
+==========================================================================================================
+
+Group ID:
+V-272496
+Rule ID:
+SV-272496r1082184
+STIG ID:
+RHEL-09-431016
+SRG ID:
+SRG-OS-000445-GPOS-00199
+Severity:
+CAT II
+Legacy IDs:
+SV-70979, V-56719
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must elevate the SELinux context when an administrator calls the sudo command.
+Discussion:
+Without verification of the security functions, security functions may not operate correctly and the failure may go unnoticed. Security function is defined as the hardware, software, and/or firmware of the information system responsible for enforcing the system security policy and supporting the isolation of code and data on which the protection is based. Security functionality includes, but is not limited to, establishing system accounts, configuring access authorizations (i.e., permissions, privileges), setting events to be audited, and setting intrusion detection parameters.
+
+This requirement applies to operating systems performing security function verification/testing and/or systems and environments that require this functionality.
+
+Preventing nonprivileged users from executing privileged functions mitigates the risk that unauthorized individuals or processes may gain unnecessary access to information or privileges.
+
+Privileged functions include, for example, establishing accounts, performing system integrity checks, or administering cryptographic key management activities. Nonprivileged users are individuals who do not possess appropriate authorizations. Circumventing intrusion detection and prevention mechanisms or malicious code protection mechanisms are examples of privileged functions that require protection from nonprivileged users.
+Check Text:
+Verify that RHEL 9 elevates the SELinux context when an administrator calls the sudo command with the following command:
+
+This command must be run as root:
+
+# grep -r sysadm_r /etc/sudoers /etc/sudoers.d
+%{designated_group_or_user_name} ALL=(ALL) TYPE=sysadm_t ROLE=sysadm_r ALL
+
+If conflicting results are returned, this is a finding.
+
+If a designated sudoers administrator group or account(s) is not configured to elevate the SELinux type and role to "sysadm_t" and "sysadm_r" with the use of the sudo command, this is a finding.
+Fix Text:
+Configure RHEL 9 to elevate the SELinux context when an administrator calls the sudo command.
+
+Edit a file in the "/etc/sudoers.d" directory with the following command:
+
+$ sudo visudo -f /etc/sudoers.d/<customfile>
+
+Use the following example to build the <customfile> in the /etc/sudoers.d directory to allow any administrator belonging to a designated sudoers admin group to elevate their SELinux context with the use of the sudo command:
+
+%{designated_group_or_user_name} ALL=(ALL) TYPE=sysadm_t ROLE=sysadm_r ALL
+
+Remove any configurations that conflict with the above from the following locations:
+ 
+/etc/sudoers
+/etc/sudoers.d/
+CCI-002235
+Prevent non-privileged users from executing privileged functions.
+NIST SP 800-53 Revision 4 :: AC-6 (10)
+NIST SP 800-53 Revision 5 :: AC-6 (10)

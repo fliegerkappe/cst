@@ -1,0 +1,41 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+SC-24 Fail In A Known State
+************************************************************************************************************
+
+Group ID:
+V-257783
+Rule ID:
+SV-257783r991562
+STIG ID:
+RHEL-09-211040
+SRG ID:
+SRG-OS-000269-GPOS-00103
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 systemd-journald service must be enabled.
+Discussion:
+In the event of a system failure, RHEL 9 must preserve any information necessary to determine cause of failure and any information necessary to return to operations with least disruption to system processes.
+Check Text:
+Verify that "systemd-journald" is active with the following command:
+
+$ systemctl is-active systemd-journald
+
+active
+
+If the systemd-journald service is not active, this is a finding.
+Fix Text:
+To enable the systemd-journald service, run the following command:
+
+$ sudo systemctl enable --now systemd-journald
+CCI-001665
+Preserve organization-defined system state information in the event of a system failure.
+NIST SP 800-53 :: SC-24
+NIST SP 800-53A :: SC-24.1 (v)
+NIST SP 800-53 Revision 4 :: SC-24
+NIST SP 800-53 Revision 5 :: SC-24

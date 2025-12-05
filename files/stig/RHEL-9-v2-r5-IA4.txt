@@ -1,0 +1,58 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+IA-4 Identifier Management
+************************************************************************************************************
+
+Group ID:
+V-258049    (See AC-2 Account Management: V-258049)
+Rule ID:
+SV-258049r1015092
+STIG ID:
+RHEL-09-411050
+SRG ID:
+SRG-OS-000118-GPOS-00060
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must disable account identifiers (individuals, groups, roles, and devices) after 35 days of inactivity.
+Discussion:
+Inactive identifiers pose a risk to systems and applications because attackers may exploit an inactive identifier and potentially obtain undetected access to the system.
+
+Disabling inactive accounts ensures that accounts which may not have been responsibly removed are not available to attackers who may have compromised their credentials.
+
+Owners of inactive accounts will not notice if unauthorized access to their user account has been obtained.
+Check Text:
+Verify that RHEL 9 account identifiers (individuals, groups, roles, and devices) are disabled after 35 days of inactivity with the following command:
+
+Check the account inactivity value by performing the following command:
+
+$ sudo grep -i inactive /etc/default/useradd
+
+INACTIVE=35
+
+If "INACTIVE" is set to "-1", a value greater than "35", or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to disable account identifiers after 35 days of inactivity after the password expiration. 
+
+Run the following command to change the configuration for useradd:
+
+$ sudo useradd -D -f 35
+
+The recommendation is 35 days, but a lower value is acceptable.
+CCI-003627
+Disable accounts when the accounts have expired.
+NIST SP 800-53 Revision 5 :: AC-2 (3) (a)
+CCI-003628
+Disable accounts when the accounts are no longer associated to a user.
+NIST SP 800-53 Revision 5 :: AC-2 (3) (b)
+CCI-000795
+The organization manages information system identifiers by disabling the identifier after an organization-defined time period of inactivity.
+NIST SP 800-53 :: IA-4 e
+NIST SP 800-53A :: IA-4.1 (iii)
+NIST SP 800-53 Revision 4 :: IA-4 e
+
+

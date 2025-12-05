@@ -1,0 +1,335 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AU-7 Audit Record Reduction and Report Generation
+************************************************************************************************************
+
+Group ID:
+V-258151
+Rule ID:
+SV-258151r1045298
+STIG ID:
+RHEL-09-653010
+SRG ID:
+SRG-OS-000062-GPOS-00031
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit package must be installed.
+Discussion:
+Without establishing what type of events occurred, the source of events, where events occurred, and the outcome of events, it would be difficult to establish, correlate, and investigate the events leading up to an outage or attack.
+
+Audit record content that may be necessary to satisfy this requirement includes, for example, time stamps, source and destination addresses, user/process identifiers, event descriptions, success/fail indications, filenames involved, and access control or flow control rules invoked.
+
+Associating event types with detected events in audit logs provides a means of investigating an attack, recognizing resource utilization or capacity thresholds, or identifying an improperly configured RHEL 9 system.
+
+Satisfies: SRG-OS-000062-GPOS-00031, SRG-OS-000037-GPOS-00015, SRG-OS-000038-GPOS-00016, SRG-OS-000039-GPOS-00017, SRG-OS-000040-GPOS-00018, SRG-OS-000041-GPOS-00019, SRG-OS-000042-GPOS-00021, SRG-OS-000051-GPOS-00024, SRG-OS-000054-GPOS-00025, SRG-OS-000122-GPOS-00063, SRG-OS-000254-GPOS-00095, SRG-OS-000255-GPOS-00096, SRG-OS-000337-GPOS-00129, SRG-OS-000348-GPOS-00136, SRG-OS-000349-GPOS-00137, SRG-OS-000350-GPOS-00138, SRG-OS-000351-GPOS-00139, SRG-OS-000352-GPOS-00140, SRG-OS-000353-GPOS-00141, SRG-OS-000354-GPOS-00142, SRG-OS-000358-GPOS-00145, SRG-OS-000365-GPOS-00152, SRG-OS-000392-GPOS-00172, SRG-OS-000475-GPOS-00220, SRG-OS-000055-GPOS-00026
+Check Text:
+Verify that the RHEL 9 audit service package is installed.
+
+Check that the audit service package is installed with the following command:
+
+$ dnf list --installed audit
+
+Example output:
+
+audit-3.0.7-101.el9_0.2.x86_64
+
+If the "audit" package is not installed, this is a finding.
+Fix Text:
+Install the audit service package (if the audit service is not already installed) with the following command:
+
+$ sudo dnf install audit
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000131
+Ensure that audit records containing information that establishes when the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 b
+CCI-000132
+Ensure that audit records containing information that establishes where the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 c
+CCI-000133
+Ensure that audit records containing information that establishes the source of the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 d
+CCI-000134
+Ensure that audit records containing information that establishes the outcome of the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 e
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000154
+Provide the capability to centrally review and analyze audit records from multiple components within the system.
+NIST SP 800-53 :: AU-6 (4)
+NIST SP 800-53A :: AU-6 (4).1
+NIST SP 800-53 Revision 4 :: AU-6 (4)
+NIST SP 800-53 Revision 5 :: AU-6 (4)
+CCI-000158
+Provide the capability to process, sort, and search audit records for events of interest based on organization-defined audit fields within audit records.
+NIST SP 800-53 :: AU-7 (1)
+NIST SP 800-53A :: AU-7 (1).1
+NIST SP 800-53 Revision 4 :: AU-7 (1)
+NIST SP 800-53 Revision 5 :: AU-7 (1)
+CCI-000159
+Use internal system clocks to generate time stamps for audit records.
+NIST SP 800-53 :: AU-8
+NIST SP 800-53A :: AU-8.1
+NIST SP 800-53 Revision 4 :: AU-8 a
+NIST SP 800-53 Revision 5 :: AU-8 a
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001464
+Initiates session audits automatically at system start-up.
+NIST SP 800-53 :: AU-14 (1)
+NIST SP 800-53A :: AU-14 (1).1
+NIST SP 800-53 Revision 4 :: AU-14 (1)
+NIST SP 800-53 Revision 5 :: AU-14 (1)
+CCI-001487
+Ensure that audit records containing information that establishes the identity of any individuals, subjects, or objects/entities associated with the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 f
+CCI-003938
+Automatically generate audit records of the enforcement actions.
+NIST SP 800-53 Revision 5 :: CM-5 (1) (b)
+CCI-001875
+Provide an audit reduction capability that supports on-demand audit review and analysis.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001876
+Provide an audit reduction capability that supports on-demand reporting requirements.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001877
+Provide an audit reduction capability that supports after-the-fact investigations of incidents.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001878
+Provide a report generation capability that supports on-demand audit review and analysis.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001879
+Provide a report generation capability that supports on-demand reporting requirements.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001880
+Provide a report generation capability that supports after-the-fact investigations of security incidents.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001881
+Provide an audit reduction capability that does not alter original content or time ordering of audit records.
+NIST SP 800-53 Revision 4 :: AU-7 b
+NIST SP 800-53 Revision 5 :: AU-7 b
+CCI-001882
+Provide a report generation capability that does not alter original content or time ordering of audit records.
+NIST SP 800-53 Revision 4 :: AU-7 b
+NIST SP 800-53 Revision 5 :: AU-7 b
+CCI-001889
+Record time stamps for audit records that meet organization-defined granularity of time measurement.
+NIST SP 800-53 Revision 4 :: AU-8 b
+NIST SP 800-53 Revision 5 :: AU-8 b
+CCI-001914
+Provide the capability for organization-defined individuals or roles to change the logging to be performed on organization-defined system components based on organization-defined selectable event criteria within organization-defined time thresholds.
+NIST SP 800-53 Revision 4 :: AU-12 (3)
+NIST SP 800-53 Revision 5 :: AU-12 (3)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-001814
+The Information system supports auditing of the enforcement actions.
+NIST SP 800-53 Revision 4 :: CM-5
+
+***********************************************************************************************************
+
+Group ID:
+V-258152
+Rule ID:
+SV-258152r1015127
+STIG ID:
+RHEL-09-653015
+SRG ID:
+SRG-OS-000062-GPOS-00031
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit service must be enabled.
+Discussion:
+Without establishing what type of events occurred, it would be difficult to establish, correlate, and investigate the events leading up to an outage or attack. Ensuring the "auditd" service is active ensures audit records generated by the kernel are appropriately recorded.
+
+Additionally, a properly configured audit subsystem ensures that actions of individual system users can be uniquely traced to those users so they can be held accountable for their actions.
+
+Satisfies: SRG-OS-000062-GPOS-00031, SRG-OS-000037-GPOS-00015, SRG-OS-000038-GPOS-00016, SRG-OS-000039-GPOS-00017, SRG-OS-000040-GPOS-00018, SRG-OS-000041-GPOS-00019, SRG-OS-000042-GPOS-00021, SRG-OS-000051-GPOS-00024, SRG-OS-000054-GPOS-00025, SRG-OS-000122-GPOS-00063, SRG-OS-000254-GPOS-00095, SRG-OS-000255-GPOS-00096, SRG-OS-000337-GPOS-00129, SRG-OS-000348-GPOS-00136, SRG-OS-000349-GPOS-00137, SRG-OS-000350-GPOS-00138, SRG-OS-000351-GPOS-00139, SRG-OS-000352-GPOS-00140, SRG-OS-000353-GPOS-00141, SRG-OS-000354-GPOS-00142, SRG-OS-000358-GPOS-00145, SRG-OS-000365-GPOS-00152, SRG-OS-000392-GPOS-00172, SRG-OS-000475-GPOS-00220
+Check Text:
+Verify the audit service is configured to produce audit records with the following command:
+
+$ systemctl status auditd.service
+
+auditd.service - Security Auditing Service
+Loaded:loaded (/usr/lib/systemd/system/auditd.service; enabled; vendor preset: enabled)
+Active: active (running) since Tues 2022-05-24 12:56:56 EST; 4 weeks 0 days ago
+
+If the audit service is not "active" and "running", this is a finding.
+Fix Text:
+To enable the auditd service run the following command:
+
+$ sudo systemctl enable --now auditd
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000131
+Ensure that audit records containing information that establishes when the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 b
+CCI-000132
+Ensure that audit records containing information that establishes where the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 c
+CCI-000133
+Ensure that audit records containing information that establishes the source of the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 d
+CCI-000134
+Ensure that audit records containing information that establishes the outcome of the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 e
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000154
+Provide the capability to centrally review and analyze audit records from multiple components within the system.
+NIST SP 800-53 :: AU-6 (4)
+NIST SP 800-53A :: AU-6 (4).1
+NIST SP 800-53 Revision 4 :: AU-6 (4)
+NIST SP 800-53 Revision 5 :: AU-6 (4)
+CCI-000158
+Provide the capability to process, sort, and search audit records for events of interest based on organization-defined audit fields within audit records.
+NIST SP 800-53 :: AU-7 (1)
+NIST SP 800-53A :: AU-7 (1).1
+NIST SP 800-53 Revision 4 :: AU-7 (1)
+NIST SP 800-53 Revision 5 :: AU-7 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001464
+Initiates session audits automatically at system start-up.
+NIST SP 800-53 :: AU-14 (1)
+NIST SP 800-53A :: AU-14 (1).1
+NIST SP 800-53 Revision 4 :: AU-14 (1)
+NIST SP 800-53 Revision 5 :: AU-14 (1)
+CCI-001487
+Ensure that audit records containing information that establishes the identity of any individuals, subjects, or objects/entities associated with the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 f
+CCI-003938
+Automatically generate audit records of the enforcement actions.
+NIST SP 800-53 Revision 5 :: CM-5 (1) (b)
+CCI-001875
+Provide an audit reduction capability that supports on-demand audit review and analysis.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001876
+Provide an audit reduction capability that supports on-demand reporting requirements.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001877
+Provide an audit reduction capability that supports after-the-fact investigations of incidents.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001878
+Provide a report generation capability that supports on-demand audit review and analysis.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001879
+Provide a report generation capability that supports on-demand reporting requirements.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001880
+Provide a report generation capability that supports after-the-fact investigations of security incidents.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001881
+Provide an audit reduction capability that does not alter original content or time ordering of audit records.
+NIST SP 800-53 Revision 4 :: AU-7 b
+NIST SP 800-53 Revision 5 :: AU-7 b
+CCI-001882
+Provide a report generation capability that does not alter original content or time ordering of audit records.
+NIST SP 800-53 Revision 4 :: AU-7 b
+NIST SP 800-53 Revision 5 :: AU-7 b
+CCI-001889
+Record time stamps for audit records that meet organization-defined granularity of time measurement.
+NIST SP 800-53 Revision 4 :: AU-8 b
+NIST SP 800-53 Revision 5 :: AU-8 b
+CCI-001914
+Provide the capability for organization-defined individuals or roles to change the logging to be performed on organization-defined system components based on organization-defined selectable event criteria within organization-defined time thresholds.
+NIST SP 800-53 Revision 4 :: AU-12 (3)
+NIST SP 800-53 Revision 5 :: AU-12 (3)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-004188
+Monitor the use of maintenance tools that execute with increased privilege.
+NIST SP 800-53 Revision 5 :: MA-3 (5)
+CCI-001814
+The Information system supports auditing of the enforcement actions.
+NIST SP 800-53 Revision 4 :: CM-5

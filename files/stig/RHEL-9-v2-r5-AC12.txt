@@ -1,0 +1,119 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AC-12 Session Termination
+************************************************************************************************************
+
+Group ID:
+V-257995
+Rule ID:
+SV-257995r1045053
+STIG ID:
+RHEL-09-255095
+SRG ID:
+SRG-OS-000163-GPOS-00072
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured so that all network connections associated with SSH traffic terminate after becoming unresponsive.
+Discussion:
+Terminating an unresponsive SSH session within a short time period reduces the window of opportunity for unauthorized personnel to take control of a management session enabled on the console or console port that has been left unattended. In addition, quickly terminating an idle SSH session will also free up resources committed by the managed network element.
+
+Terminating network connections associated with communications sessions includes, for example, deallocating associated TCP/IP address/port pairs at the operating system level and deallocating networking assignments at the application level if multiple application sessions are using a single operating system-level network connection. This does not mean the operating system terminates all sessions or network access; it only ends the unresponsive session and releases the resources associated with that session.
+
+RHEL 9 utilizes /etc/ssh/sshd_config for configurations of OpenSSH. Within the sshd_config, the product of the values of "ClientAliveInterval" and "ClientAliveCountMax" are used to establish the inactivity threshold. The "ClientAliveInterval" is a timeout interval in seconds, after which if no data has been received from the client, sshd will send a message through the encrypted channel to request a response from the client. The "ClientAliveCountMax" is the number of client alive messages that may be sent without sshd receiving any messages back from the client. If this threshold is met, sshd will disconnect the client. For more information on these settings and others, refer to the sshd_config man pages.
+
+Satisfies: SRG-OS-000163-GPOS-00072, SRG-OS-000279-GPOS-00109
+Check Text:
+Verify the "ClientAliveCountMax" is set to "1" by performing the following command:
+
+$ sudo /usr/sbin/sshd -dd 2>&1 | awk '/filename/ {print $4}' | tr -d '\r' | tr '\n' ' ' | xargs sudo grep -iH '^\s*clientalivecountmax'
+
+ClientAliveCountMax 1
+
+If "ClientAliveCountMax" does not exist, is not set to a value of "1" in "/etc/ssh/sshd_config", or is commented out, this is a finding.
+Fix Text:
+Note: This setting must be applied in conjunction with RHEL-09-255100 to function correctly.
+
+Configure the SSH server to terminate a user session automatically after the SSH client has become unresponsive.
+
+Modify or append the following lines in the "/etc/ssh/sshd_config" or in a file in "/etc/ssh/sshd_config.d":
+
+ClientAliveCountMax 1
+
+For the changes to take effect, the SSH daemon must be restarted.
+
+$ sudo systemctl restart sshd.service
+CCI-001133
+Terminate the network connection associated with a communications session at the end of the session or after an organization-defined time period of inactivity.
+NIST SP 800-53 :: SC-10
+NIST SP 800-53A :: SC-10.1 (ii)
+NIST SP 800-53 Revision 4 :: SC-10
+NIST SP 800-53 Revision 5 :: SC-10
+CCI-002361
+Automatically terminate a user session after organization-defined conditions or trigger events requiring session disconnect.
+NIST SP 800-53 Revision 4 :: AC-12
+NIST SP 800-53 Revision 5 :: AC-12
+
+==========================================================================================================
+
+Group ID:
+V-257996
+Rule ID:
+SV-257996r1045055
+STIG ID:
+RHEL-09-255100
+SRG ID:
+SRG-OS-000126-GPOS-00066
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured so that all network connections associated with SSH traffic are terminated after 10 minutes of becoming unresponsive.
+Discussion:
+Terminating an unresponsive SSH session within a short time period reduces the window of opportunity for unauthorized personnel to take control of a management session enabled on the console or:q console port that has been left unattended. In addition, quickly terminating an idle SSH session will also free up resources committed by the managed network element.
+
+Terminating network connections associated with communications sessions includes, for example, deallocating associated TCP/IP address/port pairs at the operating system level and deallocating networking assignments at the application level if multiple application sessions are using a single operating system-level network connection. This does not mean the operating system terminates all sessions or network access; it only ends the unresponsive session and releases the resources associated with that session.
+
+RHEL 9 utilizes /etc/ssh/sshd_config for configurations of OpenSSH. Within the sshd_config, the product of the values of "ClientAliveInterval" and "ClientAliveCountMax" are used to establish the inactivity threshold. The "ClientAliveInterval" is a timeout interval in seconds, after which if no data has been received from the client, sshd will send a message through the encrypted channel to request a response from the client. The "ClientAliveCountMax" is the number of client alive messages that may be sent without sshd receiving any messages back from the client. If this threshold is met, sshd will disconnect the client. For more information on these settings and others, refer to the sshd_config man pages.
+
+Satisfies: SRG-OS-000126-GPOS-00066, SRG-OS-000163-GPOS-00072, SRG-OS-000279-GPOS-00109, SRG-OS-000395-GPOS-00175
+Check Text:
+Verify the "ClientAliveInterval" variable is set to a value of "600" or less by performing the following command:
+
+$ sudo /usr/sbin/sshd -dd 2>&1 | awk '/filename/ {print $4}' | tr -d '\r' | tr '\n' ' ' | xargs sudo grep -iH '^\s*clientaliveinterval'
+
+ClientAliveInterval 600
+
+If "ClientAliveInterval" does not exist, does not have a value of "600" or less in "/etc/ssh/sshd_config", or is commented out, this is a finding.
+Fix Text:
+Note: This setting must be applied in conjunction with RHEL-09-255095 to function correctly.
+
+Configure the SSH server to terminate a user session automatically after the SSH client has been unresponsive for 10 minutes.
+
+Modify or append the following lines in the "/etc/ssh/sshd_config" or in a file in "/etc/ssh/sshd_config.d":
+
+ClientAliveInterval 600
+
+For the changes to take effect, the SSH daemon must be restarted.
+
+$ sudo systemctl restart sshd.service
+CCI-001133
+Terminate the network connection associated with a communications session at the end of the session or after an organization-defined time period of inactivity.
+NIST SP 800-53 :: SC-10
+NIST SP 800-53A :: SC-10.1 (ii)
+NIST SP 800-53 Revision 4 :: SC-10
+NIST SP 800-53 Revision 5 :: SC-10
+CCI-002361
+Automatically terminate a user session after organization-defined conditions or trigger events requiring session disconnect.
+NIST SP 800-53 Revision 4 :: AC-12
+NIST SP 800-53 Revision 5 :: AC-12
+CCI-002891
+Verify session and network connection termination after the completion of nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (7)
+NIST SP 800-53 Revision 5 :: MA-4 (7)
+

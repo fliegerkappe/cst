@@ -1,0 +1,266 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+SC-4 Information In Shared Resources
+************************************************************************************************************
+
+Group ID:
+V-257797
+Rule ID:
+SV-257797r1117266
+STIG ID:
+RHEL-09-213010
+SRG ID:
+SRG-OS-000132-GPOS-00067
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must restrict access to the kernel message buffer.
+Discussion:
+Preventing unauthorized information transfers mitigates the risk of information, including encrypted representations of information, produced by the actions of prior users/roles (or the actions of processes acting on behalf of prior users/roles) from being available to any current users/roles (or current processes) that obtain access to shared system resources (e.g., registers, main memory, hard disks) after those resources have been released back to information systems. The control of information in shared resources is also commonly referred to as object reuse and residual information protection.
+
+This requirement generally applies to the design of an information technology product, but it can also apply to the configuration of particular information system components that are, or use, such products. This can be verified by acceptance/validation processes in DOD or other government agencies.
+
+There may be shared resources with configurable protections (e.g., files in storage) that may be assessed on specific information system components.
+
+Restricting access to the kernel message buffer limits access to only root. This prevents attackers from gaining additional system information as a nonprivileged user.
+
+The sysctl --system command will load settings from all system configuration files. All configuration files are sorted by their filename in lexicographic order, regardless of the directories in which they reside. If multiple files specify the same option, the entry in the file with the lexicographically latest name will take precedence. Files are read from directories in the following list from top to bottom. Once a file of a given filename is loaded, any file of the same name in subsequent directories is ignored.
+
+/etc/sysctl.d/*.conf
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+
+Satisfies: SRG-OS-000132-GPOS-00067, SRG-OS-000138-GPOS-00069
+Check Text:
+Verify RHEL 9 is configured to restrict access to the kernel message buffer with the following commands:
+
+Check the status of the kernel.dmesg_restrict kernel parameter.
+
+$ sudo sysctl kernel.dmesg_restrict
+
+kernel.dmesg_restrict = 1
+
+If "kernel.dmesg_restrict" is not set to "1" or is missing, this is a finding.
+
+Check that the configuration files are present to enable this kernel parameter.
+
+$ sudo grep -r kernel.dmesg_restrict /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
+
+/etc/sysctl.d/99-sysctl.conf:kernel.dmesg_restrict = 1
+
+If "kernel.dmesg_restrict" is not set to "1", is missing, or commented out, this is a finding.
+
+If conflicting results are returned, this is a finding.
+Fix Text:
+Configure RHEL 9 to restrict access to the kernel message buffer.
+
+Add or edit the following line in a system configuration file, in the "/etc/sysctl.d/" directory:
+
+kernel.dmesg_restrict = 1
+
+Remove any configurations that conflict with the above from the following locations: 
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+/etc/sysctl.d/*.conf
+
+Load settings from all system configuration files with the following command:
+
+$ sudo sysctl --system
+CCI-001082
+Separate user functionality, including user interface services, from system management functionality.
+NIST SP 800-53 :: SC-2
+NIST SP 800-53A :: SC-2.1
+NIST SP 800-53 Revision 4 :: SC-2
+NIST SP 800-53 Revision 5 :: SC-2
+CCI-001090
+Prevent unauthorized and unintended information transfer via shared system resources.
+NIST SP 800-53 :: SC-4
+NIST SP 800-53A :: SC-4.1
+NIST SP 800-53 Revision 4 :: SC-4
+NIST SP 800-53 Revision 5 :: SC-4
+rhel-8-sc4.sh
+************************************************************************************************************
+
+Group ID:
+V-257798
+Rule ID:
+SV-257798r1117266
+STIG ID:
+RHEL-09-213015
+SRG ID:
+SRG-OS-000132-GPOS-00067
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prevent kernel profiling by nonprivileged users.
+Discussion:
+Preventing unauthorized information transfers mitigates the risk of information, including encrypted representations of information, produced by the actions of prior users/roles (or the actions of processes acting on behalf of prior users/roles) from being available to any current users/roles (or current processes) that obtain access to shared system resources (e.g., registers, main memory, hard disks) after those resources have been released back to information systems. The control of information in shared resources is also commonly referred to as object reuse and residual information protection.
+
+This requirement generally applies to the design of an information technology product, but it can also apply to the configuration of particular information system components that are, or use, such products. This can be verified by acceptance/validation processes in DOD or other government agencies.
+
+There may be shared resources with configurable protections (e.g., files in storage) that may be assessed on specific information system components.
+
+Setting the kernel.perf_event_paranoid kernel parameter to "2" prevents attackers from gaining additional system information as a nonprivileged user.
+
+The sysctl --system command will load settings from all system configuration files. All configuration files are sorted by their filename in lexicographic order, regardless of the directories in which they reside. If multiple files specify the same option, the entry in the file with the lexicographically latest name will take precedence. Files are read from directories in the following list from top to bottom. Once a file of a given filename is loaded, any file of the same name in subsequent directories is ignored.
+
+/etc/sysctl.d/*.conf
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+
+Satisfies: SRG-OS-000132-GPOS-00067, SRG-OS-000138-GPOS-00069
+Check Text:
+Verify RHEL 9 is configured to prevent kernel profiling by nonprivileged users with the following commands:
+
+Check the status of the kernel.perf_event_paranoid kernel parameter.
+
+$ sudo sysctl kernel.perf_event_paranoid
+
+kernel.perf_event_paranoid = 2
+
+If "kernel.perf_event_paranoid" is not set to "2" or is missing, this is a finding.
+
+Check that the configuration files are present to enable this kernel parameter.
+
+$ sudo grep -r kernel.perf_event_paranoid /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
+
+/etc/sysctl.d/99-sysctl.conf:kernel.perf_event_paranoid = 2
+
+If "kernel.perf_event_paranoid" is not set to "2", is missing, or commented out, this is a finding.
+
+If conflicting results are returned, this is a finding.
+Fix Text:
+Configure RHEL 9 to prevent kernel profiling by nonprivileged users.
+
+Add or edit the following line in a system configuration file, in the "/etc/sysctl.d/" directory:
+
+kernel.perf_event_paranoid = 2
+
+Remove any configurations that conflict with the above from the following locations: 
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+/etc/sysctl.d/*.conf
+
+Load settings from all system configuration files with the following command:
+
+$ sudo sysctl --system
+CCI-001082
+Separate user functionality, including user interface services, from system management functionality.
+NIST SP 800-53 :: SC-2
+NIST SP 800-53A :: SC-2.1
+NIST SP 800-53 Revision 4 :: SC-2
+NIST SP 800-53 Revision 5 :: SC-2
+CCI-001090
+Prevent unauthorized and unintended information transfer via shared system resources.
+NIST SP 800-53 :: SC-4
+NIST SP 800-53A :: SC-4.1
+NIST SP 800-53 Revision 4 :: SC-4
+NIST SP 800-53 Revision 5 :: SC-4
+
+************************************************************************************************************
+
+Group ID:
+V-257928
+Rule ID:
+SV-257928r1044992
+STIG ID:
+RHEL-09-232240
+SRG ID:
+SRG-OS-000480-GPOS-00227
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+All RHEL 9 world-writable directories must be owned by root, sys, bin, or an application user.
+Discussion:
+If a world-writable directory is not owned by root, sys, bin, or an application user identifier (UID), unauthorized users may be able to modify files created by others.
+
+The only authorized public directories are those temporary directories supplied with the system or those designed to be temporary file repositories. The setting is normally reserved for directories used by the system and by users for temporary file storage, (e.g., /tmp), and for directories requiring global read/write access.
+
+Satisfies: SRG-OS-000480-GPOS-00227, SRG-OS-000138-GPOS-00069
+Check Text:
+Verify that world writable directories are owned by root, a system account, or an application account with the following command. It will discover and print world-writable directories that are not owned by root.  Run it once for each local partition [PART]:
+
+$ sudo find  PART  -xdev -type d -perm -0002 -uid +0 -print 
+
+If there is output, this is a finding.
+Fix Text:
+Configure all public directories to be owned by root or a system account to prevent unauthorized and unintended information transferred via shared system resources.
+
+Set the owner of all public directories as root or a system account using the command, replace "[Public Directory]" with any directory path not owned by root or a system account:
+
+$ sudo chown root [Public Directory]
+CCI-001090
+Prevent unauthorized and unintended information transfer via shared system resources.
+NIST SP 800-53 :: SC-4
+NIST SP 800-53A :: SC-4.1
+NIST SP 800-53 Revision 4 :: SC-4
+NIST SP 800-53 Revision 5 :: SC-4
+
+************************************************************************************************************
+
+Group ID:
+V-257929
+Rule ID:
+SV-257929r1117267
+STIG ID:
+RHEL-09-232245
+SRG ID:
+SRG-OS-000138-GPOS-00069
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+A sticky bit must be set on all RHEL 9 public directories.
+Discussion:
+Preventing unauthorized information transfers mitigates the risk of information, including encrypted representations of information, produced by the actions of prior users/roles (or the actions of processes acting on behalf of prior users/roles) from being available to any current users/roles (or current processes) that obtain access to shared system resources (e.g., registers, main memory, hard disks) after those resources have been released back to information systems. The control of information in shared resources is also commonly referred to as object reuse and residual information protection.
+
+This requirement generally applies to the design of an information technology product, but it can also apply to the configuration of particular information system components that are, or use, such products. This can be verified by acceptance/validation processes in DOD or other government agencies.
+Check Text:
+Verify that all world-writable directories have the sticky bit set.
+
+Determine if all world-writable directories have the sticky bit set by running the following command:
+
+$ sudo find / -type d \( -perm -0002 -a ! -perm -1000 \) -print 2>/dev/null
+
+drwxrwxrwt 7 root root 4096 Jul 26 11:19 /tmp
+
+If any of the returned directories are world-writable and do not have the sticky bit set, this is a finding.
+Fix Text:
+Configure all world-writable directories to have the sticky bit set to prevent unauthorized and unintended information transferred via shared system resources.
+
+Set the sticky bit on all world-writable directories using the command, replace "[World-Writable Directory]" with any directory path missing the sticky bit:
+
+$ chmod a+t [World-Writable Directory]
+CCI-001090
+Prevent unauthorized and unintended information transfer via shared system resources.
+NIST SP 800-53 :: SC-4
+NIST SP 800-53A :: SC-4.1
+NIST SP 800-53 Revision 4 :: SC-4
+NIST SP 800-53 Revision 5 :: SC-4
+
+
+
+
+
+

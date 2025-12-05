@@ -1,0 +1,577 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AC-17 Remote Access
+************************************************************************************************************
+
+Group ID:
+V-258230
+Rule ID:
+SV-258230r958408
+STIG ID:
+RHEL-09-671010
+SRG ID:
+SRG-OS-000033-GPOS-00014
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enable FIPS mode.
+Discussion:
+Use of weak or untested encryption algorithms undermines the purposes of utilizing encryption to protect data. The operating system must implement cryptographic modules adhering to the higher standards approved by the federal government since this provides assurance they have been tested and validated. This includes NIST FIPS-validated cryptography for the following: Provisioning digital signatures, generating cryptographic hashes, and to protect data requiring data-at-rest protections in accordance with applicable federal laws, Executive Orders, directives, policies, regulations, and standards.
+
+Satisfies: SRG-OS-000033-GPOS-00014, SRG-OS-000125-GPOS-00065, SRG-OS-000396-GPOS-00176, SRG-OS-000423-GPOS-00187, SRG-OS-000478-GPOS-00223
+Check Text:
+Verify that RHEL 9 is in FIPS mode with the following command:
+
+$ sudo fips-mode-setup --check
+
+FIPS mode is enabled.
+
+If FIPS mode is not enabled, this is a finding.
+Fix Text:
+Configure the operating system to implement FIPS mode with the following command
+
+$ sudo fips-mode-setup --enable
+
+Reboot the system for the changes to take effect.
+
+CCI-000068
+Implement cryptographic mechanisms to protect the confidentiality of remote access sessions.
+NIST SP 800-53 :: AC-17 (2)
+NIST SP 800-53A :: AC-17 (2).1
+NIST SP 800-53 Revision 4 :: AC-17 (2)
+NIST SP 800-53 Revision 5 :: AC-17 (2)
+CCI-000877
+Employ strong authentication in the establishment of nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 :: MA-4 c
+NIST SP 800-53A :: MA-4.1 (iv)
+NIST SP 800-53 Revision 4 :: MA-4 c
+NIST SP 800-53 Revision 5 :: MA-4 c
+CCI-002418
+Protect the confidentiality and/or integrity of transmitted information.
+NIST SP 800-53 Revision 4 :: SC-8
+NIST SP 800-53 Revision 5 :: SC-8
+CCI-002450
+Implement organization-defined types of cryptography for each specified cryptography use.
+NIST SP 800-53 Revision 4 :: SC-13
+NIST SP 800-53 Revision 5 :: SC-13 
+
+==========================================================================================================
+
+Group ID:
+V-257935
+Rule ID:
+SV-257935r1044994
+STIG ID:
+RHEL-09-251010
+SRG ID:
+SRG-OS-000096-GPOS-00050
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the firewalld package installed.
+Discussion:
+"Firewalld" provides an easy and effective way to block/limit remote access to the system via ports, services, and protocols.
+
+Remote access services, such as those providing remote access to network devices and information systems, which lack automated control capabilities, increase risk and make remote user access management difficult at best.
+
+Remote access is access to DOD nonpublic information systems by an authorized user (or an information system) communicating through an external, nonorganization-controlled network. Remote access methods include, for example, dial-up, broadband, and wireless.
+
+RHEL 9 functionality (e.g., SSH) must be capable of taking enforcement action if the audit reveals unauthorized activity. Automated control of remote access sessions allows organizations to ensure ongoing compliance with remote access policies by enforcing connection rules of remote access applications on a variety of information system components (e.g., servers, workstations, notebook computers, smartphones, and tablets).
+
+Satisfies: SRG-OS-000096-GPOS-00050, SRG-OS-000297-GPOS-00115, SRG-OS-000298-GPOS-00116, SRG-OS-000480-GPOS-00227, SRG-OS-000480-GPOS-00232
+Check Text:
+Run the following command to determine if the firewalld package is installed with the following command:
+
+$ dnf list --installed firewalld 
+
+Example output:
+
+firewalld.noarch          1.0.0-4.el9
+
+If the "firewall" package is not installed, this is a finding.
+Fix Text:
+To install the "firewalld" package run the following command:
+
+$ sudo dnf install firewalld
+
+CCI-000382
+Configure the system to prohibit or restrict the use of organization-defined prohibited or restricted functions, system ports, protocols, software, and/or services.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (iii)
+NIST SP 800-53 Revision 4 :: CM-7 b
+NIST SP 800-53 Revision 5 :: CM-7 b
+CCI-002314
+Employ automated mechanisms to control remote access methods.
+NIST SP 800-53 Revision 4 :: AC-17 (1)
+NIST SP 800-53 Revision 5 :: AC-17 (1)
+CCI-002322
+Provide the capability to disconnect or disable remote access to the system within the organization-defined time period.
+NIST SP 800-53 Revision 4 :: AC-17 (9)
+NIST SP 800-53 Revision 5 :: AC-17 (9)
+
+==========================================================================================================
+
+Group ID:
+V-257936
+Rule ID:
+SV-257936r1044995
+STIG ID:
+RHEL-09-251015
+SRG ID:
+SRG-OS-000096-GPOS-00050
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+The firewalld service on RHEL 9 must be active.
+Discussion:
+"Firewalld" provides an easy and effective way to block/limit remote access to the system via ports, services, and protocols.
+
+Remote access services, such as those providing remote access to network devices and information systems, which lack automated control capabilities, increase risk and make remote user access management difficult at best.
+
+Remote access is access to DOD nonpublic information systems by an authorized user (or an information system) communicating through an external, non-organization-controlled network. Remote access methods include, for example, dial-up, broadband, and wireless.
+
+RHEL 9 functionality (e.g., RDP) must be capable of taking enforcement action if the audit reveals unauthorized activity. Automated control of remote access sessions allows organizations to ensure ongoing compliance with remote access policies by enforcing connection rules of remote access applications on a variety of information system components (e.g., servers, workstations, notebook computers, smartphones, and tablets).
+
+Satisfies: SRG-OS-000096-GPOS-00050, SRG-OS-000297-GPOS-00115, SRG-OS-000480-GPOS-00227, SRG-OS-000480-GPOS-00232
+Check Text:
+Verify that "firewalld" is active with the following command:
+
+$ systemctl is-active firewalld 
+
+active
+
+If the firewalld service is not active, this is a finding.
+Fix Text:
+To enable the firewalld service run the following command:
+
+$ sudo systemctl enable --now firewalld
+
+CCI-000382
+Configure the system to prohibit or restrict the use of organization-defined prohibited or restricted functions, system ports, protocols, software, and/or services.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (iii)
+NIST SP 800-53 Revision 4 :: CM-7 b
+NIST SP 800-53 Revision 5 :: CM-7 b
+CCI-002314
+Employ automated mechanisms to control remote access methods.
+NIST SP 800-53 Revision 4 :: AC-17 (1)
+NIST SP 800-53 Revision 5 :: AC-17 (1)
+
+==========================================================================================================
+
+Group ID:
+V-257982
+Rule ID:
+SV-257982r1045021
+STIG ID:
+RHEL-09-255030
+SRG ID:
+SRG-OS-000032-GPOS-00013
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must log SSH connection attempts and failures to the server.
+Discussion:
+SSH provides several logging levels with varying amounts of verbosity. "DEBUG" is specifically not recommended other than strictly for debugging SSH communications since it provides so much data that it is difficult to identify important security information. "INFO" or "VERBOSE" level is the basic level that only records login activity of SSH users. In many situations, such as Incident Response, it is important to determine when a particular user was active on a system. The logout record can eliminate those users who disconnected, which helps narrow the field.
+Check Text:
+Verify that RHEL 9 logs SSH connection attempts and failures to the server.
+
+Check what the SSH daemon's "LogLevel" option is set to with the following command:
+
+$ sudo /usr/sbin/sshd -dd 2>&1 | awk '/filename/ {print $4}' | tr -d '\r' | tr '\n' ' ' | xargs sudo grep -iH '^\s*loglevel'
+
+LogLevel VERBOSE
+
+If a value of "VERBOSE" is not returned or the line is commented out or missing, this is a finding.
+Fix Text:
+Configure RHEL 9 to log connection attempts add or modify the following line in "/etc/ssh/sshd_config" or in a file in "/etc/ssh/sshd_config.d".
+
+LogLevel VERBOSE
+
+Restart the SSH daemon for the settings to take effect:
+
+$ sudo systemctl restart sshd.service
+
+CCI-000067
+Employ automated mechanisms to monitor remote access methods.
+NIST SP 800-53 :: AC-17 (1)
+NIST SP 800-53A :: AC-17 (1).1
+NIST SP 800-53 Revision 4 :: AC-17 (1)
+NIST SP 800-53 Revision 5 :: AC-17 (1)
+
+==========================================================================================================
+
+Group ID:
+V-257989
+Rule ID:
+SV-257989r1051240
+STIG ID:
+RHEL-09-255065
+SRG ID:
+SRG-OS-000250-GPOS-00093
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+The RHEL 9 SSH server must be configured to use only DOD-approved encryption ciphers employing FIPS 140-3 validated cryptographic hash algorithms to protect the confidentiality of SSH server connections.
+Discussion:
+Without cryptographic integrity protections, information can be altered by unauthorized users without detection.
+
+Remote access (e.g., RDP) is access to DOD nonpublic information systems by an authorized user (or an information system) communicating through an external, nonorganization-controlled network. Remote access methods include, for example, dial-up, broadband, and wireless.
+
+Cryptographic mechanisms used for protecting the integrity of information include, for example, signed hash functions using asymmetric cryptography enabling distribution of the public key to verify the hash information while maintaining the confidentiality of the secret key used to generate the hash.
+
+RHEL 9 incorporates systemwide crypto policies by default. The SSH configuration file has no effect on the ciphers, MACs, or algorithms unless specifically defined in the /etc/sysconfig/sshd file. The employed algorithms can be viewed in the /etc/crypto-policies/back-ends/opensshserver.config file.
+Check Text:
+Verify the SSH server is configured to use only ciphers employing FIPS 140-3 approved algorithms.
+
+To verify the ciphers in the systemwide SSH configuration file, use the following command:
+
+$ sudo grep -i Ciphers /etc/crypto-policies/back-ends/opensshserver.config 
+Ciphers aes256-gcm@openssh.com,aes256-ctr,aes128-gcm@openssh.com,aes128-ctr
+
+If the cipher entries in the "opensshserver.config" file have any ciphers other than "aes256-gcm@openssh.com,aes256-ctr,aes128-gcm@openssh.com,aes128-ctr", or they are missing or commented out, this is a finding.
+Fix Text:
+Configure the RHEL 9 SSH server to use only ciphers employing FIPS 140-3 approved algorithms.
+
+Reinstall crypto-policies with the following command:
+
+$ sudo dnf -y reinstall crypto-policies
+
+Set the crypto-policy to FIPS with the following command:
+
+$ sudo update-crypto-policies --set FIPS
+
+Setting system policy to FIPS
+
+Note: Systemwide crypto policies are applied on application startup. It is recommended to restart the system for the change of policies to fully take place.
+
+CCI-001453
+Implement cryptographic mechanisms to protect the integrity of remote access sessions.
+NIST SP 800-53 :: AC-17 (2)
+NIST SP 800-53A :: AC-17 (2).1
+NIST SP 800-53 Revision 4 :: AC-17 (2)
+NIST SP 800-53 Revision 5 :: AC-17 (2)
+
+==========================================================================================================
+
+Group ID:
+V-257991
+Rule ID:
+SV-257991r1051246
+STIG ID:
+RHEL-09-255075
+SRG ID:
+SRG-OS-000250-GPOS-00093
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+The RHEL 9 SSH server must be configured to use only Message Authentication Codes (MACs) employing FIPS 140-3 validated cryptographic hash algorithms to protect the confidentiality of SSH server connections.
+Discussion:
+Without cryptographic integrity protections, information can be altered by unauthorized users without detection.
+
+Remote access (e.g., RDP) is access to DOD nonpublic information systems by an authorized user (or an information system) communicating through an external, nonorganization-controlled network. Remote access methods include, for example, dial-up, broadband, and wireless.
+
+Cryptographic mechanisms used for protecting the integrity of information include, for example, signed hash functions using asymmetric cryptography enabling distribution of the public key to verify the hash information while maintaining the confidentiality of the secret key used to generate the hash.
+
+RHEL 9 incorporates systemwide crypto policies by default. The SSH configuration file has no effect on the ciphers, MACs, or algorithms unless specifically defined in the /etc/sysconfig/sshd file. The employed algorithms can be viewed in the /etc/crypto-policies/back-ends/opensshserver.config file.
+Check Text:
+Verify the SSH server is configured to use only MACs employing FIPS 140-3 approved algorithms.
+
+To verify the MACs in the systemwide SSH configuration file, use the following command:
+
+$ sudo grep -i MACs /etc/crypto-policies/back-ends/opensshserver.config
+
+MACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512
+
+If the MACs entries in the "opensshserver.config" file have any hashes other than "hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512", or they are missing or commented out, this is a finding.
+Fix Text:
+Configure the RHEL 9 SSH server to use only MACs employing FIPS 140-3 approved algorithms.
+
+Reinstall crypto-policies with the following command:
+
+$ sudo dnf -y reinstall crypto-policies
+
+Set the crypto-policy to FIPS with the following command:
+
+$ sudo update-crypto-policies --set FIPS
+
+Setting system policy to FIPS
+
+Note: Systemwide crypto policies are applied on application startup. It is recommended to restart the system for the change of policies to fully take place.
+
+CCI-001453
+Implement cryptographic mechanisms to protect the integrity of remote access sessions.
+NIST SP 800-53 :: AC-17 (2)
+NIST SP 800-53A :: AC-17 (2).1
+NIST SP 800-53 Revision 4 :: AC-17 (2)
+NIST SP 800-53 Revision 5 :: AC-17 (2)
+
+==========================================================================================================
+
+Group ID:
+V-257994
+Rule ID:
+SV-257994r1045051
+STIG ID:
+RHEL-09-255090
+SRG ID:
+SRG-OS-000423-GPOS-00187
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must force a frequent session key renegotiation for SSH connections to the server.
+Discussion:
+Without protection of the transmitted information, confidentiality and integrity may be compromised because unprotected communications can be intercepted and either read or altered. 
+
+This requirement applies to both internal and external networks and all types of information system components from which information can be transmitted (e.g., servers, mobile devices, notebook computers, printers, copiers, scanners, and facsimile machines). Communication paths outside the physical protection of a controlled boundary are exposed to the possibility of interception and modification. 
+
+Protecting the confidentiality and integrity of organizational information can be accomplished by physical means (e.g., employing physical distribution systems) or by logical means (e.g., employing cryptographic techniques). If physical means of protection are employed, then logical means (cryptography) do not have to be employed, and vice versa.
+
+Session key regeneration limits the chances of a session key becoming compromised.
+
+Satisfies: SRG-OS-000423-GPOS-00187, SRG-OS-000033-GPOS-00014, SRG-OS-000424-GPOS-00188
+Check Text:
+Verify the SSH server is configured to force frequent session key renegotiation with the following command:
+
+$ sudo /usr/sbin/sshd -dd 2>&1 | awk '/filename/ {print $4}' | tr -d '\r' | tr '\n' ' ' | xargs sudo grep -iH '^\s*rekeylimit'
+
+RekeyLimit 1G 1h
+
+If "RekeyLimit" does not have a maximum data amount and maximum time defined, is missing, or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to force a frequent session key renegotiation for SSH connections to the server by adding or modifying the following line in the "/etc/ssh/sshd_config" or in a file in "/etc/ssh/sshd_config.d":
+
+RekeyLimit 1G 1h
+
+Restart the SSH daemon for the settings to take effect.
+
+$ sudo systemctl restart sshd.service
+
+CCI-000068
+Implement cryptographic mechanisms to protect the confidentiality of remote access sessions.
+NIST SP 800-53 :: AC-17 (2)
+NIST SP 800-53A :: AC-17 (2).1
+NIST SP 800-53 Revision 4 :: AC-17 (2)
+NIST SP 800-53 Revision 5 :: AC-17 (2)
+CCI-002418
+Protect the confidentiality and/or integrity of transmitted information.
+NIST SP 800-53 Revision 4 :: SC-8
+NIST SP 800-53 Revision 5 :: SC-8
+CCI-002421
+Implement cryptographic mechanisms to prevent unauthorized disclosure of information and/or detect changes to information during transmission.
+NIST SP 800-53 Revision 4 :: SC-8 (1)
+NIST SP 800-53 Revision 5 :: SC-8 (1)
+
+==========================================================================================================
+
+Group ID:
+V-258144
+Rule ID:
+SV-258144r1045286
+STIG ID:
+RHEL-09-652030
+SRG ID:
+SRG-OS-000032-GPOS-00013
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+All RHEL 9 remote access methods must be monitored.
+Discussion:
+Logging remote access methods can be used to trace the decrease in the risks associated with remote user access management. It can also be used to spot cyberattacks and ensure ongoing compliance with organizational policies surrounding the use of remote access methods.
+Check Text:
+Verify that RHEL 9 monitors all remote access methods.
+
+Check that remote access methods are being logged by running the following command:
+
+$ grep -rE '(auth.\*|authpriv.\*|daemon.\*)' /etc/rsyslog.conf /etc/rsyslog.d/
+
+/etc/rsyslog.conf:authpriv.*
+ 
+If "auth.*", "authpriv.*" or "daemon.*" are not configured to be logged, this is a finding.
+Fix Text:
+Add or update the following lines to the "/etc/rsyslog.conf" file or a file in "/etc/rsyslog.d":
+
+auth.*;authpriv.*;daemon.* /var/log/secure
+
+The "rsyslog" service must be restarted for the changes to take effect with the following command:
+
+$ sudo systemctl restart rsyslog.service
+
+CCI-000067
+Employ automated mechanisms to monitor remote access methods.
+NIST SP 800-53 :: AC-17 (1)
+NIST SP 800-53A :: AC-17 (1).1
+NIST SP 800-53 Revision 4 :: AC-17 (1)
+NIST SP 800-53 Revision 5 :: AC-17 (1)
+
+==========================================================================================================
+
+Group ID:
+V-258232
+Rule ID:
+SV-258232r1045440
+STIG ID:
+RHEL-09-671020
+SRG ID:
+SRG-OS-000033-GPOS-00014
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 IP tunnels must use FIPS 140-3 approved cryptographic algorithms.
+Discussion:
+Overriding the system crypto policy makes the behavior of the Libreswan service violate expectations, and makes system configuration more fragmented.
+Check Text:
+Verify that the IPsec service uses the system crypto policy with the following command:
+
+Note: If the ipsec service is not installed, this requirement is Not Applicable.
+
+$ sudo grep include /etc/ipsec.conf /etc/ipsec.d/*.conf
+
+/etc/ipsec.conf:include /etc/crypto-policies/back-ends/libreswan.config
+
+If the ipsec configuration file does not contain "include /etc/crypto-policies/back-ends/libreswan.config", this is a finding.
+Fix Text:
+Configure Libreswan to use the system cryptographic policy.
+
+Add the following line to "/etc/ipsec.conf":
+
+include /etc/crypto-policies/back-ends/libreswan.config
+
+CCI-000068
+Implement cryptographic mechanisms to protect the confidentiality of remote access sessions.
+NIST SP 800-53 :: AC-17 (2)
+NIST SP 800-53A :: AC-17 (2).1
+NIST SP 800-53 Revision 4 :: AC-17 (2)
+NIST SP 800-53 Revision 5 :: AC-17 (2)
+
+==========================================================================================================
+
+Group ID:
+V-270177
+Rule ID:
+SV-270177r1051237
+STIG ID:
+RHEL-09-255064
+SRG ID:
+SRG-OS-000250-GPOS-00093
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+The RHEL 9 SSH client must be configured to use only DOD-approved encryption ciphers employing FIPS 140-3 validated cryptographic hash algorithms to protect the confidentiality of SSH client connections.
+Discussion:
+Without cryptographic integrity protections, information can be altered by unauthorized users without detection. 
+
+Remote access (e.g., RDP) is access to DOD nonpublic information systems by an authorized user (or an information system) communicating through an external, nonorganization-controlled network. Remote access methods include, for example, dial-up, broadband, and wireless. 
+
+Cryptographic mechanisms used for protecting the integrity of information include, for example, signed hash functions using asymmetric cryptography, enabling distribution of the public key to verify the hash information while maintaining the confidentiality of the secret key used to generate the hash. 
+
+RHEL 9 incorporates systemwide crypto policies by default. The SSH configuration file has no effect on the ciphers, MACs, or algorithms unless specifically defined in the /etc/sysconfig/sshd file. The employed algorithms can be viewed in the /etc/crypto-policies/back-ends/openssh.config file.
+Check Text:
+Verify the SSH client is configured to use only ciphers employing FIPS 140-3 approved algorithms.
+
+To verify the ciphers in the systemwide SSH configuration file, use the following command:
+
+$ grep -i Ciphers /etc/crypto-policies/back-ends/openssh.config 
+
+Ciphers aes256-gcm@openssh.com,aes256-ctr,aes128-gcm@openssh.com,aes128-ctr
+
+If the cipher entries in the "openssh.config" file have any ciphers other than "aes256-gcm@openssh.com,aes256-ctr,aes128-gcm@openssh.com,aes128-ctr", or they are missing or commented out, this is a finding.
+Fix Text:
+Configure the SSH client to use only ciphers employing FIPS 140-3 approved algorithms.
+
+Reinstall crypto-policies with the following command:
+
+$ sudo dnf -y reinstall crypto-policies
+
+Set the crypto-policy to FIPS with the following command:
+
+$ sudo update-crypto-policies --set FIPS
+
+Setting system policy to FIPS
+
+Note: Systemwide crypto policies are applied on application startup. It is recommended to restart the system for the change of policies to fully take place.
+
+CCI-001453
+Implement cryptographic mechanisms to protect the integrity of remote access sessions.
+NIST SP 800-53 :: AC-17 (2)
+NIST SP 800-53A :: AC-17 (2).1
+NIST SP 800-53 Revision 4 :: AC-17 (2)
+NIST SP 800-53 Revision 5 :: AC-17 (2)
+
+==========================================================================================================
+
+Group ID:
+V-270178
+Rule ID:
+SV-270178r1051243
+STIG ID:
+RHEL-09-255070
+SRG ID:
+SRG-OS-000250-GPOS-00093
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+The RHEL 9 SSH client must be configured to use only DOD-approved Message Authentication Codes (MACs) employing FIPS 140-3 validated cryptographic hash algorithms to protect the confidentiality of SSH client connections.
+Discussion:
+Without cryptographic integrity protections, information can be altered by unauthorized users without detection. 
+
+Remote access (e.g., RDP) is access to DOD nonpublic information systems by an authorized user (or an information system) communicating through an external, nonorganization-controlled network. Remote access methods include, for example, dial-up, broadband, and wireless. 
+
+Cryptographic mechanisms used for protecting the integrity of information include, for example, signed hash functions using asymmetric cryptography, enabling distribution of the public key to verify the hash information while maintaining the confidentiality of the secret key used to generate the hash. 
+
+RHEL 9 incorporates systemwide crypto policies by default. The SSH configuration file has no effect on the ciphers, MACs, or algorithms unless specifically defined in the /etc/sysconfig/sshd file. The employed algorithms can be viewed in the /etc/crypto-policies/back-ends/openssh.config file.
+Check Text:
+Verify the SSH client is configured to use only MACs employing FIPS 140-3 approved algorithms.
+
+To verify the MACs in the systemwide SSH configuration file, use the following command:
+
+$ grep -i MACs /etc/crypto-policies/back-ends/openssh.config
+
+MACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512
+
+If the MACs entries in the "openssh.config" file have any hashes other than "hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512", or they are missing or commented out, this is a finding.
+Fix Text:
+Configure the SSH client to use only MACs employing FIPS 140-3 approved algorithms.
+
+Reinstall crypto-policies with the following command:
+
+$ sudo dnf -y reinstall crypto-policies
+
+Set the crypto-policy to FIPS with the following command:
+
+$ sudo update-crypto-policies --set FIPS
+
+Setting system policy to FIPS
+
+Note: Systemwide crypto policies are applied on application startup. It is recommended to restart the system for the change of policies to fully take place.
+
+CCI-001453
+Implement cryptographic mechanisms to protect the integrity of remote access sessions.
+NIST SP 800-53 :: AC-17 (2)
+NIST SP 800-53A :: AC-17 (2).1
+NIST SP 800-53 Revision 4 :: AC-17 (2)
+NIST SP 800-53 Revision 5 :: AC-17 (2)

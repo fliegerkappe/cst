@@ -1,0 +1,443 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AC-7 Unsuccessful Logon Attempts
+************************************************************************************************************
+
+Group ID:
+V-258054
+Rule ID:
+SV-258054r958736
+STIG ID:
+RHEL-09-411075
+SRG ID:
+SRG-OS-000329-GPOS-00128
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must automatically lock an account when three unsuccessful logon attempts occur.
+Discussion:
+By limiting the number of failed logon attempts, the risk of unauthorized system access via user password guessing, otherwise known as brute-force attacks, is reduced. Limits are imposed by locking the account.
+
+Satisfies: SRG-OS-000329-GPOS-00128, SRG-OS-000021-GPOS-00005
+Check Text:
+Verify RHEL 9 is configured to lock an account after three unsuccessful logon attempts with the command:
+
+$ grep 'deny =' /etc/security/faillock.conf
+
+deny = 3
+
+If the "deny" option is not set to "3" or less (but not "0"), is missing or commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to lock an account when three unsuccessful logon attempts occur.
+
+Add/modify the "/etc/security/faillock.conf" file to match the following line:
+
+deny = 3
+CCI-000044
+Enforce the organization-defined limit of consecutive invalid logon attempts by a user during the organization-defined time period.
+NIST SP 800-53 :: AC-7 a
+NIST SP 800-53A :: AC-7.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-7 a
+NIST SP 800-53 Revision 5 :: AC-7 a
+CCI-002238
+Automatically lock the account or node for either an organization-defined time period, until the locked account or node is released by an administrator, or delays the next logon prompt according to the organization-defined delay algorithm when the maximum number of unsuccessful logon attempts is exceeded.
+NIST SP 800-53 Revision 4 :: AC-7 b
+NIST SP 800-53 Revision 5 :: AC-7 b
+
+
+==========================================================================================================
+
+Group ID:
+V-258055
+Rule ID:
+SV-258055r1045140
+STIG ID:
+RHEL-09-411080
+SRG ID:
+SRG-OS-000329-GPOS-00128
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must automatically lock the root account until the root account is released by an administrator when three unsuccessful logon attempts occur during a 15-minute time period.
+Discussion:
+By limiting the number of failed logon attempts, the risk of unauthorized system access via user password guessing, also known as brute-forcing, is reduced. Limits are imposed by locking the account.
+
+Satisfies: SRG-OS-000329-GPOS-00128, SRG-OS-000021-GPOS-00005
+Check Text:
+Verify RHEL 9 is configured to lock the root account after three unsuccessful logon attempts with the command:
+
+$ sudo grep even_deny_root /etc/security/faillock.conf
+
+even_deny_root
+
+If the "even_deny_root" option is not set or is missing or commented out, this is a finding.
+Fix Text:
+To configure RHEL 9 to lock out the "root" account after a number of incorrect logon attempts using "pam_faillock.so", first enable the feature using the following command:
+ 
+$ sudo authselect enable-feature with-faillock  
+
+Edit the "/etc/security/faillock.conf" by uncommenting or adding the following line:
+ 
+even_deny_root
+CCI-000044
+Enforce the organization-defined limit of consecutive invalid logon attempts by a user during the organization-defined time period.
+NIST SP 800-53 :: AC-7 a
+NIST SP 800-53A :: AC-7.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-7 a
+NIST SP 800-53 Revision 5 :: AC-7 a
+CCI-002238
+Automatically lock the account or node for either an organization-defined time period, until the locked account or node is released by an administrator, or delays the next logon prompt according to the organization-defined delay algorithm when the maximum number of unsuccessful logon attempts is exceeded.
+NIST SP 800-53 Revision 4 :: AC-7 b
+NIST SP 800-53 Revision 5 :: AC-7 b
+
+
+==========================================================================================================
+
+
+Group ID:
+V-258056
+Rule ID:
+SV-258056r1045143
+STIG ID:
+RHEL-09-411085
+SRG ID:
+SRG-OS-000329-GPOS-00128
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must automatically lock an account when three unsuccessful logon attempts occur during a 15-minute time period.
+Discussion:
+By limiting the number of failed logon attempts the risk of unauthorized system access via user password guessing, otherwise known as brute-forcing, is reduced. Limits are imposed by locking the account.
+
+Satisfies: SRG-OS-000329-GPOS-00128, SRG-OS-000021-GPOS-00005
+Check Text:
+Note: If the system administrator demonstrates the use of an approved centralized account management method that locks an account after three unsuccessful logon attempts within a period of 15 minutes, this requirement is Not Applicable.
+
+Verify RHEL 9 locks an account after three unsuccessful logon attempts within a period of 15 minutes with the following command:
+
+$ sudo grep fail_interval /etc/security/faillock.conf 
+
+fail_interval = 900
+
+If the "fail_interval" option is not set to "900" or less (but not "0"), the line is commented out, or the line is missing, this is a finding.
+Fix Text:
+To configure RHEL 9 to lock out the "root" account after a number of incorrect logon attempts within 15 minutes using "pam_faillock.so", enable the feature using the following command:
+ 
+$ sudo authselect enable-feature with-faillock  
+
+Then edit the "/etc/security/faillock.conf" file as follows:
+
+fail_interval = 900
+CCI-000044
+Enforce the organization-defined limit of consecutive invalid logon attempts by a user during the organization-defined time period.
+NIST SP 800-53 :: AC-7 a
+NIST SP 800-53A :: AC-7.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-7 a
+NIST SP 800-53 Revision 5 :: AC-7 a
+CCI-002238
+Automatically lock the account or node for either an organization-defined time period, until the locked account or node is released by an administrator, or delays the next logon prompt according to the organization-defined delay algorithm when the maximum number of unsuccessful logon attempts is exceeded.
+NIST SP 800-53 Revision 4 :: AC-7 b
+NIST SP 800-53 Revision 5 :: AC-7 b
+
+==========================================================================================================
+
+Group ID:
+V-258057
+Rule ID:
+SV-258057r1045146
+STIG ID:
+RHEL-09-411090
+SRG ID:
+SRG-OS-000329-GPOS-00128
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must maintain an account lock until the locked account is released by an administrator.
+Discussion:
+By limiting the number of failed logon attempts the risk of unauthorized system access via user password guessing, otherwise known as brute-forcing, is reduced. Limits are imposed by locking the account.
+
+Satisfies: SRG-OS-000329-GPOS-00128, SRG-OS-000021-GPOS-00005
+Check Text:
+Verify RHEL 9 is configured to lock an account until released by an administrator after three unsuccessful logon attempts with the command:
+
+$ sudo grep -w unlock_time /etc/security/faillock.conf
+
+unlock_time = 0
+
+If the "unlock_time" option is not set to "0" or the line is missing or commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to lock an account until released by an administrator after three unsuccessful logon attempts with the command:
+ 
+$ sudo authselect enable-feature with-faillock  
+
+Edit the "/etc/security/faillock.conf" file as follows:
+
+unlock_time = 0
+CCI-000044
+Enforce the organization-defined limit of consecutive invalid logon attempts by a user during the organization-defined time period.
+NIST SP 800-53 :: AC-7 a
+NIST SP 800-53A :: AC-7.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-7 a
+NIST SP 800-53 Revision 5 :: AC-7 a
+CCI-002238
+Automatically lock the account or node for either an organization-defined time period, until the locked account or node is released by an administrator, or delays the next logon prompt according to the organization-defined delay algorithm when the maximum number of unsuccessful logon attempts is exceeded.
+NIST SP 800-53 Revision 4 :: AC-7 b
+NIST SP 800-53 Revision 5 :: AC-7 b
+
+
+==========================================================================================================
+
+Group ID:
+V-258060
+Rule ID:
+SV-258060r1045150
+STIG ID:
+RHEL-09-411105
+SRG ID:
+SRG-OS-000021-GPOS-00005
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must ensure account lockouts persist.
+Discussion:
+Having lockouts persist across reboots ensures that account is only unlocked by an administrator. If the lockouts did not persist across reboots, an attacker could simply reboot the system to continue brute force attacks against the accounts on the system.
+Check Text:
+Verify the "/etc/security/faillock.conf" file is configured to use a nondefault faillock directory to ensure contents persist after reboot with the following command:
+
+$ sudo grep -w dir /etc/security/faillock.conf
+
+dir = /var/log/faillock
+
+If the "dir" option is not set to a nondefault documented tally log directory or is missing or commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 maintain the contents of the faillock directory after a reboot.
+
+Add/modify the "/etc/security/faillock.conf" file to match the following line:
+
+dir = /var/log/faillock
+CCI-000044
+Enforce the organization-defined limit of consecutive invalid logon attempts by a user during the organization-defined time period.
+NIST SP 800-53 :: AC-7 a
+NIST SP 800-53A :: AC-7.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-7 a
+NIST SP 800-53 Revision 5 :: AC-7 a
+
+
+==========================================================================================================
+
+Group ID:
+V-258070
+Rule ID:
+SV-258070r1045153
+STIG ID:
+RHEL-09-412045
+SRG ID:
+SRG-OS-000021-GPOS-00005
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must log username information when unsuccessful logon attempts occur.
+Discussion:
+Without auditing of these events, it may be harder or impossible to identify what an attacker did after an attack.
+Check Text:
+Verify the "/etc/security/faillock.conf" file is configured to log username information when unsuccessful logon attempts occur with the following command:
+
+$ sudo grep audit /etc/security/faillock.conf
+
+audit
+
+If the "audit" option is not set, is missing, or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to log username information when unsuccessful logon attempts occur.
+
+Enable the feature using the following command:
+ 
+$ sudo authselect enable-feature with-faillock 
+ 
+Add/modify the "/etc/security/faillock.conf" file to match the following line:
+
+audit
+CCI-000044
+Enforce the organization-defined limit of consecutive invalid logon attempts by a user during the organization-defined time period.
+NIST SP 800-53 :: AC-7 a
+NIST SP 800-53A :: AC-7.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-7 a
+NIST SP 800-53 Revision 5 :: AC-7 a
+
+
+==========================================================================================================
+
+Group ID:
+V-258080
+Rule ID:
+SV-258080r1045162
+STIG ID:
+RHEL-09-431020
+SRG ID:
+SRG-OS-000021-GPOS-00005
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must configure SELinux context type to allow the use of a nondefault faillock tally directory.
+Discussion:
+Not having the correct SELinux context on the faillock directory may lead to unauthorized access to the directory.
+Check Text:
+Verify the location of the nondefault tally directory for the pam_faillock module with the following command:
+
+Note: If the system does not have SELinux enabled and enforcing a targeted policy, or if the pam_faillock module is not configured for use, this requirement is Not Applicable.
+
+$ sudo grep -w dir /etc/security/faillock.conf
+
+dir = /var/log/faillock
+
+Check the security context type of the nondefault tally directory with the following command:
+
+$ ls -Zd /var/log/faillock
+
+unconfined_u:object_r:faillog_t:s0 /var/log/faillock
+
+If the security context type of the nondefault tally directory is not "faillog_t", this is a finding.
+Fix Text:
+Configure RHEL 9 to allow the use of a nondefault faillock tally directory while SELinux enforces a targeted policy. 
+
+First enable the feature using the following command:
+ 
+$ sudo authselect enable-feature with-faillock 
+ 
+Create a nondefault faillock tally directory (if it does not already exist) with the following example:
+
+$ sudo mkdir /var/log/faillock
+
+Then add/modify the "/etc/security/faillock.conf" file to match the following line:
+ 
+dir = /var/log/faillock
+
+Update the /etc/selinux/targeted/contexts/files/file_contexts.local with "faillog_t" context type for the nondefault faillock tally directory with the following command:
+
+$ sudo semanage fcontext -a -t faillog_t "/var/log/faillock(/.*)?"
+
+Next, update the context type of the nondefault faillock directory/subdirectories and files with the following command:
+
+$ sudo restorecon -R -v /var/log/faillock
+CCI-000044
+Enforce the organization-defined limit of consecutive invalid logon attempts by a user during the organization-defined time period.
+NIST SP 800-53 :: AC-7 a
+NIST SP 800-53A :: AC-7.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-7 a
+NIST SP 800-53 Revision 5 :: AC-7 a
+
+
+==========================================================================================================
+
+Group ID:
+V-258095
+Rule ID:
+SV-258095r1045189
+STIG ID:
+RHEL-09-611030
+SRG ID:
+SRG-OS-000021-GPOS-00005
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must configure the use of the pam_faillock.so module in the /etc/pam.d/system-auth file.
+Discussion:
+If the pam_faillock.so module is not loaded, the system will not correctly lockout accounts to prevent password guessing attacks.
+Check Text:
+Verify the pam_faillock.so module is present in the "/etc/pam.d/system-auth" file:
+
+$ grep pam_faillock.so /etc/pam.d/system-auth
+
+auth required pam_faillock.so preauth
+auth required pam_faillock.so authfail
+account required pam_faillock.so
+
+If the pam_faillock.so module is not present in the "/etc/pam.d/system-auth" file with the "preauth" line listed before pam_unix.so, this is a finding.
+
+If the system administrator (SA) can demonstrate that the required configuration is contained in a PAM configuration file included or substacked from the system-auth file, this is not a finding.
+Fix Text:
+Configure RHEL 9 to include the use of the pam_faillock.so module in the /etc/pam.d/system-auth file. 
+
+If PAM is managed with authselect, enable the feature with the following command:
+ 
+$ sudo authselect enable-feature with-faillock
+ 
+Otherwise, add/modify the appropriate sections of the "/etc/pam.d/system-auth" file to match the following lines:
+Note: The "preauth" line must be listed before pam_unix.so.
+
+auth required pam_faillock.so preauth
+auth required pam_faillock.so authfail
+account required pam_faillock.so
+CCI-000044
+Enforce the organization-defined limit of consecutive invalid logon attempts by a user during the organization-defined time period.
+NIST SP 800-53 :: AC-7 a
+NIST SP 800-53A :: AC-7.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-7 a
+NIST SP 800-53 Revision 5 :: AC-7 a
+
+
+==========================================================================================================
+
+Group ID:
+V-258096
+Rule ID:
+SV-258096r1045191
+STIG ID:
+RHEL-09-611035
+SRG ID:
+SRG-OS-000021-GPOS-00005
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must configure the use of the pam_faillock.so module in the /etc/pam.d/password-auth file.
+Discussion:
+If the pam_faillock.so module is not loaded, the system will not correctly lockout accounts to prevent password guessing attacks.
+Check Text:
+Verify the pam_faillock.so module is present in the "/etc/pam.d/password-auth" file:
+
+$ grep pam_faillock.so /etc/pam.d/password-auth
+
+auth required pam_faillock.so preauth
+auth required pam_faillock.so authfail
+account required pam_faillock.so
+
+If the pam_faillock.so module is not present in the "/etc/pam.d/password-auth" file with the "preauth" line listed before pam_unix.so, this is a finding.
+
+If the system administrator (SA) can demonstrate that the required configuration is contained in a PAM configuration file included or substacked from the system-auth file, this is not a finding.
+Fix Text:
+Configure RHEL 9 to include the use of the pam_faillock.so module in the /etc/pam.d/password-auth file. If PAM is managed with authselect, enable the feature with the following command:
+ 
+$ sudo authselect enable-feature with-faillock
+
+Otherwise, add/modify the appropriate sections of the "/etc/pam.d/password-auth" file to match the following lines:
+Note: The "preauth" line must be listed before pam_unix.so.
+
+auth required pam_faillock.so preauth
+auth required pam_faillock.so authfail
+account required pam_faillock.so
+CCI-000044
+Enforce the organization-defined limit of consecutive invalid logon attempts by a user during the organization-defined time period.
+NIST SP 800-53 :: AC-7 a
+NIST SP 800-53A :: AC-7.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-7 a
+NIST SP 800-53 Revision 5 :: AC-7 a

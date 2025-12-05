@@ -1,0 +1,519 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AU-4 Audit Storage Capacity
+************************************************************************************************************
+
+Group ID:
+V-258161
+Rule ID:
+SV-258161r958416
+STIG ID:
+RHEL-09-653060
+SRG ID:
+SRG-OS-000039-GPOS-00017
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must label all offloaded audit logs before sending them to the central log server.
+Discussion:
+Enriched logging is needed to determine who, what, and when events occur on a system. Without this, determining root cause of an event will be much more difficult.
+
+When audit logs are not labeled before they are sent to a central log server, the audit data will not be able to be analyzed and tied back to the correct system.
+
+Satisfies: SRG-OS-000039-GPOS-00017, SRG-OS-000342-GPOS-00133, SRG-OS-000479-GPOS-00224
+Check Text:
+Verify that RHEL 9 Audit Daemon is configured to label all offloaded audit logs, with the following command:
+
+$ sudo grep name_format /etc/audit/auditd.conf
+
+name_format = hostname
+
+If the "name_format" option is not "hostname", "fqd", or "numeric", or the line is commented out, this is a finding.
+Fix Text:
+Edit the /etc/audit/auditd.conf file and add or update the "name_format" option:
+
+name_format = hostname
+
+The audit daemon must be restarted for changes to take effect.
+CCI-000132
+Ensure that audit records containing information that establishes where the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 c
+CCI-001851
+Transfer audit logs per organization-defined frequency to a different system, system component, or media than the system or system component conducting the logging.
+NIST SP 800-53 Revision 4 :: AU-4 (1)
+NIST SP 800-53 Revision 5 :: AU-4 (1)
+
+************************************************************************************************************
+
+Group ID:
+V-258162
+Rule ID:
+SV-258162r958754
+STIG ID:
+RHEL-09-653065
+SRG ID:
+SRG-OS-000342-GPOS-00133
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must take appropriate action when the internal event queue is full.
+Discussion:
+The audit system should have an action setup in the event the internal event queue becomes full so that no data is lost.  Information stored in one location is vulnerable to accidental or incidental deletion or alteration.
+
+Offloading is a common process in information systems with limited audit storage capacity.
+
+Satisfies: SRG-OS-000342-GPOS-00133, SRG-OS-000479-GPOS-00224
+Check Text:
+Verify that RHEL 9 audit system is configured to take an appropriate action when the internal event queue is full:
+
+$ sudo grep -i overflow_action /etc/audit/auditd.conf 
+
+overflow_action = syslog
+
+If the value of the "overflow_action" option is not set to "syslog", "single", "halt" or the line is commented out, ask the system administrator (SA) to indicate how the audit logs are offloaded to a different system or media.
+
+If there is no evidence that the transfer of the audit logs being offloaded to another system or media takes appropriate action if the internal event queue becomes full, this is a finding.
+Fix Text:
+Edit the /etc/audit/auditd.conf file and add or update the "overflow_action" option:
+
+overflow_action = syslog
+
+The audit daemon must be restarted for changes to take effect.
+CCI-001851
+Transfer audit logs per organization-defined frequency to a different system, system component, or media than the system or system component conducting the logging.
+NIST SP 800-53 Revision 4 :: AU-4 (1)
+NIST SP 800-53 Revision 5 :: AU-4 (1)
+
+
+************************************************************************************************************
+
+Group ID:
+V-257847
+Rule ID:
+SV-257847r1044924
+STIG ID:
+RHEL-09-231030
+SRG ID:
+SRG-OS-000341-GPOS-00132
+Severity:
+CAT III
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must use a separate file system for the system audit data path.
+Discussion:
+Placing "/var/log/audit" in its own partition enables better separation between audit files and other system files, and helps ensure that auditing cannot be halted due to the partition running out of space.
+
+Satisfies: SRG-OS-000341-GPOS-00132, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify that a separate file system/partition has been created for the system audit data path with the following command:
+
+Note: /var/log/audit is used as the example as it is a common location.
+
+$ mount | grep /var/log/audit 
+
+/dev/mapper/rootvg-varlogaudit on /var/log/audit type xfs (rw,relatime,seclabel,attr2,inode64,logbufs=8,logbsize=32k,noquota)
+Note: Options displayed for mount may differ.
+
+If no line is returned, this is a finding.
+Fix Text:
+Migrate the system audit data path onto a separate file system.
+CCI-001849
+Allocate audit log storage capacity to accommodate organization-defined audit log retention requirements.
+NIST SP 800-53 Revision 4 :: AU-4
+NIST SP 800-53 Revision 5 :: AU-4
+
+
+************************************************************************************************************
+
+Group ID:
+V-258140
+Rule ID:
+SV-258140r1106460
+STIG ID:
+RHEL-09-652010
+SRG ID:
+SRG-OS-000479-GPOS-00224
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the rsyslog package installed.
+Discussion:
+rsyslogd is a system utility providing support for message logging. Support for both internet and Unix domain sockets enables this utility to support both local and remote logging. Couple this utility with "gnutls" (which is a secure communications library implementing the SSL, TLS, and DTLS protocols), to create a method to securely encrypt and offload auditing.
+
+Satisfies: SRG-OS-000479-GPOS-00224, SRG-OS-000051-GPOS-00024, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify RHEL 9 has the rsyslog package installed with the following command:
+
+$ dnf list --installed rsyslog
+
+Example output:
+
+rsyslog.x86_64          8.2102.0-101.el9_0.1
+
+If the "rsyslog" package is not installed, this is a finding.
+Fix Text:
+Install the rsyslog package with the following command:
+ 
+$ sudo dnf install rsyslog
+CCI-000154
+Provide the capability to centrally review and analyze audit records from multiple components within the system.
+NIST SP 800-53 :: AU-6 (4)
+NIST SP 800-53A :: AU-6 (4).1
+NIST SP 800-53 Revision 4 :: AU-6 (4)
+NIST SP 800-53 Revision 5 :: AU-6 (4)
+CCI-001851
+Transfer audit logs per organization-defined frequency to a different system, system component, or media than the system or system component conducting the logging.
+NIST SP 800-53 Revision 4 :: AU-4 (1)
+NIST SP 800-53 Revision 5 :: AU-4 (1)
+
+
+************************************************************************************************************
+
+Group ID:
+V-258146
+Rule ID:
+SV-258146r1045288
+STIG ID:
+RHEL-09-652040
+SRG ID:
+SRG-OS-000342-GPOS-00133
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must authenticate the remote logging server for offloading audit logs via rsyslog.
+Discussion:
+Information stored in one location is vulnerable to accidental or incidental deletion or alteration.
+
+Offloading is a common process in information systems with limited audit storage capacity.
+
+RHEL 9 installation media provides "rsyslogd", a system utility providing support for message logging. Support for both internet and Unix domain sockets enables this utility to support both local and remote logging. Coupling this utility with "gnutls" (a secure communications library implementing the SSL, TLS and DTLS protocols) creates a method to securely encrypt and offload auditing.
+
+"Rsyslog" supported authentication modes include:
+anon - anonymous authentication
+x509/fingerprint - certificate fingerprint authentication
+x509/certvalid - certificate validation only
+x509/name - certificate validation and subject name authentication
+
+Satisfies: SRG-OS-000342-GPOS-00133, SRG-OS-000479-GPOS-00224
+Check Text:
+Verify RHEL 9 authenticates the remote logging server for offloading audit logs with the following command:
+
+$ grep -i 'StreamDriver[\.]*AuthMode' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+
+/etc/rsyslog.conf:$ActionSendStreamDriverAuthMode x509/name 
+
+If the variable name "StreamDriverAuthMode" is present in an omfwd statement block, this is not a finding. However, if the "StreamDriverAuthMode" variable is in a module block, this is a finding.
+
+If the value of the "$ActionSendStreamDriverAuthMode or StreamDriver.AuthMode" option is not set to "x509/name" or the line is commented out, ask the system administrator (SA) to indicate how the audit logs are offloaded to a different system or media. 
+
+If there is no evidence that the transfer of the audit logs being offloaded to another system or media is encrypted, this is a finding.
+Fix Text:
+Configure RHEL 9 to authenticate the remote logging server for offloading audit logs by setting the following option in "/etc/rsyslog.conf" or "/etc/rsyslog.d/[customfile].conf":
+
+$ActionSendStreamDriverAuthMode x509/name
+CCI-001851
+Transfer audit logs per organization-defined frequency to a different system, system component, or media than the system or system component conducting the logging.
+NIST SP 800-53 Revision 4 :: AU-4 (1)
+NIST SP 800-53 Revision 5 :: AU-4 (1)
+
+
+************************************************************************************************************
+
+Group ID:
+V-258147
+Rule ID:
+SV-258147r1045290
+STIG ID:
+RHEL-09-652045
+SRG ID:
+SRG-OS-000342-GPOS-00133
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must encrypt the transfer of audit records offloaded onto a different system or media from the system being audited via rsyslog.
+Discussion:
+Information stored in one location is vulnerable to accidental or incidental deletion or alteration.
+
+Offloading is a common process in information systems with limited audit storage capacity.
+
+RHEL 9 installation media provides "rsyslogd", a system utility providing support for message logging. Support for both internet and Unix domain sockets enables this utility to support both local and remote logging. Coupling this utility with "gnutls" (a secure communications library implementing the SSL, TLS and DTLS protocols) creates a method to securely encrypt and offload auditing.
+
+"Rsyslog" supported authentication modes include:
+anon - anonymous authentication
+x509/fingerprint - certificate fingerprint authentication
+x509/certvalid - certificate validation only
+x509/name - certificate validation and subject name authentication
+
+Satisfies: SRG-OS-000342-GPOS-00133, SRG-OS-000479-GPOS-00224
+Check Text:
+Verify RHEL 9 encrypts audit records offloaded onto a different system or media from the system being audited via rsyslog with the following command:
+
+$ grep -i 'StreamDriver[\.]*Mode' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+
+/etc/rsyslog.conf:$ActionSendStreamDriverMode 1 
+
+If the value of the "$ActionSendStreamDriverMode or StreamDriver.Mode" option is not set to "1" or the line is commented out, this is a finding.
+
+If the variable name "StreamDriverAuthMode" is present in an omfwd statement block, this is not a finding. However, if the "StreamDriverAuthMode" variable is in a module block, this is a finding.
+Fix Text:
+Configure RHEL 9 to encrypt offloaded audit records via rsyslog by setting the following options in "/etc/rsyslog.conf" or "/etc/rsyslog.d/[customfile].conf":
+
+$ActionSendStreamDriverMode 1
+CCI-001851
+Transfer audit logs per organization-defined frequency to a different system, system component, or media than the system or system component conducting the logging.
+NIST SP 800-53 Revision 4 :: AU-4 (1)
+NIST SP 800-53 Revision 5 :: AU-4 (1)
+
+
+************************************************************************************************************
+
+Group ID:
+V-258148
+Rule ID:
+SV-258148r1045292
+STIG ID:
+RHEL-09-652050
+SRG ID:
+SRG-OS-000342-GPOS-00133
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must encrypt via the gtls driver the transfer of audit records offloaded onto a different system or media from the system being audited via rsyslog.
+Discussion:
+Information stored in one location is vulnerable to accidental or incidental deletion or alteration.
+
+Offloading is a common process in information systems with limited audit storage capacity.
+
+RHEL 9 installation media provides "rsyslogd", a system utility providing support for message logging. Support for both internet and Unix domain sockets enables this utility to support both local and remote logging. Coupling this utility with "gnutls" (a secure communications library implementing the SSL, TLS and DTLS protocols) creates a method to securely encrypt and offload auditing.
+
+Satisfies: SRG-OS-000342-GPOS-00133, SRG-OS-000479-GPOS-00224
+Check Text:
+Verify RHEL 9 uses the gtls driver to encrypt audit records offloaded onto a different system or media from the system being audited with the following command:
+
+$ grep -Ei 'DefaultNetStreamDriver\b|StreamDriver.Name' /etc/rsyslog.conf /etc/rsyslog.d/*.conf
+
+/etc/rsyslog.conf:$DefaultNetstreamDriver gtls
+
+If the value of the "$DefaultNetstreamDriver or StreamDriver" option is not set to "gtls" or the line is commented out, this is a finding.
+
+If the variable name "StreamDriver" is present in an omfwd statement block, this is not a finding. However, if the "StreamDriver" variable is in a module block, this is a finding.
+Fix Text:
+Configure RHEL 9 to use the gtls driver to encrypt offloaded audit records by setting the following options in "/etc/rsyslog.conf" or "/etc/rsyslog.d/[customfile].conf":
+
+$DefaultNetstreamDriver gtls
+CCI-001851
+Transfer audit logs per organization-defined frequency to a different system, system component, or media than the system or system component conducting the logging.
+NIST SP 800-53 Revision 4 :: AU-4 (1)
+NIST SP 800-53 Revision 5 :: AU-4 (1)
+
+
+************************************************************************************************************
+
+Group ID:
+V-258149
+Rule ID:
+SV-258149r1106462
+STIG ID:
+RHEL-09-652055
+SRG ID:
+SRG-OS-000479-GPOS-00224
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured to forward audit records via TCP to a different system or media from the system being audited via rsyslog.
+Discussion:
+Information stored in one location is vulnerable to accidental or incidental deletion or alteration.
+
+Off-loading is a common process in information systems with limited audit storage capacity.
+
+RHEL 9 installation media provides "rsyslogd", a system utility providing support for message logging. Support for both internet and Unix domain sockets enables this utility to support both local and remote logging. Coupling this utility with "gnutls" (a secure communications library implementing the SSL, TLS and DTLS protocols) creates a method to securely encrypt and off-load auditing.
+
+Rsyslog provides three ways to forward message: the traditional UDP transport, which is extremely lossy but standard; the plain TCP based transport, which loses messages only during certain situations but is widely available; and the RELP transport, which does not lose messages but is currently available only as part of the rsyslogd 3.15.0 and above.
+
+Examples of each configuration:
+UDP *.* @remotesystemname
+TCP *.* @@remotesystemname
+RELP *.* :omrelp:remotesystemname:2514
+Note that a port number was given as there is no standard port for RELP.
+
+Satisfies: SRG-OS-000479-GPOS-00224, SRG-OS-000480-GPOS-00227, SRG-OS-000342-GPOS-00133
+Check Text:
+Verify RHEL 9 audit system off-loads audit records onto a different system or media from the system being audited via rsyslog using TCP with the following command:
+
+$ sudo grep -iR '@@' /etc/rsyslog.conf /etc/rsyslog.d/
+
+/etc/rsyslog.d/remoteLogging.conf:*.* @@[remoteloggingserver]:[port]
+
+If a remote server is not configured, or the line is commented out, ask the system administrator (SA) to indicate how the audit logs are off-loaded to a different system or media. 
+
+If there is no evidence that the audit logs are being off-loaded to another system or media, this is a finding.
+Fix Text:
+Configure RHEL 9 to off-load audit records onto a different system or media from the system being audited via TCP using rsyslog by specifying the remote logging server in "/etc/rsyslog.conf" or "/etc/rsyslog.d/[customfile].conf" with the name or IP address of the log aggregation server.
+
+*.* @@[remoteloggingserver]:[port]
+CCI-001851
+Transfer audit logs per organization-defined frequency to a different system, system component, or media than the system or system component conducting the logging.
+NIST SP 800-53 Revision 4 :: AU-4 (1)
+NIST SP 800-53 Revision 5 :: AU-4 (1)
+
+
+************************************************************************************************************
+
+Group ID:
+V-258155
+Rule ID:
+SV-258155r1045300
+STIG ID:
+RHEL-09-653030
+SRG ID:
+SRG-OS-000341-GPOS-00132
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must allocate audit record storage capacity to store at least one week's worth of audit records.
+Discussion:
+To ensure RHEL 9 systems have a sufficient storage capacity in which to write the audit logs, RHEL 9 needs to be able to allocate audit record storage capacity.
+
+The task of allocating audit record storage capacity is usually performed during initial installation of RHEL 9.
+
+Satisfies: SRG-OS-000341-GPOS-00132, SRG-OS-000342-GPOS-00133
+Check Text:
+Verify RHEL 9 allocates audit record storage capacity to store at least one week of audit records when audit records are not immediately sent to a central audit record storage facility.
+
+Note: The partition size needed to capture a week of audit records is based on the activity level of the system and the total storage capacity available. Typically 10.0GB of storage space for audit records should be sufficient.
+
+Determine which partition the audit records are being written to with the following command:
+
+$ sudo grep -w log_file /etc/audit/auditd.conf
+
+log_file = /var/log/audit/audit.log 
+
+Check the size of the partition that audit records are written to with the following command and verify whether it is sufficiently large:
+
+ # df -h /var/log/audit/
+
+/dev/sda2 24G 10.4G 13.6G 43% /var/log/audit 
+
+If the audit record partition is not allocated for sufficient storage capacity, this is a finding.
+Fix Text:
+Allocate enough storage capacity for at least one week of audit records when audit records are not immediately sent to a central audit record storage facility.
+
+If audit records are stored on a partition made specifically for audit records, resize the partition with sufficient space to contain one week of audit records.
+
+If audit records are not stored on a partition made specifically for audit records, a new partition with sufficient space will need be to be created.
+CCI-001849
+Allocate audit log storage capacity to accommodate organization-defined audit log retention requirements.
+NIST SP 800-53 Revision 4 :: AU-4
+NIST SP 800-53 Revision 5 :: AU-4
+CCI-001851
+Transfer audit logs per organization-defined frequency to a different system, system component, or media than the system or system component conducting the logging.
+NIST SP 800-53 Revision 4 :: AU-4 (1)
+NIST SP 800-53 Revision 5 :: AU-4 (1)
+
+
+************************************************************************************************************
+
+Group ID:
+V-258173
+Rule ID:
+SV-258173r1101933
+STIG ID:
+RHEL-09-653120
+SRG ID:
+SRG-OS-000254-GPOS-00095
+Severity:
+CAT III
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must allocate an audit_backlog_limit of sufficient size to capture processes that start prior to the audit daemon.
+Discussion:
+Without the capability to generate audit records, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.
+
+If auditing is enabled late in the startup process, the actions of some startup processes may not be audited. Some audit systems also maintain state information only available if auditing is enabled before a given process is created.
+
+Audit records can be generated from various components within the information system (e.g., module or policy filter).
+
+Allocating an audit_backlog_limit of sufficient size is critical in maintaining a stable boot process. With an insufficient limit allocated, the system is susceptible to boot failures and crashes.
+
+Satisfies: SRG-OS-000254-GPOS-00095, SRG-OS-000341-GPOS-00132
+Check Text:
+Verify RHEL 9 allocates a sufficient audit_backlog_limit to capture processes that start prior to the audit daemon with the following command:
+
+$ sudo grubby --info=ALL | grep args | grep 'audit_backlog_limit'
+
+If the command returns any outputs, and audit_backlog_limit is less than "8192", this is a finding.
+Fix Text:
+Configure RHEL 9 to allocate sufficient audit_backlog_limit to capture processes that start prior to the audit daemon with the following command:
+
+$ sudo grubby --update-kernel=ALL --args=audit_backlog_limit=8192
+CCI-001464
+Initiates session audits automatically at system start-up.
+NIST SP 800-53 :: AU-14 (1)
+NIST SP 800-53A :: AU-14 (1).1
+NIST SP 800-53 Revision 4 :: AU-14 (1)
+NIST SP 800-53 Revision 5 :: AU-14 (1)
+CCI-001849
+Allocate audit log storage capacity to accommodate organization-defined audit log retention requirements.
+NIST SP 800-53 Revision 4 :: AU-4
+NIST SP 800-53 Revision 5 :: AU-4
+
+
+************************************************************************************************************
+
+Group ID:
+V-258175
+Rule ID:
+SV-258175r1045310
+STIG ID:
+RHEL-09-653130
+SRG ID:
+SRG-OS-000342-GPOS-00133
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audispd-plugins package must be installed.
+Discussion:
+"audispd-plugins" provides plugins for the real-time interface to the audit subsystem, "audispd". These plugins can do things like relay events to remote machines or analyze events for suspicious behavior.
+Check Text:
+Verify that RHEL 9 has the audispd-plugins package installed with the following command:
+
+$ dnf list --installed audispd-plugins
+
+Example output:
+
+audispd-plugins.x86_64          3.0.7-101.el9_0.2
+
+If the "audispd-plugins" package is not installed, this is a finding.
+Fix Text:
+The audispd-plugins package can be installed with the following command:
+ 
+$ sudo dnf install audispd-plugins
+CCI-001851
+Transfer audit logs per organization-defined frequency to a different system, system component, or media than the system or system component conducting the logging.
+NIST SP 800-53 Revision 4 :: AU-4 (1)
+NIST SP 800-53 Revision 5 :: AU-4 (1)

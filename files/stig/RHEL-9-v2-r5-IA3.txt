@@ -1,0 +1,413 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+IA-3 Device Identification and Authentication
+************************************************************************************************************
+
+Group ID:
+V-257849
+Rule ID:
+SV-257849r1044928
+STIG ID:
+RHEL-09-231040
+SRG ID:
+SRG-OS-000114-GPOS-00059
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 file system automount function must be disabled unless required.
+Discussion:
+An authentication process resists replay attacks if it is impractical to achieve a successful authentication by recording and replaying a previous authentication message.
+
+Satisfies: SRG-OS-000114-GPOS-00059, SRG-OS-000378-GPOS-00163, SRG-OS-000480-GPOS-00227
+Check Text:
+Note: If the autofs service is not installed, this requirement is Not Applicable.
+
+Verify that the RHEL 9 file system automount function has been disabled with the following command:
+
+$ systemctl is-enabled  autofs
+
+masked
+
+If the returned value is not "masked", "disabled", or "Failed to get unit file state for autofs.service for autofs" and is not documented as an operational requirement with the information system security officer (ISSO), this is a finding.
+Fix Text:
+Configure RHEL 9 to disable the ability to automount devices.
+
+The autofs service can be disabled with the following command:
+
+$ sudo systemctl mask --now autofs.service
+CCI-000778
+Uniquely identify organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 :: IA-3
+NIST SP 800-53A :: IA-3.1 (ii)
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+CCI-001958
+Authenticate organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+
+************************************************************************************************************
+
+Group ID:
+V-258014
+Rule ID:
+SV-258014r1045084
+STIG ID:
+RHEL-09-271020
+SRG ID:
+SRG-OS-000114-GPOS-00059
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must disable the graphical user interface automount function unless required.
+Discussion:
+Automatically mounting file systems permits easy introduction of unknown devices, thereby facilitating malicious activity.
+
+Satisfies: SRG-OS-000114-GPOS-00059, SRG-OS-000378-GPOS-00163, SRG-OS-000480-GPOS-00227
+Check Text:
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, the GNOME desktop environment. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+Verify RHEL 9 disables the graphical user interface automount function with the following command:
+
+$ gsettings get org.gnome.desktop.media-handling automount-open 
+
+false
+
+If "automount-open" is set to "true", and is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+Configure the GNOME desktop to disable automated mounting of removable media.
+
+The dconf settings can be edited in the /etc/dconf/db/* location.
+
+Update the [org/gnome/desktop/media-handling] section of the "/etc/dconf/db/local.d/00-security-settings" database file and add or update the following lines:
+
+[org/gnome/desktop/media-handling]
+automount-open=false
+
+Then update the dconf system databases:
+
+$ sudo dconf update
+CCI-000778
+Uniquely identify organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 :: IA-3
+NIST SP 800-53A :: IA-3.1 (ii)
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+CCI-001958
+Authenticate organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+
+************************************************************************************************************
+
+Group ID:
+V-258015
+Rule ID:
+SV-258015r1045086
+STIG ID:
+RHEL-09-271025
+SRG ID:
+SRG-OS-000114-GPOS-00059
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prevent a user from overriding the disabling of the graphical user interface automount function.
+Discussion:
+A nonprivileged account is any operating system account with authorizations of a nonprivileged user.
+
+Satisfies: SRG-OS-000114-GPOS-00059, SRG-OS-000378-GPOS-00163, SRG-OS-000480-GPOS-00227
+Check Text:
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, the GNOME desktop environment. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+Verify RHEL 9 disables the ability of the user to override the graphical user interface automount setting.
+
+Determine which profile the system database is using with the following command:
+
+$ sudo grep system-db /etc/dconf/profile/user
+
+system-db:local
+
+Check that the automount setting is locked from nonprivileged user modification with the following command:
+
+Note: The example below is using the database "local" for the system, so the path is "/etc/dconf/db/local.d". This path must be modified if a database other than "local" is being used.
+
+$ grep 'automount-open' /etc/dconf/db/local.d/locks/* 
+
+/org/gnome/desktop/media-handling/automount-open
+
+If the command does not return at least the example result, this is a finding.
+Fix Text:
+Configure the GNOME desktop to not allow a user to change the setting that disables automated mounting of removable media.
+
+Add the following line to "/etc/dconf/db/local.d/locks/00-security-settings-lock" to prevent user modification:
+
+/org/gnome/desktop/media-handling/automount-open
+
+Then update the dconf system databases:
+
+$ sudo dconf update
+CCI-000778
+Uniquely identify organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 :: IA-3
+NIST SP 800-53A :: IA-3.1 (ii)
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+CCI-001958
+Authenticate organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+
+************************************************************************************************************
+
+Group ID:
+V-258017
+Rule ID:
+SV-258017r1045088
+STIG ID:
+RHEL-09-271035
+SRG ID:
+SRG-OS-000114-GPOS-00059
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prevent a user from overriding the disabling of the graphical user interface autorun function.
+Discussion:
+Techniques used to address this include protocols using nonces (e.g., numbers generated for a specific one-time use) or challenges (e.g., TLS, WS_Security). Additional techniques include time-synchronous or challenge-response one-time authenticators.
+
+Satisfies: SRG-OS-000114-GPOS-00059, SRG-OS-000378-GPOS-00163, SRG-OS-000480-GPOS-00227
+Check Text:
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, the GNOME desktop environment. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+Verify RHEL 9 disables ability of the user to override the graphical user interface autorun setting.
+
+Determine which profile the system database is using with the following command:
+
+$ gsettings writable org.gnome.desktop.media-handling autorun-never
+ 
+false
+ 
+If "autorun-never" is writable, the result is "true". If this is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+Configure the GNOME desktop to not allow a user to change the setting that disables autorun on removable media.
+
+Add the following line to "/etc/dconf/db/local.d/locks/00-security-settings-lock" to prevent user modification:
+
+/org/gnome/desktop/media-handling/autorun-never
+
+Then update the dconf system databases:
+
+$ sudo dconf update
+CCI-000778
+Uniquely identify organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 :: IA-3
+NIST SP 800-53A :: IA-3.1 (ii)
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+CCI-001958
+Authenticate organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+
+************************************************************************************************************
+
+Group ID: (See CM-7 Least Functionality: V-258034)
+V-258034
+Rule ID:
+SV-258034r1051267
+STIG ID:
+RHEL-09-291010
+SRG ID:
+SRG-OS-000114-GPOS-00059
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured to disable USB mass storage.
+Discussion:
+USB mass storage permits easy introduction of unknown devices, thereby facilitating malicious activity.
+
+Satisfies: SRG-OS-000114-GPOS-00059, SRG-OS-000378-GPOS-00163, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify that RHEL 9 disables the ability to load the USB Storage kernel module with the following command:
+
+$ grep -r usb-storage /etc/modprobe.conf /etc/modprobe.d/* 
+
+install usb-storage /bin/false
+blacklist usb-storage
+
+If the command does not return any output, or either line is commented out, and use of USB Storage is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+To configure the system to prevent the usb-storage kernel module from being loaded, add the following lines to the file "/etc/modprobe.d/usb-storage.conf" (or create "usb-storage.conf" if it does not exist):
+
+install usb-storage /bin/false
+blacklist usb-storage
+CCI-000778
+Uniquely identify organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 :: IA-3
+NIST SP 800-53A :: IA-3.1 (ii)
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+CCI-001958
+Authenticate organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+CCI-003959
+Prohibit the use or connection of unauthorized hardware components.
+NIST SP 800-53 Revision 5 :: CM-7 (9) (b)
+
+************************************************************************************************************
+
+Group ID: 
+V-258035  (See CM-7 Least Functionality: V-258035)
+Rule ID:
+SV-258035r1045125
+STIG ID:
+RHEL-09-291015
+SRG ID:
+SRG-OS-000378-GPOS-00163
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the USBGuard package installed.
+Discussion:
+The USBguard-daemon is the main component of the USBGuard software framework. It runs as a service in the background and enforces the USB device authorization policy for all USB devices. The policy is defined by a set of rules using a rule language described in the usbguard-rules.conf file. The policy and the authorization state of USB devices can be modified during runtime using the usbguard tool.
+
+The system administrator (SA) must work with the site information system security officer (ISSO) to determine a list of authorized peripherals and establish rules within the USBGuard software framework to allow only authorized devices.
+Check Text:
+Verify USBGuard is installed on the operating system with the following command:
+
+$ sudo dnf list installed usbguard
+
+Example output:
+
+Installed Packages
+usbguard.x86_64          1.0.0-10.el9_1.2          @rhel-9-for-x86_64-appstream-rpms
+
+If the USBGuard package is not installed, ask the SA to indicate how unauthorized peripherals are being blocked.
+
+If there is no evidence that unauthorized peripherals are being blocked before establishing a connection, this is a finding.
+
+If the system is virtual machine with no virtual or physical USB peripherals attached, this is not a finding.
+Fix Text:
+Install the usbguard package with the following command:
+
+$ sudo dnf install usbguard
+
+Enable the service to start on boot and then start it with the following commands:
+$ sudo systemctl enable usbguard
+$ sudo systemctl start usbguard
+
+Verify the status of the service with the following command:
+$ sudo systemctl status usbguard
+
+Note: usbguard will need to be configured to allow authorized devices once it is enabled on RHEL 9.
+CCI-001958
+Authenticate organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+CCI-003959
+Prohibit the use or connection of unauthorized hardware components.
+NIST SP 800-53 Revision 5 :: CM-7 (9) (b)
+
+************************************************************************************************************
+
+Group ID:
+V-258036   (See CM-7 Least Functionality: V-258036)
+Rule ID:
+SV-258036r1014861
+STIG ID:
+RHEL-09-291020
+SRG ID:
+SRG-OS-000378-GPOS-00163
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the USBGuard package enabled.
+Discussion:
+The USBguard-daemon is the main component of the USBGuard software framework. It runs as a service in the background and enforces the USB device authorization policy for all USB devices. The policy is defined by a set of rules using a rule language described in the usbguard-rules.conf file. The policy and the authorization state of USB devices can be modified during runtime using the usbguard tool.
+
+The system administrator (SA) must work with the site information system security officer (ISSO) to determine a list of authorized peripherals and establish rules within the USBGuard software framework to allow only authorized devices.
+Check Text:
+Verify RHEL 9 has USBGuard enabled with the following command:
+
+$ systemctl is-active usbguard
+
+active
+
+If usbguard is not active, ask the SA to indicate how unauthorized peripherals are being blocked.
+
+If there is no evidence that unauthorized peripherals are being blocked before establishing a connection, this is a finding.
+
+If the system is virtual machine with no virtual or physical USB peripherals attached, this is not a finding.
+Fix Text:
+To enable the USBGuard service run the following command:
+
+$ sudo systemctl enable --now usbguard
+CCI-001958
+Authenticate organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+CCI-003959
+Prohibit the use or connection of unauthorized hardware components.
+NIST SP 800-53 Revision 5 :: CM-7 (9) (b)
+
+************************************************************************************************************
+
+Group ID:
+V-258038
+Rule ID:
+SV-258038r1045128
+STIG ID:
+RHEL-09-291030
+SRG ID:
+SRG-OS-000378-GPOS-00163
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must block unauthorized peripherals before establishing a connection.
+Discussion:
+The USBguard-daemon is the main component of the USBGuard software framework. It runs as a service in the background and enforces the USB device authorization policy for all USB devices. The policy is defined by a set of rules using a rule language described in the usbguard-rules.conf file. The policy and the authorization state of USB devices can be modified during runtime using the usbguard tool.
+
+The system administrator (SA) must work with the site information system security officer (ISSO) to determine a list of authorized peripherals and establish rules within the USBGuard software framework to allow only authorized devices.
+Check Text:
+Note: If the system is virtual machine with no virtual or physical USB peripherals attached, this is Not Applicable.
+
+Verify the USBGuard has a policy configured with the following command:
+
+$ sudo usbguard list-rules
+
+allow id 1d6b:0001 serial
+
+If the command does not return results or an error is returned, ask the SA to indicate how unauthorized peripherals are being blocked.
+
+If there is no evidence that unauthorized peripherals are being blocked before establishing a connection, this is a finding.
+Fix Text:
+Configure the operating system to enable the blocking of unauthorized peripherals with the following command:
+
+Note: This command must be run from a root shell and will create an allow list for any usb devices currently connected to the system.
+
+# usbguard generate-policy --no-hash > /etc/usbguard/rules.conf
+
+Note: Enabling and starting usbguard without properly configuring it for an individual system will immediately prevent any access over a usb device such as a keyboard or mouse.
+CCI-001958
+Authenticate organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+

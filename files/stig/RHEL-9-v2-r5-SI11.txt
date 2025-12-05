@@ -1,0 +1,462 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+SI-11 Error Handling
+************************************************************************************************************
+
+Group ID:
+V-258165
+Rule ID:
+SV-258165r958434
+STIG ID:
+RHEL-09-653080
+SRG ID:
+SRG-OS-000057-GPOS-00027
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit logs must be group-owned by root or by a restricted logging group to prevent unauthorized read access.
+Discussion:
+Unauthorized disclosure of audit records can reveal system and configuration data to attackers, thus compromising its confidentiality.
+
+Satisfies: SRG-OS-000057-GPOS-00027, SRG-OS-000058-GPOS-00028, SRG-OS-000059-GPOS-00029, SRG-OS-000206-GPOS-00084
+Check Text:
+Verify the audit logs are group-owned by "root" or a restricted logging group. 
+
+First determine if a group other than "root" has been assigned to the audit logs with the following command:
+
+$ sudo grep log_group /etc/audit/auditd.conf
+
+Then determine where the audit logs are stored with the following command:
+
+$ sudo grep -iw log_file /etc/audit/auditd.conf
+
+log_file = /var/log/audit/audit.log
+
+Then using the location of the audit log file, determine if the audit log is group-owned by "root" using the following command:
+
+$ sudo stat -c "%G %n" /var/log/audit/audit.log
+
+root /var/log/audit/audit.log
+
+If the audit log is not group-owned by "root" or the configured alternative logging group, this is a finding.
+Fix Text:
+Change the group of the directory of "/var/log/audit" to be owned by a correct group.
+
+Identify the group that is configured to own audit log:
+
+$ sudo grep -P '^[ ]*log_group[ ]+=.*$' /etc/audit/auditd.conf
+
+Change the ownership to that group:
+
+$ sudo chgrp ${GROUP} /var/log/audit
+CCI-000162
+Protect audit information from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000163
+Protect audit information from unauthorized modification.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000164
+Protect audit information from unauthorized deletion.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-001314
+Reveal error messages only to organization-defined personnel or roles.
+NIST SP 800-53 :: SI-11 c
+NIST SP 800-53A :: SI-11.1 (iv)
+NIST SP 800-53 Revision 4 :: SI-11 b
+NIST SP 800-53 Revision 5 :: SI-11 b
+
+==========================================================================================================
+
+Group ID:
+V-257885
+Rule ID:
+SV-257885r1044953
+STIG ID:
+RHEL-09-232025
+SRG ID:
+SRG-OS-000206-GPOS-00084
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 /var/log directory must have mode 0755 or less permissive.
+Discussion:
+Only authorized personnel should be aware of errors and the details of the errors. Error messages are an indicator of an organization's operational state or can identify the RHEL 9 system or platform. Additionally, personally identifiable information (PII) and operational information must not be revealed through error messages to unauthorized personnel or their designated representatives.
+
+The structure and content of error messages must be carefully considered by the organization and development team. The extent to which the information system is able to identify and handle error conditions is guided by organizational policy and operational requirements.
+Check Text:
+Verify that the "/var/log" directory has a mode of "0755" or less permissive with the following command:
+
+$ stat -c '%a %n' /var/log
+
+755 /var/log
+
+If "/var/log" does not have a mode of "0755" or less permissive, this is a finding.
+Fix Text:
+Configure the "/var/log" directory to a mode of "0755" by running the following command:
+
+$ sudo chmod 0755 /var/log
+CCI-001314
+Reveal error messages only to organization-defined personnel or roles.
+NIST SP 800-53 :: SI-11 c
+NIST SP 800-53A :: SI-11.1 (iv)
+NIST SP 800-53 Revision 4 :: SI-11 b
+NIST SP 800-53 Revision 5 :: SI-11 b
+
+==========================================================================================================
+
+Group ID:
+V-257886
+Rule ID:
+SV-257886r1044955
+STIG ID:
+RHEL-09-232030
+SRG ID:
+SRG-OS-000206-GPOS-00084
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 /var/log/messages file must have mode 0640 or less permissive.
+Discussion:
+Only authorized personnel should be aware of errors and the details of the errors. Error messages are an indicator of an organization's operational state or can identify the RHEL 9 system or platform. Additionally, personally identifiable information (PII) and operational information must not be revealed through error messages to unauthorized personnel or their designated representatives.
+
+The structure and content of error messages must be carefully considered by the organization and development team. The extent to which the information system is able to identify and handle error conditions is guided by organizational policy and operational requirements.
+Check Text:
+Verify the "/var/log/messages" file has a mode of "0640" or less permissive with the following command:
+
+$ stat -c '%a %n' /var/log/messages
+
+600 /var/log/messages
+
+If "/var/log/messages" does not have a mode of "0640" or less permissive, this is a finding.
+Fix Text:
+Configure the "/var/log/messages" file to have a mode of "0640" by running the following command:
+
+$ sudo chmod 0640 /var/log/messages
+CCI-001314
+Reveal error messages only to organization-defined personnel or roles.
+NIST SP 800-53 :: SI-11 c
+NIST SP 800-53A :: SI-11.1 (iv)
+NIST SP 800-53 Revision 4 :: SI-11 b
+NIST SP 800-53 Revision 5 :: SI-11 b
+
+==========================================================================================================
+
+Group ID:
+V-257914
+Rule ID:
+SV-257914r1044969
+STIG ID:
+RHEL-09-232170
+SRG ID:
+SRG-OS-000206-GPOS-00084
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 /var/log directory must be owned by root.
+Discussion:
+Only authorized personnel should be aware of errors and the details of the errors. Error messages are an indicator of an organization's operational state or can identify the RHEL 9 system or platform. Additionally, personally identifiable information (PII) and operational information must not be revealed through error messages to unauthorized personnel or their designated representatives.
+
+The structure and content of error messages must be carefully considered by the organization and development team. The extent to which the information system is able to identify and handle error conditions is guided by organizational policy and operational requirements.
+Check Text:
+Verify the "/var/log" directory is owned by root with the following command:
+
+$ stat -c "%U %n" /var/log
+
+root /var/log
+
+If "/var/log" does not have an owner of "root", this is a finding.
+Fix Text:
+Configure the owner of the directory "/var/log" to "root" by running the following command:
+
+$ sudo chown root /var/log
+CCI-001314
+Reveal error messages only to organization-defined personnel or roles.
+NIST SP 800-53 :: SI-11 c
+NIST SP 800-53A :: SI-11.1 (iv)
+NIST SP 800-53 Revision 4 :: SI-11 b
+NIST SP 800-53 Revision 5 :: SI-11 b
+
+==========================================================================================================
+
+Group ID:
+V-257915
+Rule ID:
+SV-257915r1044971
+STIG ID:
+RHEL-09-232175
+SRG ID:
+SRG-OS-000206-GPOS-00084
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 /var/log directory must be group-owned by root.
+Discussion:
+Only authorized personnel should be aware of errors and the details of the errors. Error messages are an indicator of an organization's operational state or can identify the RHEL 9 system or platform. Additionally, personally identifiable information (PII) and operational information must not be revealed through error messages to unauthorized personnel or their designated representatives.
+
+The structure and content of error messages must be carefully considered by the organization and development team. The extent to which the information system is able to identify and handle error conditions is guided by organizational policy and operational requirements.
+Check Text:
+Verify the "/var/log" directory is group-owned by root with the following command:
+
+$ stat -c "%G %n" /var/log
+
+root /var/log
+
+If "/var/log" does not have a group owner of "root", this is a finding.
+Fix Text:
+Configure the group owner of the directory "/var/log" to "root" by running the following command:
+
+$ sudo chgrp root /var/log
+CCI-001314
+Reveal error messages only to organization-defined personnel or roles.
+NIST SP 800-53 :: SI-11 c
+NIST SP 800-53A :: SI-11.1 (iv)
+NIST SP 800-53 Revision 4 :: SI-11 b
+NIST SP 800-53 Revision 5 :: SI-11 b
+
+==========================================================================================================
+
+Group ID:
+V-257916
+Rule ID:
+SV-257916r1101916
+STIG ID:
+RHEL-09-232180
+SRG ID:
+SRG-OS-000206-GPOS-00084
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 /var/log/messages file must be owned by root.
+Discussion:
+Only authorized personnel should be aware of errors and the details of the errors. Error messages are an indicator of an organization's operational state or can identify the RHEL 9 system or platform. Additionally, personally identifiable information (PII) and operational information must not be revealed through error messages to unauthorized personnel or their designated representatives.
+
+The structure and content of error messages must be carefully considered by the organization and development team. The extent to which the information system is able to identify and handle error conditions is guided by organizational policy and operational requirements.
+Check Text:
+Verify the "/var/log/messages" file is owned by root with the following command:
+	
+$ stat -c "%U %n" /var/log/messages
+	
+root /var/log/messages
+	
+If "/var/log/messages" does not have an owner of "root", this is a finding.
+Fix Text:
+Change the owner of the "/var/log/messages" file to "root" by running the following command:
+
+$ sudo chown root /var/log/messages
+CCI-001314
+Reveal error messages only to organization-defined personnel or roles.
+NIST SP 800-53 :: SI-11 c
+NIST SP 800-53A :: SI-11.1 (iv)
+NIST SP 800-53 Revision 4 :: SI-11 b
+NIST SP 800-53 Revision 5 :: SI-11 b
+
+==========================================================================================================
+
+Group ID:
+V-257917
+Rule ID:
+SV-257917r1101914
+STIG ID:
+RHEL-09-232185
+SRG ID:
+SRG-OS-000206-GPOS-00084
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 /var/log/messages file must be group-owned by root.
+Discussion:
+Only authorized personnel should be aware of errors and the details of the errors. Error messages are an indicator of an organization's operational state or can identify the RHEL 9 system or platform. Additionally, personally identifiable information (PII) and operational information must not be revealed through error messages to unauthorized personnel or their designated representatives.
+
+The structure and content of error messages must be carefully considered by the organization and development team. The extent to which the information system is able to identify and handle error conditions is guided by organizational policy and operational requirements.
+Check Text:
+Verify the "/var/log/messages" file is group-owned by root with the following command:
+
+$ stat -c "%G %n" /var/log/messages
+
+root /var/log/messages
+
+If "/var/log/messages" does not have a group owner of "root", this is a finding.
+Fix Text:
+Change the group owner of the "/var/log/messages" file to "root" by running the following command:
+
+$ sudo chgrp root /var/log/messages
+CCI-001314
+Reveal error messages only to organization-defined personnel or roles.
+NIST SP 800-53 :: SI-11 c
+NIST SP 800-53A :: SI-11.1 (iv)
+NIST SP 800-53 Revision 4 :: SI-11 b
+NIST SP 800-53 Revision 5 :: SI-11 b
+
+==========================================================================================================
+
+Group ID:
+V-258166
+Rule ID:
+SV-258166r1045303
+STIG ID:
+RHEL-09-653085
+SRG ID:
+SRG-OS-000057-GPOS-00027
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit log directory must be owned by root to prevent unauthorized read access.
+Discussion:
+Unauthorized disclosure of audit records can reveal system and configuration data to attackers, thus compromising its confidentiality.
+
+Satisfies: SRG-OS-000057-GPOS-00027, SRG-OS-000058-GPOS-00028, SRG-OS-000059-GPOS-00029, SRG-OS-000206-GPOS-00084
+Check Text:
+Verify the audit logs directory is owned by "root". 
+
+Determine where the audit logs are stored with the following command:
+
+$ sudo grep -iw log_file /etc/audit/auditd.conf
+
+log_file = /var/log/audit/audit.log
+
+Using the location of the audit log file, determine if the audit log directory is owned by "root" using the following command:
+
+$ sudo stat -c '%U %n' /var/log/audit
+
+root /var/log/audit
+
+If the audit log directory is not owned by "root", this is a finding.
+Fix Text:
+Configure the audit log to be protected from unauthorized read access by setting the correct owner as "root" with the following command:
+
+$ sudo chown root /var/log/audit
+CCI-000162
+Protect audit information from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000163
+Protect audit information from unauthorized modification.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000164
+Protect audit information from unauthorized deletion.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-001314
+Reveal error messages only to organization-defined personnel or roles.
+NIST SP 800-53 :: SI-11 c
+NIST SP 800-53A :: SI-11.1 (iv)
+NIST SP 800-53 Revision 4 :: SI-11 b
+NIST SP 800-53 Revision 5 :: SI-11 b
+
+==========================================================================================================
+
+Group ID:
+V-258167
+Rule ID:
+SV-258167r1101918
+STIG ID:
+RHEL-09-653090
+SRG ID:
+SRG-OS-000057-GPOS-00027
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit logs file must have mode 0600 or less permissive to prevent unauthorized access to the audit log.
+Discussion:
+Only authorized personnel should be aware of errors and the details of the errors. Error messages are an indicator of an organization's operational state or can identify the RHEL 9 system or platform. Additionally, Personally Identifiable Information (PII) and operational information must not be revealed through error messages to unauthorized personnel or their designated representatives.
+
+The structure and content of error messages must be carefully considered by the organization and development team. The extent to which the information system is able to identify and handle error conditions is guided by organizational policy and operational requirements.
+
+Satisfies: SRG-OS-000057-GPOS-00027, SRG-OS-000058-GPOS-00028, SRG-OS-000059-GPOS-00029, SRG-OS-000206-GPOS-00084
+Check Text:
+Verify the audit logs have a mode of "0600". 
+
+Determine where the audit logs are stored with the following command:
+
+$ sudo find /var/log/audit/ -type f -exec stat -c '%a %n' {} \;
+
+600 /var/log/audit/audit.log
+
+Using the location of the audit log file, determine the mode of each audit log with the following command:
+
+$ sudo find /var/log/audit/ -type f -exec stat -c '%a %n' {} \;
+
+rw-------. 2 root root 237923 Jun 11 11:56 /var/log/audit/audit.log
+
+If the audit logs have a mode more permissive than "0600", this is a finding.
+Fix Text:
+Configure the audit logs to have a mode of "0600" with the following command:
+
+Replace "[audit_log_file]" with the path to each audit log file. By default, these logs are located in "/var/log/audit/.
+
+$ sudo chmod 0600 /var/log/audit/[audit_log_file]
+
+Check the group that owns the system audit logs:
+
+$ sudo grep -iw log_group /etc/audit/auditd.conf
+
+If log_group is set to a user other than root, configure the permissions the following way:
+
+$ sudo chmod 0640 $log_file
+$ sudo chmod 0440 $log_file.*
+
+Otherwise, configure the permissions the following way:
+
+$ sudo chmod 0600 $log_file
+$ sudo chmod 0400 $log_file.*
+CCI-000162
+Protect audit information from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000163
+Protect audit information from unauthorized modification.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000164
+Protect audit information from unauthorized deletion.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-001314
+Reveal error messages only to organization-defined personnel or roles.
+NIST SP 800-53 :: SI-11 c
+NIST SP 800-53A :: SI-11.1 (iv)
+NIST SP 800-53 Revision 4 :: SI-11 b
+NIST SP 800-53 Revision 5 :: SI-11 b
+

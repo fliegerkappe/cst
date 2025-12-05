@@ -1,0 +1,886 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AC-2 Account Management
+************************************************************************************************************
+
+Group ID:
+V-258047
+Rule ID:
+SV-258047r1101951
+STIG ID:
+RHEL-09-411040
+SRG ID:
+SRG-OS-000123-GPOS-00064
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must automatically expire temporary accounts within 72 hours.
+Discussion:
+Temporary accounts are privileged or nonprivileged accounts that are established during pressing circumstances, such as new software or hardware configuration or an incident response, where the need for prompt account activation requires bypassing normal account authorization procedures. If any inactive temporary accounts are left enabled on the system and are not either manually removed or automatically expired within 72 hours, the security posture of the system will be degraded and exposed to exploitation by unauthorized users or insider threat actors.
+
+Temporary accounts are different from emergency accounts. Emergency accounts, also known as "last resort" or "break glass" accounts, are local logon accounts enabled on the system for emergency use by authorized system administrators to manage a system when standard logon methods are failing or not available. Emergency accounts are not subject to manual removal or scheduled expiration requirements.
+
+The automatic expiration of temporary accounts may be extended as needed by the circumstances but it must not be extended indefinitely. A documented permanent account should be established for privileged users who need long-term maintenance accounts.
+
+Satisfies: SRG-OS-000123-GPOS-00064, SRG-OS-000002-GPOS-00002
+Check Text:
+Verify temporary accounts have been provisioned with an expiration date of 72 hours.
+
+For every existing temporary account, run the following command to obtain its account expiration information:
+
+$ sudo chage -l <temporary_account_name> | grep -i "account expires"
+
+Verify each of these accounts has an expiration date set within 72 hours. 
+
+If any temporary accounts have no expiration date set or do not expire within 72 hours, this is a finding.
+Fix Text:
+Configure the operating system to expire temporary accounts after 72 hours with the following command:
+
+$ sudo chage -E $(date -d +3days +%Y-%m-%d) <temporary_account_name>
+CCI-000016
+Automatically remove or disable temporary and emergency accounts after an organization-defined time-period for each type of account.
+NIST SP 800-53 :: AC-2 (2)
+NIST SP 800-53A :: AC-2 (2).1 (ii)
+NIST SP 800-53 Revision 4 :: AC-2 (2)
+NIST SP 800-53 Revision 5 :: AC-2 (2)
+CCI-001682
+Automatically remove or disable emergency accounts after an organization-defined time period for each type of account.
+NIST SP 800-53 Revision 5 :: AC-2 (2)
+NIST SP 800-53 :: AC-2 (2)
+NIST SP 800-53 Revision 4 :: AC-2 (2)
+NIST SP 800-53A :: AC-2 (2).1 (ii)
+
+==========================================================================================================
+
+Group ID:
+V-258049
+Rule ID:
+SV-258049r1015092
+STIG ID:
+RHEL-09-411050
+SRG ID:
+SRG-OS-000118-GPOS-00060
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must disable account identifiers (individuals, groups, roles, and devices) after 35 days of inactivity.
+Discussion:
+Inactive identifiers pose a risk to systems and applications because attackers may exploit an inactive identifier and potentially obtain undetected access to the system.
+
+Disabling inactive accounts ensures that accounts which may not have been responsibly removed are not available to attackers who may have compromised their credentials.
+
+Owners of inactive accounts will not notice if unauthorized access to their user account has been obtained.
+Check Text:
+Verify that RHEL 9 account identifiers (individuals, groups, roles, and devices) are disabled after 35 days of inactivity with the following command:
+
+Check the account inactivity value by performing the following command:
+
+$ sudo grep -i inactive /etc/default/useradd
+
+INACTIVE=35
+
+If "INACTIVE" is set to "-1", a value greater than "35", or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to disable account identifiers after 35 days of inactivity after the password expiration. 
+
+Run the following command to change the configuration for useradd:
+
+$ sudo useradd -D -f 35
+
+The recommendation is 35 days, but a lower value is acceptable.
+CCI-003627
+Disable accounts when the accounts have expired.
+NIST SP 800-53 Revision 5 :: AC-2 (3) (a)
+CCI-003628
+Disable accounts when the accounts are no longer associated to a user.
+NIST SP 800-53 Revision 5 :: AC-2 (3) (b)
+CCI-000795
+The organization manages information system identifiers by disabling the identifier after an organization-defined time period of inactivity.
+NIST SP 800-53 :: IA-4 e
+NIST SP 800-53A :: IA-4.1 (iii)
+NIST SP 800-53 Revision 4 :: IA-4 e
+
+==========================================================================================================
+
+Group ID:
+V-258217
+Rule ID:
+SV-258217r1045436
+STIG ID:
+RHEL-09-654215
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/sudoers.
+Discussion:
+The actions taken by system administrators must be audited to keep a record of what was executed on the system, as well as for accountability purposes. Editing the sudoers file may be sign of an attacker trying to establish persistent methods to a system, auditing the editing of the sudoers files mitigates this risk.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/sudoers" with the following command:
+
+$ sudo auditctl -l | grep '/etc/sudoers[^.]'
+
+-w /etc/sudoers -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/sudoers".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/sudoers -p wa -k identity
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258218
+Rule ID:
+SV-258218r1101981
+STIG ID:
+RHEL-09-654220
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/sudoers.d/ directory.
+Discussion:
+The actions taken by system administrators must be audited to keep a record of what was executed on the system, as well as for accountability purposes. Editing the sudoers file may be sign of an attacker trying to establish persistent methods to a system, auditing the editing of the sudoers files mitigates this risk.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/sudoers.d/" with the following command:
+
+$ sudo auditctl -l | grep /etc/sudoers.d
+
+-w /etc/sudoers.d/ -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/sudoers.d/".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/sudoers.d/ -p wa -k identity
+
+To load the rules to the kernel immediately, use the following command:
+
+$ sudo augenrules --load
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258219
+Rule ID:
+SV-258219r1015130
+STIG ID:
+RHEL-09-654225
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/group.
+Discussion:
+In addition to auditing new user and group accounts, these watches will alert the system administrator(s) to any modifications. Any unexpected users, groups, or modifications must be investigated for legitimacy.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/group" with the following command:
+
+$ sudo auditctl -l | egrep '(/etc/group)'  
+
+-w /etc/group -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/group".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/group -p wa -k identity
+
+The audit daemon must be restarted for the changes to take effect.
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258220
+Rule ID:
+SV-258220r1015131
+STIG ID:
+RHEL-09-654230
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/gshadow.
+Discussion:
+In addition to auditing new user and group accounts, these watches will alert the system administrator(s) to any modifications. Any unexpected users, groups, or modifications should be investigated for legitimacy.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/gshadow" with the following command:
+
+$ sudo auditctl -l | egrep '(/etc/gshadow)' 
+
+-w /etc/gshadow -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/gshadow".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/gshadow -p wa -k identity
+
+The audit daemon must be restarted for the changes to take effect.
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258221
+Rule ID:
+SV-258221r1015132
+STIG ID:
+RHEL-09-654235
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/opasswd.
+Discussion:
+In addition to auditing new user and group accounts, these watches will alert the system administrator(s) to any modifications. Any unexpected users, groups, or modifications should be investigated for legitimacy.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/security/opasswd" with the following command:
+
+$ sudo auditctl -l | egrep '(/etc/security/opasswd)' 
+
+-w /etc/security/opasswd -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/security/opasswd".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/security/opasswd -p wa -k identity
+
+The audit daemon must be restarted for the changes to take effect.
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258222
+Rule ID:
+SV-258222r1015133
+STIG ID:
+RHEL-09-654240
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/passwd.
+Discussion:
+In addition to auditing new user and group accounts, these watches will alert the system administrator(s) to any modifications. Any unexpected users, groups, or modifications should be investigated for legitimacy.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221, SRG-OS-000274-GPOS-00104, SRG-OS-000275-GPOS-00105, SRG-OS-000276-GPOS-00106, SRG-OS-000277-GPOS-00107
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/passwd" with the following command:
+
+$ sudo auditctl -l | egrep '(/etc/passwd)' 
+
+-w /etc/passwd -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/passwd".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/passwd -p wa -k identity
+
+The audit daemon must be restarted for the changes to take effect.
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-001683
+The information system notifies organization-defined personnel or roles for account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+CCI-001684
+The information system notifies organization-defined personnel or roles for account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+CCI-001685
+The information system notifies organization-defined personnel or roles for account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+CCI-001686
+The information system notifies organization-defined personnel or roles for account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-258223
+Rule ID:
+SV-258223r1015134
+STIG ID:
+RHEL-09-654245
+SRG ID:
+SRG-OS-000004-GPOS-00004
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must generate audit records for all account creations, modifications, disabling, and termination events that affect /etc/shadow.
+Discussion:
+In addition to auditing new user and group accounts, these watches will alert the system administrator(s) to any modifications. Any unexpected users, groups, or modifications should be investigated for legitimacy.
+
+Satisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000037-GPOS-00015, SRG-OS-000042-GPOS-00020, SRG-OS-000062-GPOS-00031, SRG-OS-000304-GPOS-00121, SRG-OS-000392-GPOS-00172, SRG-OS-000462-GPOS-00206, SRG-OS-000470-GPOS-00214, SRG-OS-000471-GPOS-00215, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000466-GPOS-00210, SRG-OS-000476-GPOS-00221
+Check Text:
+Verify RHEL 9 generates audit records for all account creations, modifications, disabling, and termination events that affect "/etc/passwd with the following command:
+
+$ sudo auditctl -l | egrep '(/etc/shadow)' 
+
+-w /etc/shadow -p wa -k identity
+
+If the command does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to generate audit records for all account creations, modifications, disabling, and termination events that affect "/etc/shadow".
+
+Add or update the following file system rule to "/etc/audit/rules.d/audit.rules":
+
+-w /etc/shadow -p wa -k identity
+
+The audit daemon must be restarted for the changes to take effect.
+CCI-000018
+Automatically audit account creation actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001403
+Automatically audit account modification actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001404
+Automatically audit account disabling actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-001405
+Automatically audit account removal actions.
+NIST SP 800-53 :: AC-2 (4)
+NIST SP 800-53A :: AC-2 (4).1 (i and ii)
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-002130
+Automatically audit account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+NIST SP 800-53 Revision 5 :: AC-2 (4)
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-002132
+The information system notifies organization-defined personnel or roles for account enabling actions.
+NIST SP 800-53 Revision 4 :: AC-2 (4)
+
+==========================================================================================================
+
+Group ID:
+V-272488
+Rule ID:
+SV-272488r1082178
+STIG ID:
+RHEL-09-215101
+SRG ID:
+SRG-OS-000304-GPOS-00121
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the Postfix package installed.
+Discussion:
+Postfix is a free, open-source mail transfer agent (MTA) that sends and receives emails. It is a server-side application that can be used to set up a local mail server, create a null-client mail relay, use a Postfix server as a destination for multiple domains, or choose an LDAP directory instead of files for lookups. Postfix supports protocols such as LDAP, SMTP AUTH (SASL), and TLS. It uses the Simple Mail Transfer Protocol (SMTP) to transfer emails between servers.
+
+Satisfies: SRG-OS-000304-GPOS-00121, SRG-OS-000343-GPOS-00134, SRG-OS-000363-GPOS-00150, SRG-OS-000447-GPOS-00201
+Check Text:
+Verify that RHEL 9 has the Postfix package installed with the following command:
+
+$ sudo dnf list --installed postfix
+
+Example output:
+
+postfix.x86_64                             2:3.5.25-1.el9 
+
+If the "postfix" package is not installed, this is a finding.
+Fix Text:
+Install the Postfix package with the following command:
+ 
+$ sudo dnf install postfix
+CCI-000015
+Support the management of system accounts using organization-defined automated mechanisms.
+NIST SP 800-53 :: AC-2 (1)
+NIST SP 800-53A :: AC-2 (1).1
+NIST SP 800-53 Revision 4 :: AC-2 (1)
+NIST SP 800-53 Revision 5 :: AC-2 (1)

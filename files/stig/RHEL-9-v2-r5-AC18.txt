@@ -1,0 +1,119 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AC-18 Wireless Access
+************************************************************************************************************
+
+Group ID:
+V-258040
+Rule ID:
+SV-258040r991568
+STIG ID:
+RHEL-09-291040
+SRG ID:
+SRG-OS-000299-GPOS-00117
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 wireless network adapters must be disabled.
+Discussion:
+This requirement applies to wireless peripheral technologies (e.g., wireless mice, keyboards, displays, etc.) used with RHEL 9 systems. Wireless peripherals (e.g., Wi-Fi/Bluetooth/IR keyboards, mice and pointing devices, and near field communications [NFC]) present a unique challenge by creating an open, unsecured port on a computer. Wireless peripherals must meet DOD requirements for wireless data transmission and be approved for use by the Authorizing Official (AO). Even though some wireless peripherals, such as mice and pointing devices, do not ordinarily carry information that need to be protected, modification of communications with these wireless peripherals may be used to compromise the RHEL 9 operating system.
+
+Satisfies: SRG-OS-000299-GPOS-00117, SRG-OS-000300-GPOS-00118, SRG-OS-000424-GPOS-00188, SRG-OS-000481-GPOS-00481
+Check Text:
+Verify there are no wireless interfaces configured on the system with the following command:
+
+Note: This requirement is Not Applicable for systems that do not have physical wireless network radios.
+
+$ nmcli device status
+
+DEVICE                    TYPE            STATE                    CONNECTION
+virbr0                      bridge         connected             virbr0
+wlp7s0                    wifi              connected            wifiSSID
+enp6s0                    ethernet     disconnected        --
+p2p-dev-wlp7s0     wifi-p2p     disconnected        --
+lo                             loopback    unmanaged           --
+virbr0-nic                tun              unmanaged          --
+
+If a wireless interface is configured and has not been documented and approved by the information system security officer (ISSO), this is a finding.
+Fix Text:
+Configure the system to disable all wireless network interfaces with the following command:
+
+$ nmcli radio all off
+
+CCI-001443
+Protect wireless access to the system using authentication of users and/or devices.
+NIST SP 800-53 :: AC-18 (1)
+NIST SP 800-53A :: AC-18 (1).1
+NIST SP 800-53 Revision 4 :: AC-18 (1)
+NIST SP 800-53 Revision 5 :: AC-18 (1)
+CCI-001444
+Protect wireless access to the system using encryption.
+NIST SP 800-53 :: AC-18 (1)
+NIST SP 800-53A :: AC-18 (1).1
+NIST SP 800-53 Revision 4 :: AC-18 (1)
+NIST SP 800-53 Revision 5 :: AC-18 (1)
+CCI-002418
+Protect the confidentiality and/or integrity of transmitted information.
+NIST SP 800-53 Revision 4 :: SC-8
+NIST SP 800-53 Revision 5 :: SC-8
+CCI-002421
+Implement cryptographic mechanisms to prevent unauthorized disclosure of information and/or detect changes to information during transmission.
+NIST SP 800-53 Revision 4 :: SC-8 (1)
+NIST SP 800-53 Revision 5 :: SC-8 (1)
+
+==========================================================================================================
+
+Group ID:
+V-258039
+Rule ID:
+SV-258039r1045131
+STIG ID:
+RHEL-09-291035
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 Bluetooth must be disabled.
+Discussion:
+This requirement applies to wireless peripheral technologies (e.g., wireless mice, keyboards, displays, etc.) used with RHEL 9 systems. Wireless peripherals (e.g., Wi-Fi/Bluetooth/IR keyboards, mice and pointing devices, and near field communications [NFC]) present a unique challenge by creating an open, unsecured port on a computer. Wireless peripherals must meet DOD requirements for wireless data transmission and be approved for use by the Authorizing Official (AO). Even though some wireless peripherals, such as mice and pointing devices, do not ordinarily carry information that need to be protected, modification of communications with these wireless peripherals may be used to compromise the RHEL 9 operating system.
+
+Satisfies: SRG-OS-000095-GPOS-00049, SRG-OS-000300-GPOS-00118
+Check Text:
+Verify that RHEL 9 disables the ability to load the Bluetooth kernel module with the following command:
+
+$ sudo grep -r bluetooth /etc/modprobe.conf /etc/modprobe.d/* 
+
+install bluetooth /bin/false
+blacklist bluetooth
+	
+If the command does not return any output, or the lines are commented out, and use of Bluetooth is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+Configure RHEL 9 to disable the Bluetooth adapter when not in use.
+
+Create or modify the "/etc/modprobe.d/bluetooth.conf" file with the following lines:
+
+install bluetooth /bin/false
+blacklist bluetooth
+
+Reboot the system for the settings to take effect.
+
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+CCI-001443
+Protect wireless access to the system using authentication of users and/or devices.
+NIST SP 800-53 :: AC-18 (1)
+NIST SP 800-53A :: AC-18 (1).1
+NIST SP 800-53 Revision 4 :: AC-18 (1)
+NIST SP 800-53 Revision 5 :: AC-18 (1)
+

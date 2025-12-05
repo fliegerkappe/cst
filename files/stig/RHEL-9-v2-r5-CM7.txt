@@ -1,0 +1,2070 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+CM-7 Least Functionality
+************************************************************************************************************
+
+Group ID:
+V-257830
+Rule ID:
+SV-257830r958478
+STIG ID:
+RHEL-09-215035
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must not have the rsh-server package installed.
+Discussion:
+The "rsh-server" service provides unencrypted remote access service, which does not provide for the confidentiality and integrity of user passwords or the remote session and has very weak authentication. If a privileged user were to login using this service, the privileged user password could be compromised. The "rsh-server" package provides several obsolete and insecure network services. Removing it decreases the risk of accidental (or intentional) activation of those services.
+Check Text:
+Verify that the rsh-server package is not installed with the following command:
+
+$ sudo dnf list --installed rsh-server
+
+Error: No matching Packages to list
+
+If the "rsh-server" package is installed, this is a finding.
+Fix Text:
+Remove the rsh-server package with the following command:
+
+$ sudo dnf remove rsh-server
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257863
+Rule ID:
+SV-257863r958804
+STIG ID:
+RHEL-09-231110
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /dev/shm with the nodev option.
+Discussion:
+The "nodev" mount option causes the system to not interpret character or block special devices. Executing character or block special devices from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+
+The only legitimate location for device files is the "/dev" directory located on the root partition, with the exception of chroot jails if implemented.
+Check Text:
+Verify "/dev/shm" is mounted with the "nodev" option with the following command:
+
+$ mount | grep /dev/shm
+
+tmpfs on /dev/shm type tmpfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the /dev/shm file system is mounted without the "nodev" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nodev" option on the "/dev/shm" file system.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257866
+Rule ID:
+SV-257866r958804
+STIG ID:
+RHEL-09-231125
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /tmp with the nodev option.
+Discussion:
+The "nodev" mount option causes the system to not interpret character or block special devices. Executing character or block special devices from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+
+The only legitimate location for device files is the "/dev" directory located on the root partition, with the exception of chroot jails if implemented.
+Check Text:
+Verify "/tmp" is mounted with the "nodev" option:
+
+$ mount | grep /tmp
+
+/dev/mapper/rhel-tmp on /tmp type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/tmp" file system is mounted without the "nodev" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nodev" option on the "/tmp" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257867
+Rule ID:
+SV-257867r958804
+STIG ID:
+RHEL-09-231130
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /tmp with the noexec option.
+Discussion:
+The "noexec" mount option causes the system to not execute binary files. This option must be used for mounting any file system not containing approved binary files, as they may be incompatible. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+Check Text:
+Verify "/tmp" is mounted with the "noexec" option:
+
+$ mount | grep /tmp
+
+/dev/mapper/rhel-tmp on /tmp type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/tmp" file system is mounted without the "noexec" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "noexec" option on the "/tmp" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257868
+Rule ID:
+SV-257868r958804
+STIG ID:
+RHEL-09-231135
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /tmp with the nosuid option.
+Discussion:
+The "nosuid" mount option causes the system to not execute "setuid" and "setgid" files with owner privileges. This option must be used for mounting any file system not containing approved "setuid" and "setguid" files. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+Check Text:
+Verify "/tmp" is mounted with the "nosuid" option:
+
+$ mount | grep /tmp
+
+/dev/mapper/rhel-tmp on /tmp type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/tmp" file system is mounted without the "nosuid" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nosuid" option on the "/tmp" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257870
+Rule ID:
+SV-257870r958804
+STIG ID:
+RHEL-09-231145
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /var/log with the nodev option.
+Discussion:
+The "nodev" mount option causes the system to not interpret character or block special devices. Executing character or block special devices from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+
+The only legitimate location for device files is the "/dev" directory located on the root partition, with the exception of chroot jails if implemented.
+Check Text:
+Verify "/var/log" is mounted with the "nodev" option:
+
+$ mount | grep /var/log
+
+/dev/mapper/rhel-var-log on /var/log type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/var/log" file system is mounted without the "nodev" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nodev" option on the "/var/log" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257871
+Rule ID:
+SV-257871r958804
+STIG ID:
+RHEL-09-231150
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /var/log with the noexec option.
+Discussion:
+The "noexec" mount option causes the system to not execute binary files. This option must be used for mounting any file system not containing approved binary files, as they may be incompatible. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+Check Text:
+Verify "/var/log" is mounted with the "noexec" option:
+
+$ mount | grep /var/log
+
+/dev/mapper/rhel-var-log on /var/log type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/var/log" file system is mounted without the "noexec" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "noexec" option on the "/var/log" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257872
+Rule ID:
+SV-257872r958804
+STIG ID:
+RHEL-09-231155
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /var/log with the nosuid option.
+Discussion:
+The "nosuid" mount option causes the system to not execute "setuid" and "setgid" files with owner privileges. This option must be used for mounting any file system not containing approved "setuid" and "setguid" files. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+Check Text:
+Verify "/var/log" is mounted with the "nosuid" option:
+
+$ mount | grep /var/log
+
+/dev/mapper/rhel-var-log on /var/log type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/var/log" file system is mounted without the "nosuid" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nosuid" option on the "/var/log" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257873
+Rule ID:
+SV-257873r958804
+STIG ID:
+RHEL-09-231160
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /var/log/audit with the nodev option.
+Discussion:
+The "nodev" mount option causes the system to not interpret character or block special devices. Executing character or block special devices from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+
+The only legitimate location for device files is the "/dev" directory located on the root partition, with the exception of chroot jails if implemented.
+Check Text:
+Verify "/var/log/audit" is mounted with the "nodev" option:
+
+$ mount | grep /var/log/audit
+
+/dev/mapper/rhel-var-log-audit on /var/log/audit type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/var/log/audit" file system is mounted without the "nodev" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nodev" option on the "/var/log/audit" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257874
+Rule ID:
+SV-257874r958804
+STIG ID:
+RHEL-09-231165
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /var/log/audit with the noexec option.
+Discussion:
+The "noexec" mount option causes the system to not execute binary files. This option must be used for mounting any file system not containing approved binary files, as they may be incompatible. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+Check Text:
+Verify "/var/log/audit" is mounted with the "noexec" option:
+
+$ mount | grep /var/log/audit
+
+/dev/mapper/rhel-var-log-audit on /var/log/audit type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/var/log/audit" file system is mounted without the "noexec" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "noexec" option on the "/var/log/audit" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257875
+Rule ID:
+SV-257875r958804
+STIG ID:
+RHEL-09-231170
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /var/log/audit with the nosuid option.
+Discussion:
+The "nosuid" mount option causes the system to not execute "setuid" and "setgid" files with owner privileges. This option must be used for mounting any file system not containing approved "setuid" and "setguid" files. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+Check Text:
+Verify "/var/log/audit" is mounted with the "nosuid" option:
+
+$ mount | grep /var/log/audit
+
+/dev/mapper/rhel-var-log-audit on /var/log/audit type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/var/log/audit" file system is mounted without the "nosuid" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nosuid" option on the "/var/log/audit" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257876
+Rule ID:
+SV-257876r958804
+STIG ID:
+RHEL-09-231175
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /var/tmp with the nodev option.
+Discussion:
+The "nodev" mount option causes the system to not interpret character or block special devices. Executing character or block special devices from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+
+The only legitimate location for device files is the "/dev" directory located on the root partition, with the exception of chroot jails if implemented.
+Check Text:
+Verify "/var/tmp" is mounted with the "nodev" option:
+
+$ mount | grep /var/tmp
+
+/dev/mapper/rhel-var-tmp on /var/tmp type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/var/tmp" file system is mounted without the "nodev" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nodev" option on the "/var/tmp" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257877
+Rule ID:
+SV-257877r958804
+STIG ID:
+RHEL-09-231180
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /var/tmp with the noexec option.
+Discussion:
+The "noexec" mount option causes the system to not execute binary files. This option must be used for mounting any file system not containing approved binary files, as they may be incompatible. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+Check Text:
+Verify "/var/tmp" is mounted with the "noexec" option:
+
+$ mount | grep /var/tmp
+
+/dev/mapper/rhel-var-tmp on /var/tmp type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/var/tmp" file system is mounted without the "noexec" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "noexec" option on the "/var/tmp" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257878
+Rule ID:
+SV-257878r958804
+STIG ID:
+RHEL-09-231185
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /var/tmp with the nosuid option.
+Discussion:
+The "nosuid" mount option causes the system to not execute "setuid" and "setgid" files with owner privileges. This option must be used for mounting any file system not containing approved "setuid" and "setguid" files. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+Check Text:
+Verify "/var/tmp" is mounted with the "nosuid" option:
+
+$ mount | grep /var/tmp
+
+/dev/mapper/rhel-var-tmp on /var/tmp type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/var/tmp" file system is mounted without the "nosuid" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nosuid" option on the "/var/tmp" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257946
+Rule ID:
+SV-257946r958480
+STIG ID:
+RHEL-09-252025
+SRG ID:
+SRG-OS-000096-GPOS-00050
+Severity:
+CAT III
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must disable the chrony daemon from acting as a server.
+Discussion:
+Minimizing the exposure of the server functionality of the chrony daemon diminishes the attack surface.
+
+Satisfies: SRG-OS-000096-GPOS-00050, SRG-OS-000095-GPOS-00049
+Check Text:
+Verify RHEL 9 disables the chrony daemon from acting as a server with the following command:
+
+$ grep -w port /etc/chrony.conf
+
+port 0
+
+If the "port" option is not set to "0", is commented out, or is missing, this is a finding.
+Fix Text:
+Configure RHEL 9 to disable the chrony daemon from acting as a server by adding/modifying the following line in the /etc/chrony.conf file:
+
+port 0
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+CCI-000382
+Configure the system to prohibit or restrict the use of organization-defined prohibited or restricted functions, system ports, protocols, software, and/or services.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (iii)
+NIST SP 800-53 Revision 4 :: CM-7 b
+NIST SP 800-53 Revision 5 :: CM-7 b
+
+============================================================================================================
+
+Group ID:
+V-257947
+Rule ID:
+SV-257947r958480
+STIG ID:
+RHEL-09-252030
+SRG ID:
+SRG-OS-000096-GPOS-00050
+Severity:
+CAT III
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must disable network management of the chrony daemon.
+Discussion:
+Not exposing the management interface of the chrony daemon on the network diminishes the attack space.
+
+Satisfies: SRG-OS-000096-GPOS-00050, SRG-OS-000095-GPOS-00049
+Check Text:
+Verify RHEL 9 disables network management of the chrony daemon with the following command:
+
+$ grep -w cmdport /etc/chrony.conf
+
+cmdport 0
+
+If the "cmdport" option is not set to "0", is commented out, or is missing, this is a finding.
+Fix Text:
+Configure RHEL 9 to disable network management of the chrony daemon by adding/modifying the following line in the /etc/chrony.conf file:
+
+cmdport 0
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+CCI-000382
+Configure the system to prohibit or restrict the use of organization-defined prohibited or restricted functions, system ports, protocols, software, and/or services.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (iii)
+NIST SP 800-53 Revision 4 :: CM-7 b
+NIST SP 800-53 Revision 5 :: CM-7 b
+
+============================================================================================================
+
+Group ID:
+V-258016
+Rule ID:
+SV-258016r958804
+STIG ID:
+RHEL-09-271030
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must disable the graphical user interface autorun function unless required.
+Discussion:
+Allowing autorun commands to execute may introduce malicious code to a system. Configuring this setting prevents autorun commands from executing.
+Check Text:
+Verify RHEL 9 disables the graphical user interface autorun function with the following command:
+
+Note: This requirement assumes the use of the RHEL 9 default graphical user interface, the GNOME desktop environment. If the system does not have any graphical user interface installed, this requirement is Not Applicable.
+
+$ gsettings get org.gnome.desktop.media-handling autorun-never 
+
+true
+
+If "autorun-never" is set to "false", and is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+Configure the GNOME desktop to disable the autorun function on removable media.
+
+The dconf settings can be edited in the /etc/dconf/db/* location.
+
+Update the [org/gnome/desktop/media-handling] section of the "/etc/dconf/db/local.d/00-security-settings" database file and add or update the following lines:
+
+[org/gnome/desktop/media-handling]
+autorun-never=true
+
+Then update the dconf system databases:
+
+$ sudo dconf update
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-258090
+Rule ID:
+SV-258090r958808
+STIG ID:
+RHEL-09-433015
+SRG ID:
+SRG-OS-000370-GPOS-00155
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 fapolicy module must be enabled.
+Discussion:
+The organization must identify authorized software programs and permit execution of authorized software. The process used to identify software programs that are authorized to execute on organizational information systems is commonly referred to as allowlisting.
+
+Utilizing an allowlist provides a configuration management method for allowing the execution of only authorized software. Using only authorized software decreases risk by limiting the number of potential vulnerabilities. Verification of allowlisted software occurs prior to execution or at system startup.
+
+User home directories/folders may contain information of a sensitive nature. Nonprivileged users should coordinate any sharing of information with an SA through shared resources.
+
+RHEL 9 ships with many optional packages. One such package is a file access policy daemon called "fapolicyd". "fapolicyd" is a userspace daemon that determines access rights to files based on attributes of the process and file. It can be used to either blocklist or allowlist processes or file access.
+
+Proceed with caution with enforcing the use of this daemon. Improper configuration may render the system nonfunctional. The "fapolicyd" API is not namespace aware and can cause issues when launching or running containers.
+
+Satisfies: SRG-OS-000370-GPOS-00155, SRG-OS-000368-GPOS-00154
+Check Text:
+Verify that RHEL 9 fapolicyd is active with the following command:
+
+$ systemctl is-active fapolicyd
+
+active
+
+If fapolicyd module is not active, this is a finding.
+Fix Text:
+Enable the fapolicyd with the following command:
+
+$ systemctl enable --now fapolicyd
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+CCI-001774
+Employ a deny-all, permit-by-exception policy to allow the execution of authorized software programs on the system.
+NIST SP 800-53 Revision 4 :: CM-7 (5) (b)
+NIST SP 800-53 Revision 5 :: CM-7 (5) (b)
+
+============================================================================================================
+
+Group ID:
+V-257795
+Rule ID:
+SV-257795r1044845
+STIG ID:
+RHEL-09-212050
+SRG ID:
+SRG-OS-000433-GPOS-00193
+Severity:
+CAT III
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enable mitigations against processor-based vulnerabilities.
+Discussion:
+Kernel page-table isolation is a kernel feature that mitigates the Meltdown security vulnerability and hardens the kernel against attempts to bypass kernel address space layout randomization (KASLR).
+
+Satisfies: SRG-OS-000433-GPOS-00193, SRG-OS-000095-GPOS-00049
+Check Text:
+Verify RHEL 9 enables kernel page-table isolation with the following command:
+
+$ sudo grubby --info=ALL | grep args | grep -v 'pti=on'
+
+If any output is returned, this is a finding.
+
+Check that kernel page-table isolation is enabled by default to persist in kernel updates: 
+
+$ grep pti /etc/default/grub
+
+GRUB_CMDLINE_LINUX="pti=on"
+
+If "pti" is not set to "on", is missing or commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to enable kernel page-table isolation with the following command:
+
+$ sudo grubby --update-kernel=ALL --args="pti=on"
+
+Add or modify the following line in "/etc/default/grub" to ensure the configuration survives kernel updates:
+
+GRUB_CMDLINE_LINUX="pti=on"
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+CCI-002824
+Implement organization-defined controls to protect the system memory from unauthorized code execution.
+NIST SP 800-53 Revision 4 :: SI-16
+NIST SP 800-53 Revision 5 :: SI-16
+
+============================================================================================================
+
+Group ID:
+V-257804
+Rule ID:
+SV-257804r1044853
+STIG ID:
+RHEL-09-213045
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured to disable the Asynchronous Transfer Mode kernel module.
+Discussion:
+Disabling Asynchronous Transfer Mode (ATM) protects the system against exploitation of any flaws in its implementation.
+Check Text:
+Verify that RHEL 9 disables the ability to load the ATM kernel module with the following command:
+
+$ grep -r atm /etc/modprobe.conf /etc/modprobe.d/*
+
+install atm /bin/false
+blacklist atm 
+
+If the command does not return any output, or the line is commented out, and use of ATM is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+To configure the system to prevent the atm kernel module from being loaded, add the following line to the file  /etc/modprobe.d/atm.conf (or create atm.conf if it does not exist):
+
+install atm /bin/false
+blacklist atm
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257805
+Rule ID:
+SV-257805r1044856
+STIG ID:
+RHEL-09-213050
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured to disable the Controller Area Network kernel module.
+Discussion:
+Disabling Controller Area Network (CAN) protects the system against exploitation of any flaws in its implementation.
+Check Text:
+Verify that RHEL 9 disables the ability to load the CAN kernel module with the following command:
+
+$ grep -r can /etc/modprobe.conf /etc/modprobe.d/* 
+
+install can /bin/false
+blacklist can
+
+If the command does not return any output, or the lines are commented out, and use of CAN is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+To configure the system to prevent the can kernel module from being loaded, add the following lines to the file  /etc/modprobe.d/can.conf (or create can.conf if it does not exist):
+
+install can /bin/false
+blacklist can
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257806
+Rule ID:
+SV-257806r1044859
+STIG ID:
+RHEL-09-213055
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured to disable the FireWire kernel module.
+Discussion:
+Disabling firewire protects the system against exploitation of any flaws in its implementation.
+Check Text:
+Verify that RHEL 9 disables the ability to load the firewire-core kernel module with the following command:
+
+$ grep -r firewire-core /etc/modprobe.conf /etc/modprobe.d/* 
+
+install firewire-core /bin/false
+blacklist firewire-core
+
+If the command does not return any output, or the lines are commented out, and use of firewire-core is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+To configure the system to prevent the firewire-core kernel module from being loaded, add the following lines to the file /etc/modprobe.d/firewire-core.conf (or create firewire-core.conf if it does not exist):
+
+install firewire-core /bin/false
+blacklist firewire-core
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257807
+Rule ID:
+SV-257807r1044862
+STIG ID:
+RHEL-09-213060
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must disable the Stream Control Transmission Protocol (SCTP) kernel module.
+Discussion:
+It is detrimental for operating systems to provide, or install by default, functionality exceeding requirements or mission objectives. These unnecessary capabilities or services are often overlooked and therefore may remain unsecured. They increase the risk to the platform by providing additional attack vectors.
+
+Failing to disconnect unused protocols can result in a system compromise.
+
+The Stream Control Transmission Protocol (SCTP) is a transport layer protocol, designed to support the idea of message-oriented communication, with several streams of messages within one connection. Disabling SCTP protects the system against exploitation of any flaws in its implementation.
+Check Text:
+Verify that RHEL 9 disables the ability to load the sctp kernel module with the following command:
+
+$ grep -r sctp /etc/modprobe.conf /etc/modprobe.d/* 
+
+install sctp /bin/false
+blacklist sctp
+
+If the command does not return any output, or the lines are commented out, and use of sctp is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+To configure the system to prevent the sctp kernel module from being loaded, add the following lines to the file  /etc/modprobe.d/sctp.conf (or create sctp.conf if it does not exist):
+
+install sctp /bin/false
+blacklist sctp
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257808
+Rule ID:
+SV-257808r1044865
+STIG ID:
+RHEL-09-213065
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must disable the Transparent Inter Process Communication (TIPC) kernel module.
+Discussion:
+It is detrimental for operating systems to provide, or install by default, functionality exceeding requirements or mission objectives. These unnecessary capabilities or services are often overlooked and therefore may remain unsecured. They increase the risk to the platform by providing additional attack vectors.
+
+Failing to disconnect unused protocols can result in a system compromise.
+
+The Transparent Inter Process Communication (TIPC) is a protocol that is specially designed for intra-cluster communication. It can be configured to transmit messages either on UDP or directly across Ethernet. Message delivery is sequence guaranteed, loss free and flow controlled. Disabling TIPC protects the system against exploitation of any flaws in its implementation.
+Check Text:
+Verify that RHEL 9 disables the ability to load the tipc kernel module with the following command:
+
+$ grep -r tipc /etc/modprobe.conf /etc/modprobe.d/* 
+
+install tipc /bin/false
+blacklist tipc
+
+If the command does not return any output, or the lines are commented out, and use of tipc is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+To configure the system to prevent the tipc kernel module from being loaded, add the following lines to the file  /etc/modprobe.d/tipc.conf (or create tipc.conf if it does not exist):
+
+install tipc /bin/false
+blacklist tipc
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257826
+Rule ID:
+SV-257826r1106299
+STIG ID:
+RHEL-09-215015
+SRG ID:
+SRG-OS-000074-GPOS-00042
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must not have a File Transfer Protocol (FTP) server package installed.
+Discussion:
+The FTP service provides an unencrypted remote access that does not provide for the confidentiality and integrity of user passwords or the remote session. If a privileged user were to log on using this service, the privileged user password could be compromised. SSH or other encrypted file transfer methods must be used in place of this service.
+
+Removing the "vsftpd" package decreases the risk of accidental activation.
+
+If FTP is required for operational support (such as transmission of router configurations), its use must be documented with the information systems security manager (ISSM), restricted to only authorized personnel, and have access control rules established.
+
+Satisfies: SRG-OS-000074-GPOS-00042, SRG-OS-000095-GPOS-00049, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify RHEL 9 does not have an FTP server package installed with the following command:
+
+$ sudo dnf list --installed vsftpd
+
+Error: No matching Packages to list
+
+If the "ftp" package is installed, this is a finding.
+Fix Text:
+The ftp package can be removed with the following command (using vsftpd as an example):
+
+$ sudo dnf remove vsftpd
+CCI-000197
+For password-based authentication, transmit passwords only over cryptographically-protected channels.
+NIST SP 800-53 :: IA-5 (1) (c)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (c)
+NIST SP 800-53 Revision 5 :: IA-5 (1) (c)
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257827
+Rule ID:
+SV-257827r1044892
+STIG ID:
+RHEL-09-215020
+SRG ID:
+SRG-OS-000480-GPOS-00227
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must not have the sendmail package installed.
+Discussion:
+The sendmail software was not developed with security in mind, and its design prevents it from being effectively contained by SELinux. Postfix must be used instead.
+
+Satisfies: SRG-OS-000480-GPOS-00227, SRG-OS-000095-GPOS-00049
+Check Text:
+Verify that the sendmail package is not installed with the following command:
+
+$ dnf list --installed sendmail
+
+Error: No matching Packages to list
+
+If the "sendmail" package is installed, this is a finding.
+Fix Text:
+Remove the sendmail package with the following command:
+
+$ sudo dnf remove sendmail
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257828
+Rule ID:
+SV-257828r1044894
+STIG ID:
+RHEL-09-215025
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must not have the nfs-utils package installed.
+Discussion:
+"nfs-utils" provides a daemon for the kernel NFS server and related tools. This package also contains the "showmount" program. "showmount" queries the mount daemon on a remote host for information about the Network File System (NFS) server on the remote host. For example, "showmount" can display the clients that are mounted on that host.
+Check Text:
+Verify that the nfs-utils package is not installed with the following command:
+
+$ dnf list --installed nfs-utils
+
+Error: No matching Packages to list
+
+If the "nfs-utils" package is installed, this is a finding.
+Fix Text:
+Remove the nfs-utils package with the following command:
+
+$ sudo dnf remove nfs-utils
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257829
+Rule ID:
+SV-257829r1044896
+STIG ID:
+RHEL-09-215030
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must not have the ypserv package installed.
+Discussion:
+The NIS service provides an unencrypted authentication service, which does not provide for the confidentiality and integrity of user passwords or the remote session.
+
+Removing the "ypserv" package decreases the risk of the accidental (or intentional) activation of NIS or NIS+ services.
+Check Text:
+Verify that the ypserv package is not installed with the following command:
+
+$ dnf list --installed ypserv
+
+Error: No matching Packages to list
+
+If the "ypserv" package is installed, this is a finding.
+Fix Text:
+Remove the ypserv package with the following command:
+
+$ sudo dnf remove ypserv
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257831
+Rule ID:
+SV-257831r1044898
+STIG ID:
+RHEL-09-215040
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must not have the telnet-server package installed.
+Discussion:
+It is detrimental for operating systems to provide, or install by default, functionality exceeding requirements or mission objectives. These unnecessary capabilities are often overlooked and therefore, may remain unsecure. They increase the risk to the platform by providing additional attack vectors.
+
+The telnet service provides an unencrypted remote access service, which does not provide for the confidentiality and integrity of user passwords or the remote session. If a privileged user were to login using this service, the privileged user password could be compromised.
+
+Removing the "telnet-server" package decreases the risk of accidental (or intentional) activation of the telnet service.
+Check Text:
+Verify that the telnet-server package is not installed with the following command:
+
+$ dnf list --installed telnet-server
+
+Error: No matching Packages to list
+
+If the "telnet-server" package is installed, this is a finding.
+Fix Text:
+Remove the telnet-server package with the following command:
+
+$ sudo dnf remove telnet-server
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257832
+Rule ID:
+SV-257832r1044900
+STIG ID:
+RHEL-09-215045
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must not have the gssproxy package installed.
+Discussion:
+It is detrimental for operating systems to provide, or install by default, functionality exceeding requirements or mission objectives. These unnecessary capabilities or services are often overlooked and therefore, may remain unsecured. They increase the risk to the platform by providing additional attack vectors.
+
+Operating systems are capable of providing a wide variety of functions and services. Some of the functions and services provided by default may not be necessary to support essential organizational operations (e.g., key missions, functions).
+
+The gssproxy package is a proxy for GSS API credential handling and could expose secrets on some networks. It is not needed for normal function of the OS.
+
+Satisfies: SRG-OS-000095-GPOS-00049, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify that the gssproxy package is not installed with the following command:
+
+$ dnf list --installed gssproxy
+
+Error: No matching Packages to list
+
+If the "gssproxy" package is installed and is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+Remove the gssproxy package with the following command:
+
+$ sudo dnf remove gssproxy
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257833
+Rule ID:
+SV-257833r1044902
+STIG ID:
+RHEL-09-215050
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must not have the iprutils package installed.
+Discussion:
+It is detrimental for operating systems to provide, or install by default, functionality exceeding requirements or mission objectives. These unnecessary capabilities or services are often overlooked and therefore may remain unsecured. They increase the risk to the platform by providing additional attack vectors.
+
+Operating systems are capable of providing a wide variety of functions and services. Some of the functions and services, provided by default, may not be necessary to support essential organizational operations (e.g., key missions, functions).
+
+The iprutils package provides a suite of utilities to manage and configure SCSI devices supported by the ipr SCSI storage device driver.
+
+Satisfies: SRG-OS-000095-GPOS-00049, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify that the iprutils package is not installed with the following command:
+
+$ dnf list --installed iprutils
+
+Error: No matching Packages to list
+
+If the "iprutils" package is installed and is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+Remove the iprutils package with the following command:
+
+$ sudo dnf remove iprutils
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257834
+Rule ID:
+SV-257834r1044904
+STIG ID:
+RHEL-09-215055
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must not have the tuned package installed.
+Discussion:
+It is detrimental for operating systems to provide, or install by default, functionality exceeding requirements or mission objectives. These unnecessary capabilities or services are often overlooked and therefore may remain unsecured. They increase the risk to the platform by providing additional attack vectors.
+
+Operating systems are capable of providing a wide variety of functions and services. Some of the functions and services, provided by default, may not be necessary to support essential organizational operations (e.g., key missions, functions).
+
+The tuned package contains a daemon that tunes the system settings dynamically. It does so by monitoring the usage of several system components periodically. Based on that information, components will then be put into lower or higher power savings modes to adapt to the current usage. The tuned package is not needed for normal OS operations.
+
+Satisfies: SRG-OS-000095-GPOS-00049, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify that the tuned package is not installed with the following command:
+
+$ dnf list --installed tuned
+
+Error: No matching Packages to list
+
+If the "tuned" package is installed and is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+Remove the tuned package with the following command:
+
+$ sudo dnf remove tuned
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257850
+Rule ID:
+SV-257850r1044930
+STIG ID:
+RHEL-09-231045
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prevent device files from being interpreted on file systems that contain user home directories.
+Discussion:
+The "nodev" mount option causes the system to not interpret character or block special devices. Executing character or block special devices from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+
+The only legitimate location for device files is the "/dev" directory located on the root partition, with the exception of chroot jails if implemented.
+Check Text:
+Verify "/home" is mounted with the "nodev" option with the following command:
+
+Note: If a separate file system has not been created for the user home directories (user home directories are mounted under "/"), this is automatically a finding, as the "nodev" option cannot be used on the "/" system.
+
+$ mount | grep /home
+
+tmpfs on /home type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/home" file system is mounted without the "nodev" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nodev" option on the "/home" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257851
+Rule ID:
+SV-257851r1044932
+STIG ID:
+RHEL-09-231050
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prevent files with the setuid and setgid bit set from being executed on file systems that contain user home directories.
+Discussion:
+The "nosuid" mount option causes the system to not execute "setuid" and "setgid" files with owner privileges. This option must be used for mounting any file system not containing approved "setuid" and "setguid" files. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+
+Satisfies: SRG-OS-000368-GPOS-00154, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify "/home" is mounted with the "nosuid" option with the following command:
+
+Note: If a separate file system has not been created for the user home directories (user home directories are mounted under "/"), this is automatically a finding, as the "nosuid" option cannot be used on the "/" system.
+
+$ mount | grep /home
+
+tmpfs on /home type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/home" file system is mounted without the "nosuid" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nosuid" option on the "/home" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257860
+Rule ID:
+SV-257860r1044940
+STIG ID:
+RHEL-09-231095
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /boot with the nodev option.
+Discussion:
+The only legitimate location for device files is the "/dev" directory located on the root partition. The only exception to this is chroot jails.
+Check Text:
+Verify that the "/boot" mount point has the "nodev" option with the following command:
+
+$ mount | grep '\s/boot\s'
+
+/dev/sda1 on /boot type xfs (rw,nodev,relatime,seclabel,attr2)
+
+If the "/boot" file system does not have the "nodev" option set, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nodev" option on the "/boot" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257861
+Rule ID:
+SV-257861r1044941
+STIG ID:
+RHEL-09-231100
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prevent files with the setuid and setgid bit set from being executed on the /boot directory.
+Discussion:
+The "nosuid" mount option causes the system not to execute "setuid" and "setgid" files with owner privileges. This option must be used for mounting any file system not containing approved "setuid" and "setguid" files. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+
+Satisfies: SRG-OS-000368-GPOS-00154, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify the /boot directory is mounted with the "nosuid" option with the following command:
+
+$ mount | grep '\s/boot\s'
+
+/dev/sda1 on /boot type xfs (rw,nosuid,relatime,seclabe,attr2,inode64,noquota)
+
+If the /boot file system does not have the "nosuid" option set, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nosuid" option on the "/boot" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257862
+Rule ID:
+SV-257862r1051265
+STIG ID:
+RHEL-09-231105
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prevent files with the setuid and setgid bit set from being executed on the /boot/efi directory.
+Discussion:
+The "nosuid" mount option causes the system not to execute "setuid" and "setgid" files with owner privileges. This option must be used for mounting any file system not containing approved "setuid" and "setguid" files. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+
+Satisfies: SRG-OS-000368-GPOS-00154, SRG-OS-000480-GPOS-00227
+Check Text:
+Note: For systems that use BIOS, this requirement is Not Applicable.
+
+Verify the /boot/efi directory is mounted with the "nosuid" option with the following command:
+
+$ mount | grep '\s/boot/efi\s'
+
+/dev/sda1 on /boot/efi type vfat (rw,nosuid,relatime,fmask=0077,dmask=0077,codepage=437,iocharset=ascii,shortname=winnt,errors=remount-ro)
+
+If the /boot/efi file system does not have the "nosuid" option set, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nosuid" option on the "/boot/efi" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257864
+Rule ID:
+SV-257864r1106304
+STIG ID:
+RHEL-09-231115
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /dev/shm with the noexec option.
+Discussion:
+The "noexec" mount option causes the system to not execute binary files. This option must be used for mounting any file system not containing approved binary files, as they may be incompatible. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+Check Text:
+Verify "/dev/shm" is mounted with the "noexec" option with the following command:
+
+$ findmnt /dev/shm
+TARGET   SOURCE FSTYPE OPTIONS
+/dev/shm tmpfs  tmpfs  rw,nodev,nosuid,noexec,seclabel 0 0
+
+If the /dev/shm file system is mounted without the "noexec" option, this is a finding.
+Fix Text:
+Configure "/dev/shm" to mount with the "noexec" option.
+
+Determine how /dev/shm is managed.
+
+$ systemctl status systemd-tmpfiles-setup
+If "active", systemd is managing temporary files (including /dev/shm).
+Otherwise, /etc/fstab is managing temporary files.
+
+If systemd is managing /dev/shm, use the following commands to add the noexec option to the mount:
+     If /etc/tmpfiles.d does not exist, create it:
+     $ sudo mkdir -p /etc/tmpfiles.d
+
+     Add a configuration file with the appropriate options for /dev/shm as follows:
+     $ echo 'd /dev/shm 1777 root root 10d' | sudo tee /etc/tmpfiles.d/dev-shm.conf
+     $ echo 'x /dev/shm' | sudo tee -a /etc/tmpfiles.d/dev-shm.conf
+
+     Apply new mount options with the following commands:
+     $ sudo systemctl mask tmp.mount
+     Created symlink /etc/systemd/system/tmp.mount ? /dev/null.
+
+     $ echo 'tmpfs /dev/shm tmpfs rw,nodev,nosuid,noexec,seclabel 0 0' | sudo tee -a /etc/fstab
+     $ sudo mount -o remount /dev/shm
+     $ sudo systemctl daemon-reload
+
+If /dev/shm is managed by /etc/fstab, use the following commands to add the noexec option to the mount:
+     $ sudo vi /etc/fstab
+
+     Add or modify the following line:
+     tmpfs /dev/shm tmpfs rw,nodev,nosuid,noexec,seclabel 0 0
+
+     Remount /dev/shm:
+     $ sudo mount -o remount /dev/shm
+
+Note: Although systemd manages tmpfs mounts by default, administrators can override settings by adding entries to /etc/fstab. Either approach is acceptable.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257865
+Rule ID:
+SV-257865r1044946
+STIG ID:
+RHEL-09-231120
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /dev/shm with the nosuid option.
+Discussion:
+The "nosuid" mount option causes the system to not execute "setuid" and "setgid" files with owner privileges. This option must be used for mounting any file system not containing approved "setuid" and "setguid" files. Executing files from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+Check Text:
+Verify "/dev/shm" is mounted with the "nosuid" option with the following command:
+
+$ mount | grep /dev/shm
+
+tmpfs on /dev/shm type tmpfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the /dev/shm file system is mounted without the "nosuid" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nosuid" option on the "/dev/shm" file system.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257869
+Rule ID:
+SV-257869r1102009
+STIG ID:
+RHEL-09-231140
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must mount /var with the nodev option.
+Discussion:
+The "nodev" mount option causes the system to not interpret character or block special devices. Executing character or block special devices from untrusted file systems increases the opportunity for nonprivileged users to attain unauthorized administrative access.
+
+The only legitimate location for device files is the "/dev" directory located on the root partition, with the exception of chroot jails if implemented.
+Check Text:
+Verify "/var" is mounted with the "nodev" option:
+
+$ mount | grep /var
+
+/dev/mapper/rhel-var on /var type xfs (rw,nodev,nosuid,noexec,seclabel)
+
+If the "/var" file system is mounted without the "nodev" option, this is a finding.
+Fix Text:
+Modify "/etc/fstab" to use the "nodev" option on the "/var" directory.
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+
+============================================================================================================
+
+Group ID:
+V-257880
+Rule ID:
+SV-257880r1044951
+STIG ID:
+RHEL-09-231195
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT III
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must disable mounting of cramfs.
+Discussion:
+It is detrimental for operating systems to provide, or install by default, functionality exceeding requirements or mission objectives. These unnecessary capabilities or services are often overlooked and therefore may remain unsecured. They increase the risk to the platform by providing additional attack vectors.
+
+Removing support for unneeded filesystem types reduces the local attack surface of the server.
+
+Compressed ROM/RAM file system (or cramfs) is a read-only file system designed for simplicity and space-efficiency. It is mainly used in embedded and small-footprint systems.
+Check Text:
+Verify that RHEL 9 disables the ability to load the cramfs kernel module with the following command:
+
+$ grep -r cramfs /etc/modprobe.conf /etc/modprobe.d/* 
+
+install cramfs /bin/false
+blacklist cramfs
+
+If the command does not return any output or the lines are commented out, and use of cramfs is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+To configure the system to prevent the cramfs kernel module from being loaded, add the following lines to the file /etc/modprobe.d/blacklist.conf (or create blacklist.conf if it does not exist):
+
+install cramfs /bin/false
+blacklist cramfs
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+============================================================================================================
+
+Group ID:
+V-257935
+Rule ID:
+SV-257935r1044994
+STIG ID:
+RHEL-09-251010
+SRG ID:
+SRG-OS-000096-GPOS-00050
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the firewalld package installed.
+Discussion:
+"Firewalld" provides an easy and effective way to block/limit remote access to the system via ports, services, and protocols.
+
+Remote access services, such as those providing remote access to network devices and information systems, which lack automated control capabilities, increase risk and make remote user access management difficult at best.
+
+Remote access is access to DOD nonpublic information systems by an authorized user (or an information system) communicating through an external, nonorganization-controlled network. Remote access methods include, for example, dial-up, broadband, and wireless.
+
+RHEL 9 functionality (e.g., SSH) must be capable of taking enforcement action if the audit reveals unauthorized activity. Automated control of remote access sessions allows organizations to ensure ongoing compliance with remote access policies by enforcing connection rules of remote access applications on a variety of information system components (e.g., servers, workstations, notebook computers, smartphones, and tablets).
+
+Satisfies: SRG-OS-000096-GPOS-00050, SRG-OS-000297-GPOS-00115, SRG-OS-000298-GPOS-00116, SRG-OS-000480-GPOS-00227, SRG-OS-000480-GPOS-00232
+Check Text:
+Run the following command to determine if the firewalld package is installed with the following command:
+
+$ dnf list --installed firewalld 
+
+Example output:
+
+firewalld.noarch          1.0.0-4.el9
+
+If the "firewall" package is not installed, this is a finding.
+Fix Text:
+To install the "firewalld" package run the following command:
+
+$ sudo dnf install firewalld
+CCI-000382
+Configure the system to prohibit or restrict the use of organization-defined prohibited or restricted functions, system ports, protocols, software, and/or services.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (iii)
+NIST SP 800-53 Revision 4 :: CM-7 b
+NIST SP 800-53 Revision 5 :: CM-7 b
+CCI-002314
+Employ automated mechanisms to control remote access methods.
+NIST SP 800-53 Revision 4 :: AC-17 (1)
+NIST SP 800-53 Revision 5 :: AC-17 (1)
+CCI-002322
+Provide the capability to disconnect or disable remote access to the system within the organization-defined time period.
+NIST SP 800-53 Revision 4 :: AC-17 (9)
+NIST SP 800-53 Revision 5 :: AC-17 (9)
+
+============================================================================================================
+
+Group ID:
+V-257936
+Rule ID:
+SV-257936r1044995
+STIG ID:
+RHEL-09-251015
+SRG ID:
+SRG-OS-000096-GPOS-00050
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+The firewalld service on RHEL 9 must be active.
+Discussion:
+"Firewalld" provides an easy and effective way to block/limit remote access to the system via ports, services, and protocols.
+
+Remote access services, such as those providing remote access to network devices and information systems, which lack automated control capabilities, increase risk and make remote user access management difficult at best.
+
+Remote access is access to DOD nonpublic information systems by an authorized user (or an information system) communicating through an external, non-organization-controlled network. Remote access methods include, for example, dial-up, broadband, and wireless.
+
+RHEL 9 functionality (e.g., RDP) must be capable of taking enforcement action if the audit reveals unauthorized activity. Automated control of remote access sessions allows organizations to ensure ongoing compliance with remote access policies by enforcing connection rules of remote access applications on a variety of information system components (e.g., servers, workstations, notebook computers, smartphones, and tablets).
+
+Satisfies: SRG-OS-000096-GPOS-00050, SRG-OS-000297-GPOS-00115, SRG-OS-000480-GPOS-00227, SRG-OS-000480-GPOS-00232
+Check Text:
+Verify that "firewalld" is active with the following command:
+
+$ systemctl is-active firewalld 
+
+active
+
+If the firewalld service is not active, this is a finding.
+Fix Text:
+To enable the firewalld service run the following command:
+
+$ sudo systemctl enable --now firewalld
+CCI-000382
+Configure the system to prohibit or restrict the use of organization-defined prohibited or restricted functions, system ports, protocols, software, and/or services.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (iii)
+NIST SP 800-53 Revision 4 :: CM-7 b
+NIST SP 800-53 Revision 5 :: CM-7 b
+CCI-002314
+Employ automated mechanisms to control remote access methods.
+NIST SP 800-53 Revision 4 :: AC-17 (1)
+NIST SP 800-53 Revision 5 :: AC-17 (1)
+
+============================================================================================================
+
+Group ID:
+V-257940
+Rule ID:
+SV-257940r1106312
+STIG ID:
+RHEL-09-251035
+SRG ID:
+SRG-OS-000096-GPOS-00050
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured to prohibit or restrict the use of functions, ports, protocols, and/or services, as defined in the Ports, Protocols, and Services Management (PPSM) Category Assignments List (CAL) and vulnerability assessments.
+Discussion:
+To prevent unauthorized connection of devices, unauthorized transfer of information, or unauthorized tunneling (i.e., embedding of data types within data types), organizations must disable or restrict unused or unnecessary ports, protocols, and services on information systems.
+Check Text:
+Inspect the firewall configuration and running services to verify it is configured to prohibit or restrict the use of functions, ports, protocols, and/or services that are unnecessary or prohibited.
+
+Check which services are currently active with the following command:
+
+$ sudo firewall-cmd --list-all-zones | grep -e "active" -e "services"
+
+Ask the system administrator for the site or program Ports, Protocols, and Services Management Component Local Service Assessment (PPSM CLSA). Verify the services allowed by the firewall match the PPSM CLSA. 
+
+If there are additional ports, protocols, or services that are not in the PPSM CLSA, or there are ports, protocols, or services that are prohibited by the PPSM CAL, this is a finding.
+Fix Text:
+Update the host's firewall settings and/or running services to comply with the PPSM CLSA for the site or program and the PPSM CAL.
+
+Then run the following command to load the newly created rule(s):
+
+$ sudo firewall-cmd --reload
+CCI-000382
+Configure the system to prohibit or restrict the use of organization-defined prohibited or restricted functions, system ports, protocols, software, and/or services.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (iii)
+NIST SP 800-53 Revision 4 :: CM-7 b
+NIST SP 800-53 Revision 5 :: CM-7 b
+
+============================================================================================================
+
+Group ID:
+V-258034
+Rule ID:
+SV-258034r1051267
+STIG ID:
+RHEL-09-291010
+SRG ID:
+SRG-OS-000114-GPOS-00059
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured to disable USB mass storage.
+Discussion:
+USB mass storage permits easy introduction of unknown devices, thereby facilitating malicious activity.
+
+Satisfies: SRG-OS-000114-GPOS-00059, SRG-OS-000378-GPOS-00163, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify that RHEL 9 disables the ability to load the USB Storage kernel module with the following command:
+
+$ grep -r usb-storage /etc/modprobe.conf /etc/modprobe.d/* 
+
+install usb-storage /bin/false
+blacklist usb-storage
+
+If the command does not return any output, or either line is commented out, and use of USB Storage is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+To configure the system to prevent the usb-storage kernel module from being loaded, add the following lines to the file "/etc/modprobe.d/usb-storage.conf" (or create "usb-storage.conf" if it does not exist):
+
+install usb-storage /bin/false
+blacklist usb-storage
+CCI-000778
+Uniquely identify organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 :: IA-3
+NIST SP 800-53A :: IA-3.1 (ii)
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+CCI-001958
+Authenticate organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+CCI-003959
+Prohibit the use or connection of unauthorized hardware components.
+NIST SP 800-53 Revision 5 :: CM-7 (9) (b)
+
+============================================================================================================
+
+Group ID:
+V-258035
+Rule ID:
+SV-258035r1045125
+STIG ID:
+RHEL-09-291015
+SRG ID:
+SRG-OS-000378-GPOS-00163
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the USBGuard package installed.
+Discussion:
+The USBguard-daemon is the main component of the USBGuard software framework. It runs as a service in the background and enforces the USB device authorization policy for all USB devices. The policy is defined by a set of rules using a rule language described in the usbguard-rules.conf file. The policy and the authorization state of USB devices can be modified during runtime using the usbguard tool.
+
+The system administrator (SA) must work with the site information system security officer (ISSO) to determine a list of authorized peripherals and establish rules within the USBGuard software framework to allow only authorized devices.
+Check Text:
+Verify USBGuard is installed on the operating system with the following command:
+
+$ sudo dnf list installed usbguard
+
+Example output:
+
+Installed Packages
+usbguard.x86_64          1.0.0-10.el9_1.2          @rhel-9-for-x86_64-appstream-rpms
+
+If the USBGuard package is not installed, ask the SA to indicate how unauthorized peripherals are being blocked.
+
+If there is no evidence that unauthorized peripherals are being blocked before establishing a connection, this is a finding.
+
+If the system is virtual machine with no virtual or physical USB peripherals attached, this is not a finding.
+Fix Text:
+Install the usbguard package with the following command:
+
+$ sudo dnf install usbguard
+
+Enable the service to start on boot and then start it with the following commands:
+$ sudo systemctl enable usbguard
+$ sudo systemctl start usbguard
+
+Verify the status of the service with the following command:
+$ sudo systemctl status usbguard
+
+Note: usbguard will need to be configured to allow authorized devices once it is enabled on RHEL 9.
+CCI-001958
+Authenticate organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+CCI-003959
+Prohibit the use or connection of unauthorized hardware components.
+NIST SP 800-53 Revision 5 :: CM-7 (9) (b)
+
+============================================================================================================
+
+Group ID:
+V-258036
+Rule ID:
+SV-258036r1014861
+STIG ID:
+RHEL-09-291020
+SRG ID:
+SRG-OS-000378-GPOS-00163
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the USBGuard package enabled.
+Discussion:
+The USBguard-daemon is the main component of the USBGuard software framework. It runs as a service in the background and enforces the USB device authorization policy for all USB devices. The policy is defined by a set of rules using a rule language described in the usbguard-rules.conf file. The policy and the authorization state of USB devices can be modified during runtime using the usbguard tool.
+
+The system administrator (SA) must work with the site information system security officer (ISSO) to determine a list of authorized peripherals and establish rules within the USBGuard software framework to allow only authorized devices.
+Check Text:
+Verify RHEL 9 has USBGuard enabled with the following command:
+
+$ systemctl is-active usbguard
+
+active
+
+If usbguard is not active, ask the SA to indicate how unauthorized peripherals are being blocked.
+
+If there is no evidence that unauthorized peripherals are being blocked before establishing a connection, this is a finding.
+
+If the system is virtual machine with no virtual or physical USB peripherals attached, this is not a finding.
+Fix Text:
+To enable the USBGuard service run the following command:
+
+$ sudo systemctl enable --now usbguard
+CCI-001958
+Authenticate organization-defined devices and/or types of devices before establishing a local, remote, and/or network connection.
+NIST SP 800-53 Revision 4 :: IA-3
+NIST SP 800-53 Revision 5 :: IA-3
+CCI-003959
+Prohibit the use or connection of unauthorized hardware components.
+NIST SP 800-53 Revision 5 :: CM-7 (9) (b)
+
+============================================================================================================
+
+Group ID:
+V-258039
+Rule ID:
+SV-258039r1045131
+STIG ID:
+RHEL-09-291035
+SRG ID:
+SRG-OS-000095-GPOS-00049
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 Bluetooth must be disabled.
+Discussion:
+This requirement applies to wireless peripheral technologies (e.g., wireless mice, keyboards, displays, etc.) used with RHEL 9 systems. Wireless peripherals (e.g., Wi-Fi/Bluetooth/IR keyboards, mice and pointing devices, and near field communications [NFC]) present a unique challenge by creating an open, unsecured port on a computer. Wireless peripherals must meet DOD requirements for wireless data transmission and be approved for use by the Authorizing Official (AO). Even though some wireless peripherals, such as mice and pointing devices, do not ordinarily carry information that need to be protected, modification of communications with these wireless peripherals may be used to compromise the RHEL 9 operating system.
+
+Satisfies: SRG-OS-000095-GPOS-00049, SRG-OS-000300-GPOS-00118
+Check Text:
+Verify that RHEL 9 disables the ability to load the Bluetooth kernel module with the following command:
+
+$ sudo grep -r bluetooth /etc/modprobe.conf /etc/modprobe.d/* 
+
+install bluetooth /bin/false
+blacklist bluetooth
+	
+If the command does not return any output, or the lines are commented out, and use of Bluetooth is not documented with the information system security officer (ISSO) as an operational requirement, this is a finding.
+Fix Text:
+Configure RHEL 9 to disable the Bluetooth adapter when not in use.
+
+Create or modify the "/etc/modprobe.d/bluetooth.conf" file with the following lines:
+
+install bluetooth /bin/false
+blacklist bluetooth
+
+Reboot the system for the settings to take effect.
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+CCI-001443
+Protect wireless access to the system using authentication of users and/or devices.
+NIST SP 800-53 :: AC-18 (1)
+NIST SP 800-53A :: AC-18 (1).1
+NIST SP 800-53 Revision 4 :: AC-18 (1)
+NIST SP 800-53 Revision 5 :: AC-18 (1)
+
+============================================================================================================
+
+Group ID:
+V-258089
+Rule ID:
+SV-258089r1045179
+STIG ID:
+RHEL-09-433010
+SRG ID:
+SRG-OS-000370-GPOS-00155
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 fapolicy module must be installed.
+Discussion:
+The organization must identify authorized software programs and permit execution of authorized software. The process used to identify software programs that are authorized to execute on organizational information systems is commonly referred to as allow listing.
+
+Utilizing an allow list provides a configuration management method for allowing the execution of only authorized software. Using only authorized software decreases risk by limiting the number of potential vulnerabilities. Verification of allow listed software occurs prior to execution or at system startup.
+
+User home directories/folders may contain information of a sensitive nature. Nonprivileged users should coordinate any sharing of information with an SA through shared resources.
+
+RHEL 9 ships with many optional packages. One such package is a file access policy daemon called "fapolicyd". "fapolicyd" is a userspace daemon that determines access rights to files based on attributes of the process and file. It can be used to either blocklist or allow list processes or file access.
+
+Proceed with caution with enforcing the use of this daemon. Improper configuration may render the system nonfunctional. The "fapolicyd" API is not namespace aware and can cause issues when launching or running containers.
+
+Satisfies: SRG-OS-000370-GPOS-00155, SRG-OS-000368-GPOS-00154
+Check Text:
+Verify that RHEL 9 fapolicyd package is installed with the following command:
+
+$ dnf list --installed fapolicyd
+
+Example output:
+
+fapolicyd.x86_64          1.1-103.el9_0
+
+If the "fapolicyd" package is not installed, this is a finding.
+Fix Text:
+The  fapolicyd  package can be installed with the following command:
+ 
+$ sudo dnf install fapolicyd
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+CCI-001774
+Employ a deny-all, permit-by-exception policy to allow the execution of authorized software programs on the system.
+NIST SP 800-53 Revision 4 :: CM-7 (5) (b)
+NIST SP 800-53 Revision 5 :: CM-7 (5) (b)
+
+============================================================================================================
+
+Group ID:
+V-270180
+Rule ID:
+SV-270180r1045182
+STIG ID:
+RHEL-09-433016
+SRG ID:
+SRG-OS-000368-GPOS-00154
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+The RHEL 9 fapolicy module must be configured to employ a deny-all, permit-by-exception policy to allow the execution of authorized software programs.
+Discussion:
+The organization must identify authorized software programs and permit execution of authorized software. The process used to identify software programs that are authorized to execute on organizational information systems is commonly referred to as allow listing.
+
+Using an allow list provides a configuration management method for allowing the execution of only authorized software. Using only authorized software decreases risk by limiting the number of potential vulnerabilities. Verification of allow listed software occurs prior to execution or at system startup.
+
+User home directories/folders may contain information of a sensitive nature. Nonprivileged users should coordinate any sharing of information with an SA through shared resources.
+
+RHEL 9 ships with many optional packages. One such package is a file access policy daemon called "fapolicyd". "fapolicyd" is a userspace daemon that determines access rights to files based on attributes of the process and file. It can be used to either block list or allow list processes or file access.
+
+Proceed with caution with enforcing the use of this daemon. Improper configuration may render the system nonfunctional. The "fapolicyd" API is not namespace aware and can cause issues when launching or running containers.
+
+Satisfies: SRG-OS-000368-GPOS-00154, SRG-OS-000370-GPOS-00155, SRG-OS-000480-GPOS-00232
+Check Text:
+Verify the RHEL 9 "fapolicyd" employs a deny-all, permit-by-exception policy.
+
+Check that "fapolicyd" is in enforcement mode with the following command:
+
+$ sudo grep permissive /etc/fapolicyd/fapolicyd.conf
+
+permissive = 0
+
+Check that "fapolicyd" employs a deny-all policy on system mounts with the following commands:
+
+$ sudo tail /etc/fapolicyd/compiled.rules
+
+allow exe=/usr/bin/python3.7 : ftype=text/x-python
+deny_audit perm=any pattern=ld_so : all
+deny perm=any all : all
+
+If "fapolicyd" is not running in enforcement mode with a deny-all, permit-by-exception policy, this is a finding.
+Fix Text:
+Configure RHEL 9 to employ a deny-all, permit-by-exception application allow listing policy with "fapolicyd".
+
+With the "fapolicyd" installed and enabled, configure the daemon to function in permissive mode until the allow list is built correctly to avoid system lockout. Do this by editing the "/etc/fapolicyd/fapolicyd.conf" file with the following line:
+
+permissive = 1
+
+Build the allow list in a file within the "/etc/fapolicyd/rules.d" directory, ensuring the last rule is "deny perm=any all : all".
+
+Once it is determined the allow list is built correctly, set the "fapolicyd" to enforcing mode by editing the "permissive" line in the /etc/fapolicyd/fapolicyd.conf file.
+
+permissive = 0
+CCI-001764
+Prevent program execution in accordance with organization-defined policies, rules of behavior, and/or access agreements regarding software program usage and restrictions; rules authorizing the terms and conditions of software program usage.
+NIST SP 800-53 Revision 4 :: CM-7 (2)
+NIST SP 800-53 Revision 5 :: CM-7 (2)
+

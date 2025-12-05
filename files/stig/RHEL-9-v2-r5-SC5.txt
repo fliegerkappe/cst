@@ -1,0 +1,128 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+SC-5 Denial of Service (DoS) Protection
+************************************************************************************************************
+
+Group ID:
+V-257939
+Rule ID:
+SV-257939r1044997
+STIG ID:
+RHEL-09-251030
+SRG ID:
+SRG-OS-000420-GPOS-00186
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must protect against or limit the effects of denial-of-service (DoS) attacks by ensuring rate-limiting measures on impacted network interfaces are implemented.
+Discussion:
+DoS is a condition when a resource is not available for legitimate users. When this occurs, the organization either cannot accomplish its mission or must operate at degraded capacity.
+
+This requirement addresses the configuration of RHEL 9 to mitigate the impact of DoS attacks that have occurred or are ongoing on system availability. For each system, known and potential DoS attacks must be identified and solutions for each type implemented. A variety of technologies exists to limit or, in some cases, eliminate the effects of DoS attacks (e.g., limiting processes or establishing memory partitions). Employing increased capacity and bandwidth, combined with service redundancy, may reduce the susceptibility to some DoS attacks.
+Check Text:
+Verify "nftables" is configured to allow rate limits on any connection to the system with the following command:
+
+$ sudo grep -i firewallbackend /etc/firewalld/firewalld.conf
+
+# FirewallBackend
+FirewallBackend=nftables
+
+If the "nftables" is not set as the "FirewallBackend" default, this is a finding.
+Fix Text:
+Configure "nftables" to be the default "firewallbackend" for "firewalld" by adding or editing the following line in "/etc/firewalld/firewalld.conf":
+
+FirewallBackend=nftables
+
+Establish rate-limiting rules based on organization-defined types of DoS attacks on impacted network interfaces.
+CCI-002385
+Protect against or limit the effects of organization-defined types of denial-of-service events.
+NIST SP 800-53 Revision 4 :: SC-5
+NIST SP 800-53 Revision 5 :: SC-5 a
+
+************************************************************************************************************
+
+Group ID:
+V-257957
+Rule ID:
+SV-257957r1106317
+STIG ID:
+RHEL-09-253010
+SRG ID:
+SRG-OS-000480-GPOS-00227
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured to use TCP syncookies.
+Discussion:
+Preventing unauthorized information transfers mitigates the risk of information, including encrypted representations of information, produced by the actions of prior users/roles (or the actions of processes acting on behalf of prior users/roles) from being available to any current users/roles (or current processes) that obtain access to shared system resources (e.g., registers, main memory, hard disks) after those resources have been released back to information systems. The control of information in shared resources is also commonly referred to as object reuse and residual information protection.
+
+This requirement generally applies to the design of an information technology product, but it can also apply to the configuration of particular information system components that are, or use, such products. This can be verified by acceptance/validation processes in DOD or other government agencies.
+
+There may be shared resources with configurable protections (e.g., files in storage) that may be assessed on specific information system components.
+
+Restricting access to the kernel message buffer limits access to only root. This prevents attackers from gaining additional system information as a nonprivileged user.
+
+The sysctl --system command will load settings from all system configuration files. All configuration files are sorted by their filename in lexicographic order, regardless of the directories in which they reside. If multiple files specify the same option, the entry in the file with the lexicographically latest name will take precedence. Files are read from directories in the following list from top to bottom. Once a file of a given filename is loaded, any file of the same name in subsequent directories is ignored.
+
+/etc/sysctl.d/*.conf
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+
+Satisfies: SRG-OS-000480-GPOS-00227, SRG-OS-000420-GPOS-00186, SRG-OS-000142-GPOS-00071
+Check Text:
+Verify RHEL 9 is configured to use IPv4 TCP syncookies.
+
+Determine if syncookies are used with the following command:
+
+Check the status of TCP syncookies.
+
+$ sudo sysctl net.ipv4.tcp_syncookies
+
+net.ipv4.tcp_syncookies = 1
+
+Check that the configuration files are present to enable this kernel parameter.
+
+$ sudo grep -r kernel.dmesg_restrict /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
+
+/etc/sysctl.d/99-sysctl.conf:net.ipv4.tcp_syncookies = 1
+
+If "net.ipv4.tcp_syncookies" is not set to "1", is missing, or commented out, this is a finding.
+
+If conflicting results are returned, this is a finding.
+Fix Text:
+Configure RHEL 9 to use TCP syncookies.
+
+Add or edit the following line in a system configuration file in the "/etc/sysctl.d/" directory:
+
+net.ipv4.tcp_syncookies = 1
+
+Remove any configurations that conflict with the above from the following locations: 
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+/etc/sysctl.d/*.conf
+
+Load settings from all system configuration files with the following command:
+
+$ sudo sysctl --system
+CCI-001095
+Manage capacity, bandwidth, or other redundancy to limit the effects of information flooding types of denial-of-service attacks.
+NIST SP 800-53 :: SC-5 (2)
+NIST SP 800-53A :: SC-5 (2).1
+NIST SP 800-53 Revision 4 :: SC-5 (2)
+NIST SP 800-53 Revision 5 :: SC-5 (2)
+CCI-002385
+Protect against or limit the effects of organization-defined types of denial-of-service events.
+NIST SP 800-53 Revision 4 :: SC-5
+NIST SP 800-53 Revision 5 :: SC-5 a

@@ -1,0 +1,649 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+IA-2 Identification and Authentication (Organizational Users)
+************************************************************************************************************
+
+Group ID:
+V-258045
+Rule ID:
+SV-258045r958482
+STIG ID:
+RHEL-09-411030
+SRG ID:
+SRG-OS-000104-GPOS-00051
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 duplicate User IDs (UIDs) must not exist for interactive users.
+Discussion:
+To ensure accountability and prevent unauthenticated access, interactive users must be identified and authenticated to prevent potential misuse and compromise of the system.
+
+Satisfies: SRG-OS-000104-GPOS-00051, SRG-OS-000121-GPOS-00062, SRG-OS-000042-GPOS-00020
+Check Text:
+Verify that RHEL 9 contains no duplicate UIDs for interactive users with the following command:
+
+$ sudo awk -F ":" 'list[$3]++{print $1, $3}' /etc/passwd 
+
+If output is produced and the accounts listed are interactive user accounts, this is a finding.
+Fix Text:
+Edit the file "/etc/passwd" and provide each interactive user account that has a duplicate UID with a unique UID.
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000764
+Uniquely identify and authenticate organizational users and associate that unique identification with processes acting on behalf of those users.
+NIST SP 800-53 :: IA-2
+NIST SP 800-53A :: IA-2.1
+NIST SP 800-53 Revision 4 :: IA-2
+NIST SP 800-53 Revision 5 :: IA-2
+CCI-000804
+Uniquely identify and authenticate non-organizational users or processes acting on behalf of non-organizational users.
+NIST SP 800-53 :: IA-8
+NIST SP 800-53A :: IA-8.1
+NIST SP 800-53 Revision 4 :: IA-8
+NIST SP 800-53 Revision 5 :: IA-8
+
+************************************************************************************************************
+
+Group ID:
+V-258061
+Rule ID:
+SV-258061r958482
+STIG ID:
+RHEL-09-411110
+SRG ID:
+SRG-OS-000104-GPOS-00051
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 groups must have unique Group ID (GID).
+Discussion:
+To ensure accountability and prevent unauthenticated access, groups must be identified uniquely to prevent potential misuse and compromise of the system.
+Check Text:
+Verify that RHEL 9 contains no duplicate GIDs for interactive users with the following command:
+ 
+ $  cut -d : -f 3 /etc/group | uniq -d
+ 
+If the system has duplicate GIDs, this is a finding.
+Fix Text:
+Edit the file "/etc/group" and provide each group that has a duplicate GID with a unique GID.
+CCI-000764
+Uniquely identify and authenticate organizational users and associate that unique identification with processes acting on behalf of those users.
+NIST SP 800-53 :: IA-2
+NIST SP 800-53A :: IA-2.1
+NIST SP 800-53 Revision 4 :: IA-2
+NIST SP 800-53 Revision 5 :: IA-2
+
+************************************************************************************************************
+
+Group ID:
+V-257838
+Rule ID:
+SV-257838r1044912
+STIG ID:
+RHEL-09-215075
+SRG ID:
+SRG-OS-000105-GPOS-00052
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the openssl-pkcs11 package installed.
+Discussion:
+Without the use of multifactor authentication, the ease of access to privileged functions is greatly increased. Multifactor authentication requires using two or more factors to achieve authentication. A privileged account is defined as an information system account with authorizations of a privileged user. The DOD common access card (CAC) with DOD-approved PKI is an example of multifactor authentication.
+
+Satisfies: SRG-OS-000105-GPOS-00052, SRG-OS-000375-GPOS-00160, SRG-OS-000376-GPOS-00161, SRG-OS-000377-GPOS-00162
+Check Text:
+Note: If the system administrator demonstrates the use of an approved alternate multifactor authentication method, this requirement is Not Applicable.
+
+Verify that RHEL 9 has the openssl-pkcs11 package installed with the following command:
+
+$ dnf list --installed openssl-pkcs11
+
+Example output:
+
+openssl-pkcs.i686          0.4.11-7.el9
+openssl-pkcs.x86_64          0.4.11-7.el9
+
+If the "openssl-pkcs11" package is not installed, this is a finding.
+Fix Text:
+The openssl-pkcs11 package can be installed with the following command:
+ 
+$ sudo dnf install openssl-pkcs11
+CCI-000765
+Implement multifactor authentication for access to privileged accounts.
+NIST SP 800-53 :: IA-2 (1)
+NIST SP 800-53A :: IA-2 (1).1
+NIST SP 800-53 Revision 4 :: IA-2 (1)
+NIST SP 800-53 Revision 5 :: IA-2 (1)
+CCI-004046
+Implement multi-factor authentication for local; network; and/or remote access to privileged accounts; and/or non-privileged accounts such that one of the factors is provided by a device separate from the system gaining access.
+NIST SP 800-53 Revision 5 :: IA-2 (6) (a)
+CCI-001953
+Accept Personal Identity Verification-compliant credentials.
+NIST SP 800-53 Revision 4 :: IA-2 (12)
+NIST SP 800-53 Revision 5 :: IA-2 (12)
+CCI-001954
+Electronically verify Personal Identity Verification-compliant credentials.
+NIST SP 800-53 Revision 4 :: IA-2 (12)
+NIST SP 800-53 Revision 5 :: IA-2 (12)
+CCI-001948
+The information system implements multifactor authentication for remote access to privileged accounts such that one of the factors is provided by a device separate from the system gaining access.
+NIST SP 800-53 Revision 4 :: IA-2 (11)
+
+************************************************************************************************************
+
+Group ID:
+V-257983
+Rule ID:
+SV-257983r1045024
+STIG ID:
+RHEL-09-255035
+SRG ID:
+SRG-OS-000105-GPOS-00052
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 SSHD must accept public key authentication.
+Discussion:
+Without the use of multifactor authentication, the ease of access to privileged functions is greatly increased. Multifactor authentication requires using two or more factors to achieve authentication. A privileged account is defined as an information system account with authorizations of a privileged user. A DOD common access card (CAC) with DOD-approved PKI is an example of multifactor authentication.
+
+Satisfies: SRG-OS-000105-GPOS-00052, SRG-OS-000106-GPOS-00053, SRG-OS-000107-GPOS-00054, SRG-OS-000108-GPOS-00055
+Check Text:
+Note: If the system administrator demonstrates the use of an approved alternate multifactor authentication method, this requirement is Not Applicable.
+
+Verify that RHEL 9 SSH daemon accepts public key encryption with the following command:
+ 
+$ sudo /usr/sbin/sshd -dd 2>&1 | awk '/filename/ {print $4}' | tr -d '\r' | tr '\n' ' ' | xargs sudo grep -iH '^\s*pubkeyauthentication'
+
+PubkeyAuthentication yes
+ 
+If "PubkeyAuthentication" is set to no, the line is commented out, or the line is missing, this is a finding.
+Fix Text:
+To configure the system, add or modify the following line in "/etc/ssh/sshd_config" or in a file in "/etc/ssh/sshd_config.d".
+
+PubkeyAuthentication yes
+
+Restart the SSH daemon for the settings to take effect:
+
+$ sudo systemctl restart sshd.service
+CCI-000765
+Implement multifactor authentication for access to privileged accounts.
+NIST SP 800-53 :: IA-2 (1)
+NIST SP 800-53A :: IA-2 (1).1
+NIST SP 800-53 Revision 4 :: IA-2 (1)
+NIST SP 800-53 Revision 5 :: IA-2 (1)
+CCI-000766
+Implement multifactor authentication for access to non-privileged accounts.
+NIST SP 800-53 :: IA-2 (2)
+NIST SP 800-53A :: IA-2 (2).1
+NIST SP 800-53 Revision 4 :: IA-2 (2)
+NIST SP 800-53 Revision 5 :: IA-2 (2)
+CCI-000767
+The information system implements multifactor authentication for local access to privileged accounts.
+NIST SP 800-53 :: IA-2 (3)
+NIST SP 800-53A :: IA-2 (3).1
+NIST SP 800-53 Revision 4 :: IA-2 (3)
+CCI-000768
+The information system implements multifactor authentication for local access to non-privileged accounts.
+NIST SP 800-53 :: IA-2 (4)
+NIST SP 800-53A :: IA-2 (4).1
+NIST SP 800-53 Revision 4 :: IA-2 (4)
+
+************************************************************************************************************
+
+Group ID:
+V-257984
+Rule ID:
+SV-257984r1045026
+STIG ID:
+RHEL-09-255040
+SRG ID:
+SRG-OS-000106-GPOS-00053
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+RHEL 9 SSHD must not allow blank passwords.
+Discussion:
+If an account has an empty password, anyone could log on and run commands with the privileges of that account. Accounts with empty passwords should never be used in operational environments.
+
+Satisfies: SRG-OS-000106-GPOS-00053, SRG-OS-000480-GPOS-00229, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify that RHEL 9 remote access using SSH prevents logging on with a blank password with the following command:
+
+$ sudo /usr/sbin/sshd -dd 2>&1 | awk '/filename/ {print $4}' | tr -d '\r' | tr '\n' ' ' | xargs sudo grep -iH '^\s*permitemptypasswords'
+
+PermitEmptyPasswords no
+
+If the "PermitEmptyPasswords" keyword is set to "yes", is missing, or is commented out, this is a finding.
+Fix Text:
+To configure the system to prevent SSH users from logging on with blank passwords edit the following line in "/etc/ssh/sshd_config" or in a file in "/etc/ssh/sshd_config.d":
+
+PermitEmptyPasswords no
+
+Restart the SSH daemon for the settings to take effect:
+
+$ sudo systemctl restart sshd.service
+CCI-000766
+Implement multifactor authentication for access to non-privileged accounts.
+NIST SP 800-53 :: IA-2 (2)
+NIST SP 800-53A :: IA-2 (2).1
+NIST SP 800-53 Revision 4 :: IA-2 (2)
+NIST SP 800-53 Revision 5 :: IA-2 (2)
+
+************************************************************************************************************
+
+Group ID:
+V-257985
+Rule ID:
+SV-257985r1069364
+STIG ID:
+RHEL-09-255045
+SRG ID:
+SRG-OS-000109-GPOS-00056
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must not permit direct logons to the root account using remote access via SSH.
+Discussion:
+Even though the communications channel may be encrypted, an additional layer of security is gained by extending the policy of not logging directly on as root. In addition, logging in with a user-specific account provides individual accountability of actions performed on the system and also helps to minimize direct attack attempts on root's password.
+
+Satisfies: SRG-OS-000109-GPOS-00056, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify RHEL 9 remote access using SSH prevents users from logging on directly as "root" with the following command:
+
+$ sudo /usr/sbin/sshd -dd 2>&1 | awk '/filename/ {print $4}' | tr -d '\r' | tr '\n' ' ' | xargs sudo grep -iH '^\s*permitrootlogin'
+
+PermitRootLogin no
+
+If the "PermitRootLogin" keyword is set to any value other than "no", is missing, or is commented out, this is a finding.
+Fix Text:
+To configure the system to prevent SSH users from logging on directly as root add or modify the following line in "/etc/ssh/sshd_config" or in a file in "/etc/ssh/sshd_config.d".
+
+PermitRootLogin no
+
+Restart the SSH daemon for the settings to take effect:
+
+$ sudo systemctl restart sshd.service
+CCI-004045
+Require users to be individually authenticated before granting access to the shared accounts or resources.
+NIST SP 800-53 Revision 5 :: IA-2 (5)
+CCI-000770
+The organization requires individuals to be authenticated with an individual authenticator when a group authenticator is employed.
+NIST SP 800-53 :: IA-2 (5) (b)
+NIST SP 800-53A :: IA-2 (5).2 (ii)
+NIST SP 800-53 Revision 4 :: IA-2 (5)
+
+************************************************************************************************************
+
+Group ID:
+V-258048
+Rule ID:
+SV-258048r1069380
+STIG ID:
+RHEL-09-411045
+SRG ID:
+SRG-OS-000104-GPOS-00051
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+All RHEL 9 interactive users must have a primary group that exists.
+Discussion:
+If a user is assigned the Group Identifier (GID) of a group that does not exist on the system, and a group with the GID is subsequently created, the user may have unintended rights to any files associated with the group.
+Check Text:
+Verify that all RHEL 9 interactive users have a valid GID.
+
+Check that the interactive users have a valid GID with the following command:
+
+$ sudo pwck -r
+
+If pwck reports "no group" for any interactive user, this is a finding.
+Fix Text:
+Configure the system so that all GIDs are referenced in "/etc/passwd" are defined in "/etc/group".
+
+Edit the file "/etc/passwd" and ensure that every user's GID is a valid GID.
+CCI-000764
+Uniquely identify and authenticate organizational users and associate that unique identification with processes acting on behalf of those users.
+NIST SP 800-53 :: IA-2
+NIST SP 800-53A :: IA-2.1
+NIST SP 800-53 Revision 4 :: IA-2
+NIST SP 800-53 Revision 5 :: IA-2
+
+************************************************************************************************************
+
+Group ID:
+V-258121
+Rule ID:
+SV-258121r1102086
+STIG ID:
+RHEL-09-611160
+SRG ID:
+SRG-OS-000104-GPOS-00051
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must use the common access card (CAC) smart card driver.
+Discussion:
+Smart card login provides two-factor authentication stronger than that provided by a username and password combination. Smart cards leverage public key infrastructure to provide and verify credentials. Configuring the smart card driver in use by the organization helps to prevent users from using unauthorized smart cards.
+
+Satisfies: SRG-OS-000104-GPOS-00051, SRG-OS-000106-GPOS-00053, SRG-OS-000107-GPOS-00054, SRG-OS-000109-GPOS-00056, SRG-OS-000108-GPOS-00055, SRG-OS-000112-GPOS-00057, SRG-OS-000113-GPOS-00058
+Check Text:
+Verify that RHEL loads the CAC driver with the following command:
+
+$ sudo opensc-tool --get-conf-entry app:default:card_drivers cac
+
+cac
+
+If "cac" is not listed as a card driver, or no line is returned for "card_drivers", this is a finding.
+Fix Text:
+Configure RHEL 9 to load the CAC driver.
+
+$ sudo opensc-tool --set-conf-entry app:default:card_driver:cac
+
+Restart the pcscd service to apply the changes:
+
+$ sudo systemctl restart pcscd
+CCI-000764
+Uniquely identify and authenticate organizational users and associate that unique identification with processes acting on behalf of those users.
+NIST SP 800-53 :: IA-2
+NIST SP 800-53A :: IA-2.1
+NIST SP 800-53 Revision 4 :: IA-2
+NIST SP 800-53 Revision 5 :: IA-2
+CCI-000766
+Implement multifactor authentication for access to non-privileged accounts.
+NIST SP 800-53 :: IA-2 (2)
+NIST SP 800-53A :: IA-2 (2).1
+NIST SP 800-53 Revision 4 :: IA-2 (2)
+NIST SP 800-53 Revision 5 :: IA-2 (2)
+CCI-000765
+Implement multifactor authentication for access to privileged accounts.
+NIST SP 800-53 :: IA-2 (1)
+NIST SP 800-53A :: IA-2 (1).1
+NIST SP 800-53 Revision 4 :: IA-2 (1)
+NIST SP 800-53 Revision 5 :: IA-2 (1)
+CCI-004045
+Require users to be individually authenticated before granting access to the shared accounts or resources.
+NIST SP 800-53 Revision 5 :: IA-2 (5)
+CCI-001941
+Implement replay-resistant authentication mechanisms for access to privileged accounts and/or non-privileged accounts.
+NIST SP 800-53 Revision 4 :: IA-2 (8)
+NIST SP 800-53 Revision 5 :: IA-2 (8)
+CCI-000767
+The information system implements multifactor authentication for local access to privileged accounts.
+NIST SP 800-53 :: IA-2 (3)
+NIST SP 800-53A :: IA-2 (3).1
+NIST SP 800-53 Revision 4 :: IA-2 (3)
+CCI-000768
+The information system implements multifactor authentication for local access to non-privileged accounts.
+NIST SP 800-53 :: IA-2 (4)
+NIST SP 800-53A :: IA-2 (4).1
+NIST SP 800-53 Revision 4 :: IA-2 (4)
+CCI-000770
+The organization requires individuals to be authenticated with an individual authenticator when a group authenticator is employed.
+NIST SP 800-53 :: IA-2 (5) (b)
+NIST SP 800-53A :: IA-2 (5).2 (ii)
+NIST SP 800-53 Revision 4 :: IA-2 (5)
+CCI-001942
+The information system implements replay-resistant authentication mechanisms for network access to non-privileged accounts.
+NIST SP 800-53 Revision 4 :: IA-2 (9)
+
+************************************************************************************************************
+
+Group ID:
+V-258122
+Rule ID:
+SV-258122r1045246
+STIG ID:
+RHEL-09-611165
+SRG ID:
+SRG-OS-000375-GPOS-00160
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enable certificate based smart card authentication.
+Discussion:
+Without the use of multifactor authentication, the ease of access to privileged functions is greatly increased. Multifactor authentication requires using two or more factors to achieve authentication. A privileged account is defined as an information system account with authorizations of a privileged user. The DOD Common Access Card (CAC) with DOD-approved PKI is an example of multifactor authentication.
+
+Satisfies: SRG-OS-000375-GPOS-00160, SRG-OS-000105-GPOS-00052
+Check Text:
+Note: If the system administrator (SA) demonstrates the use of an approved alternate multifactor authentication method, this requirement is Not Applicable.
+
+To verify that RHEL 9 has smart cards  enabled in System Security Services Daemon (SSSD), run the following command:
+
+$ sudo grep -ir pam_cert_auth /etc/sssd/sssd.conf /etc/sssd/conf.d/
+
+pam_cert_auth = True 
+
+If "pam_cert_auth" is not set to "True", the line is commented out, or the line is missing, this is a finding.
+Fix Text:
+Edit the file "/etc/sssd/sssd.conf" or a configuration file in "/etc/sssd/conf.d" and add or edit the following line:
+
+pam_cert_auth = True
+CCI-000765
+Implement multifactor authentication for access to privileged accounts.
+NIST SP 800-53 :: IA-2 (1)
+NIST SP 800-53A :: IA-2 (1).1
+NIST SP 800-53 Revision 4 :: IA-2 (1)
+NIST SP 800-53 Revision 5 :: IA-2 (1)
+CCI-004046
+Implement multi-factor authentication for local; network; and/or remote access to privileged accounts; and/or non-privileged accounts such that one of the factors is provided by a device separate from the system gaining access.
+NIST SP 800-53 Revision 5 :: IA-2 (6) (a)
+CCI-004047
+Implement multi-factor authentication for local; network; and/or remote access to privileged accounts; and/or non-privileged accounts such that the device meets organization-defined strength of mechanism requirements.
+NIST SP 800-53 Revision 5 :: IA-2 (6) (b)
+CCI-001948
+The information system implements multifactor authentication for remote access to privileged accounts such that one of the factors is provided by a device separate from the system gaining access.
+NIST SP 800-53 Revision 4 :: IA-2 (11)
+
+************************************************************************************************************
+
+Group ID:
+V-258123
+Rule ID:
+SV-258123r1045248
+STIG ID:
+RHEL-09-611170
+SRG ID:
+SRG-OS-000375-GPOS-00160
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must implement certificate status checking for multifactor authentication.
+Discussion:
+Using an authentication device, such as a DOD common access card (CAC) or token that is separate from the information system, ensures that even if the information system is compromised, credentials stored on the authentication device will not be affected.
+
+Multifactor solutions that require devices separate from information systems gaining access include, for example, hardware tokens providing time-based or challenge-response authenticators and smart cards such as the U.S. Government Personal Identity Verification (PIV) card and the DOD CAC.
+
+RHEL 9 includes multiple options for configuring certificate status checking, but for this requirement focuses on the System Security Services Daemon (SSSD). By default, SSSD performs Online Certificate Status Protocol (OCSP) checking and certificate verification using a sha256 digest function.
+
+Satisfies: SRG-OS-000375-GPOS-00160, SRG-OS-000377-GPOS-00162
+Check Text:
+Note: If the system administrator (SA) demonstrates the use of an approved alternate multifactor authentication method, this requirement is Not Applicable.
+
+Verify the operating system implements Online Certificate Status Protocol (OCSP) and is using the proper digest value on the system with the following command:
+
+$ sudo grep -ir certificate_verification /etc/sssd/sssd.conf /etc/sssd/conf.d/ | grep -v "^#"
+
+certificate_verification = ocsp_dgst=sha512
+
+If the certificate_verification line is missing from the [sssd] section, or is missing "ocsp_dgst=sha512", ask the administrator to indicate what type of multifactor authentication is being used and how the system implements certificate status checking. 
+
+If there is no evidence of certificate status checking being used, this is a finding.
+Fix Text:
+Configure RHEL 9 to implement certificate status checking for multifactor authentication.
+
+Review the "/etc/sssd/conf.d/certificate_verification.conf" file to determine if the system is configured to prevent OCSP or certificate verification.
+
+Add the following line to the "/etc/sssd/conf.d/certificate_verification.conf" file:
+
+certificate_verification = ocsp_dgst=sha512
+
+Set the correct ownership and permissions on the "/etc/sssd/conf.d/certificate_verification.conf" file by running these commands:
+
+$ sudo chown root:root "/etc/sssd/conf.d/certificate_verification.conf"
+$ sudo chmod 600 "/etc/sssd/conf.d/certificate_verification.conf"
+
+The "sssd" service must be restarted for the changes to take effect. To restart the "sssd" service, run the following command:
+
+$ sudo systemctl restart sssd.service
+CCI-004046
+Implement multi-factor authentication for local; network; and/or remote access to privileged accounts; and/or non-privileged accounts such that one of the factors is provided by a device separate from the system gaining access.
+NIST SP 800-53 Revision 5 :: IA-2 (6) (a)
+CCI-001954
+Electronically verify Personal Identity Verification-compliant credentials.
+NIST SP 800-53 Revision 4 :: IA-2 (12)
+NIST SP 800-53 Revision 5 :: IA-2 (12)
+CCI-001948
+The information system implements multifactor authentication for remote access to privileged accounts such that one of the factors is provided by a device separate from the system gaining access.
+NIST SP 800-53 Revision 4 :: IA-2 (11)
+
+************************************************************************************************************
+
+Group ID:
+V-258124
+Rule ID:
+SV-258124r1045250
+STIG ID:
+RHEL-09-611175
+SRG ID:
+SRG-OS-000375-GPOS-00160
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the pcsc-lite package installed.
+Discussion:
+The pcsc-lite package must be installed if it is to be available for multifactor authentication using smart cards.
+Check Text:
+Note: If the system administrator (SA) demonstrates the use of an approved alternate multifactor authentication method, this requirement is Not Applicable.
+
+Verify that RHEL 9 has the pcsc-lite package installed with the following command:
+
+$ dnf list --installed pcsc-lite
+
+Example output:
+
+pcsc-lite.x86_64          1.9.4-1.el9
+
+If the "pcsc-lite" package is not installed, this is a finding.
+Fix Text:
+The  pcsc-lite  package can be installed with the following command:
+ 
+$ sudo dnf install pcsc-lite
+CCI-004046
+Implement multi-factor authentication for local; network; and/or remote access to privileged accounts; and/or non-privileged accounts such that one of the factors is provided by a device separate from the system gaining access.
+NIST SP 800-53 Revision 5 :: IA-2 (6) (a)
+CCI-001948
+The information system implements multifactor authentication for remote access to privileged accounts such that one of the factors is provided by a device separate from the system gaining access.
+NIST SP 800-53 Revision 4 :: IA-2 (11)
+
+************************************************************************************************************
+
+Group ID:
+V-258125
+Rule ID:
+SV-258125r1045253
+STIG ID:
+RHEL-09-611180
+SRG ID:
+SRG-OS-000375-GPOS-00160
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+The pcscd service on RHEL 9 must be active.
+Discussion:
+The information system ensures that even if the information system is compromised, that compromise will not affect credentials stored on the authentication device.
+
+The daemon program for pcsc-lite and the MuscleCard framework is pcscd. It is a resource manager that coordinates communications with smart card readers and smart cards and cryptographic tokens that are connected to the system.
+Check Text:
+Verify that the "pcscd" socket is active with the following command:
+
+$ systemctl is-active pcscd.socket
+
+active
+
+If the pcscd socket is not active, this is a finding.
+Fix Text:
+To enable the pcscd socket, run the following command:
+
+$ sudo systemctl enable --now pcscd.socket
+CCI-004046
+Implement multi-factor authentication for local; network; and/or remote access to privileged accounts; and/or non-privileged accounts such that one of the factors is provided by a device separate from the system gaining access.
+NIST SP 800-53 Revision 5 :: IA-2 (6) (a)
+CCI-001948
+The information system implements multifactor authentication for remote access to privileged accounts such that one of the factors is provided by a device separate from the system gaining access.
+NIST SP 800-53 Revision 4 :: IA-2 (11)
+
+************************************************************************************************************
+
+Group ID:
+V-258126
+Rule ID:
+SV-258126r1045255
+STIG ID:
+RHEL-09-611185
+SRG ID:
+SRG-OS-000375-GPOS-00160
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the opensc package installed.
+Discussion:
+The use of PIV credentials facilitates standardization and reduces the risk of unauthorized access.
+
+The DOD has mandated the use of the common access card (CAC) to support identity management and personal authentication for systems covered under Homeland Security Presidential Directive (HSPD) 12, as well as making the CAC a primary component of layered protection for national security systems.
+
+Satisfies: SRG-OS-000375-GPOS-00160, SRG-OS-000376-GPOS-00161
+Check Text:
+Verify that RHEL 9 has the opensc package installed with the following command:
+
+$ dnf list --installed opensc
+
+Example output:
+
+opensc.x86_64          0.22.0-2.el9
+
+If the "opensc" package is not installed, this is a finding.
+Fix Text:
+The opensc package can be installed with the following command:
+ 
+$ sudo dnf install opensc
+CCI-004046
+Implement multi-factor authentication for local; network; and/or remote access to privileged accounts; and/or non-privileged accounts such that one of the factors is provided by a device separate from the system gaining access.
+NIST SP 800-53 Revision 5 :: IA-2 (6) (a)
+CCI-001953
+Accept Personal Identity Verification-compliant credentials.
+NIST SP 800-53 Revision 4 :: IA-2 (12)
+NIST SP 800-53 Revision 5 :: IA-2 (12)
+CCI-001948
+The information system implements multifactor authentication for remote access to privileged accounts such that one of the factors is provided by a device separate from the system gaining access.
+NIST SP 800-53 Revision 4 :: IA-2 (11)

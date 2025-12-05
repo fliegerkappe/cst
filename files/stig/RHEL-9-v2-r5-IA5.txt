@@ -1,0 +1,1282 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+IA-5 Authenticator Management
+************************************************************************************************************
+
+Group ID:
+V-258127
+Rule ID:
+SV-258127r958450
+STIG ID:
+RHEL-09-611190
+SRG ID:
+SRG-OS-000067-GPOS-00035
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9, for PKI-based authentication, must enforce authorized access to the corresponding private key.
+Discussion:
+If the private key is discovered, an attacker can use the key to authenticate as an authorized user and gain access to the network infrastructure.
+
+The cornerstone of the PKI is the private key used to encrypt or digitally sign information.
+
+If the private key is stolen, this will lead to the compromise of the authentication and nonrepudiation gained through PKI because the attacker can use the private key to digitally sign documents and pretend to be the authorized user.
+
+Both the holders of a digital certificate and the issuing authority must protect the computers, storage devices, or whatever they use to keep the private keys.
+Check Text:
+Verify the SSH private key files have a passcode.
+
+For each private key stored on the system, use the following command:
+
+$ sudo ssh-keygen -y -f /path/to/file
+
+If the contents of the key are displayed, this is a finding.
+Fix Text:
+Create a new private and public key pair that utilizes a passcode with the following command:
+
+$ sudo ssh-keygen -n [passphrase]
+CCI-000186
+For public key-based authentication, enforce authorized access to the corresponding private key.
+NIST SP 800-53 :: IA-5 (2)
+NIST SP 800-53A :: IA-5 (2).1
+NIST SP 800-53 Revision 4 :: IA-5 (2) (b)
+NIST SP 800-53 Revision 5 :: IA-5 (2) (a) (1)
+
+************************************************************************************************************
+
+Group ID:
+V-257826   (See CM-7 Least Functionality: V-257826)
+Rule ID:
+SV-257826r1106299
+STIG ID:
+RHEL-09-215015
+SRG ID:
+SRG-OS-000074-GPOS-00042
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must not have a File Transfer Protocol (FTP) server package installed.
+Discussion:
+The FTP service provides an unencrypted remote access that does not provide for the confidentiality and integrity of user passwords or the remote session. If a privileged user were to log on using this service, the privileged user password could be compromised. SSH or other encrypted file transfer methods must be used in place of this service.
+
+Removing the "vsftpd" package decreases the risk of accidental activation.
+
+If FTP is required for operational support (such as transmission of router configurations), its use must be documented with the information systems security manager (ISSM), restricted to only authorized personnel, and have access control rules established.
+
+Satisfies: SRG-OS-000074-GPOS-00042, SRG-OS-000095-GPOS-00049, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify RHEL 9 does not have an FTP server package installed with the following command:
+
+$ sudo dnf list --installed vsftpd
+
+Error: No matching Packages to list
+
+If the "ftp" package is installed, this is a finding.
+Fix Text:
+The ftp package can be removed with the following command (using vsftpd as an example):
+
+$ sudo dnf remove vsftpd
+CCI-000197
+For password-based authentication, transmit passwords only over cryptographically-protected channels.
+NIST SP 800-53 :: IA-5 (1) (c)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (c)
+NIST SP 800-53 Revision 5 :: IA-5 (1) (c)
+CCI-000381
+Configure the system to provide only organization-defined mission essential capabilities.
+NIST SP 800-53 :: CM-7
+NIST SP 800-53A :: CM-7.1 (ii)
+NIST SP 800-53 Revision 4 :: CM-7 a
+NIST SP 800-53 Revision 5 :: CM-7 a
+
+************************************************************************************************************
+
+Group ID:
+V-258041
+Rule ID:
+SV-258041r1038967
+STIG ID:
+RHEL-09-411010
+SRG ID:
+SRG-OS-000076-GPOS-00044
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 user account passwords for new users or password changes must have a 60-day maximum password lifetime restriction in /etc/login.defs.
+Discussion:
+Any password, no matter how complex, can eventually be cracked; therefore, passwords need to be changed periodically. If the operating system does not limit the lifetime of passwords and force users to change their passwords, there is the risk that the operating system passwords could be compromised.
+
+Setting the password maximum age ensures users are required to periodically change their passwords. Requiring shorter password lifetimes increases the risk of users writing down the password in a convenient location subject to physical compromise.
+Check Text:
+Verify that RHEL 9 enforces a 60-day maximum password lifetime for new user accounts by running the following command:
+
+$ grep -i pass_max_days /etc/login.defs
+
+PASS_MAX_DAYS 60
+
+If the "PASS_MAX_DAYS" parameter value is greater than "60", or commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to enforce a 60-day maximum password lifetime.
+
+Add or modify the following line in the "/etc/login.defs" file:
+
+PASS_MAX_DAYS 60
+CCI-004066
+For pgrep -i pass_max_days /etc/login.defsassword-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000199
+The information system enforces maximum password lifetime restrictions.
+NIST SP 800-53 :: IA-5 (1) (d)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (d)
+
+************************************************************************************************************
+
+Group ID:
+V-258042
+Rule ID:
+SV-258042r1045133
+STIG ID:
+RHEL-09-411015
+SRG ID:
+SRG-OS-000076-GPOS-00044
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 user account passwords must have a 60-day maximum password lifetime restriction.
+Discussion:
+Any password, no matter how complex, can eventually be cracked; therefore, passwords need to be changed periodically. If RHEL 9 does not limit the lifetime of passwords and force users to change their passwords, there is the risk that RHEL 9 passwords could be compromised.
+Check Text:
+Verify the maximum time period for existing passwords is restricted to 60 days with the following commands:
+
+$ sudo awk -F: '$5 > 60 {printf "%s %d\n", $1, $5}' /etc/shadow
+
+$ sudo awk -F: '$5 <= 0 {printf "%s %d\n", $1, $5}' /etc/shadow
+
+If any results are returned that are not associated with a system account, this is a finding.
+Fix Text:
+Configure noncompliant accounts to enforce a 60-day maximum password lifetime restriction.
+
+passwd -x 60 [user]
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000199
+The information system enforces maximum password lifetime restrictions.
+NIST SP 800-53 :: IA-5 (1) (d)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (d)
+
+************************************************************************************************************
+
+Group ID:
+V-258091
+Rule ID:
+SV-258091r1045185
+STIG ID:
+RHEL-09-611010
+SRG ID:
+SRG-OS-000069-GPOS-00037
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must ensure the password complexity module in the system-auth file is configured for three retries or less.
+Discussion:
+Use of a complex password helps to increase the time and resources required to compromise the password. Password complexity, or strength, is a measure of the effectiveness of a password in resisting attempts at guessing and brute-force attacks. "pwquality" enforces complex password construction configuration and has the ability to limit brute-force attacks on the system.
+
+RHEL 9 uses "pwquality" as a mechanism to enforce password complexity. This is set in both:
+/etc/pam.d/password-auth
+/etc/pam.d/system-auth
+
+By limiting the number of attempts to meet the pwquality module complexity requirements before returning with an error, the system will audit abnormal attempts at password changes.
+Check Text:
+Verify RHEL 9 is configured to limit the "pwquality" retry option to "3".
+
+Check for the use of the retry option in the security directory with the following command:
+
+$ grep -w retry /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf
+ 
+retry = 3
+ 
+If the value of "retry" is set to "0" or greater than "3", or is missing, this is a finding.
+Fix Text:
+Configure RHEL 9 to limit the "pwquality" retry option to "3".
+
+Add or update the following line in the "/etc/security/pwquality.conf" file or a file in the "/etc/security/pwquality.conf.d/" directory to contain the "retry" parameter:
+ 
+retry = 3
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000192
+The information system enforces password complexity by the minimum number of upper case characters used.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+
+************************************************************************************************************
+
+Group ID:
+V-258097
+Rule ID:
+SV-258097r1045193
+STIG ID:
+RHEL-09-611040
+SRG ID:
+SRG-OS-000069-GPOS-00037
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must ensure the password complexity module is enabled in the password-auth file.
+Discussion:
+Enabling PAM password complexity permits enforcement of strong passwords and consequently makes the system less prone to dictionary attacks.
+
+Satisfies: SRG-OS-000069-GPOS-00037, SRG-OS-000070-GPOS-00038, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify RHEL 9 uses "pwquality" to enforce the password complexity rules in the password-auth file with the following command:
+
+$ grep pam_pwquality /etc/pam.d/password-auth
+
+password required pam_pwquality.so 
+
+If the command does not return a line containing the value "pam_pwquality.so", or the line is commented out, this is a finding.
+
+If the system administrator (SA) can demonstrate that the required configuration is contained in a PAM configuration file included or substacked from the system-auth file, this is not a finding.
+Fix Text:
+Configure RHEL 9 to use "pwquality" to enforce password complexity rules.
+
+Add the following line to the "/etc/pam.d/password-auth" file (or modify the line to have the required value):
+
+password required pam_pwquality.so
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000192
+The information system enforces password complexity by the minimum number of upper case characters used.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+CCI-000193
+The information system enforces password complexity by the minimum number of lower case characters used.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+
+************************************************************************************************************
+
+Group ID:
+V-258099
+Rule ID:
+SV-258099r1045198
+STIG ID:
+RHEL-09-611050
+SRG ID:
+SRG-OS-000073-GPOS-00041
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 password-auth must be configured to use a sufficient number of hashing rounds.
+Discussion:
+Passwords need to be protected at all times, and encryption is the standard method for protecting passwords. If passwords are not encrypted, they can be plainly read (i.e., clear text) and easily compromised. Passwords that are encrypted with a weak algorithm are no more protected than if they are kept in plain text.
+
+Using more hashing rounds makes password cracking attacks more difficult.
+
+Satisfies: SRG-OS-000073-GPOS-00041, SRG-OS-000120-GPOS-00061
+Check Text:
+Verify the number of rounds for the password hashing algorithm is configured with the following command:
+
+$ grep rounds /etc/pam.d/password-auth
+
+password sufficient pam_unix.so sha512 rounds=100000
+
+If a matching line is not returned or "rounds" is less than "100000", this a finding.
+Fix Text:
+Configure RHEL 9 to use 100000 hashing rounds for hashing passwords.
+
+Add or modify the following line in "/etc/pam.d/password-auth" and set "rounds" to "100000".
+
+password sufficient pam_unix.so sha512 rounds=100000
+
+Note: Running authselect will overwrite this value unless a custom authselect policy is created.
+CCI-004062
+For password-based authentication, store passwords using an approved salted key derivation function, preferably using a keyed hash.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (d)
+CCI-000803
+Implement mechanisms for authentication to a cryptographic module that meet the requirements of applicable laws, Executive Orders, directives, policies, regulations, standards, and guidance for such authentication.
+NIST SP 800-53 :: IA-7
+NIST SP 800-53A :: IA-7.1
+NIST SP 800-53 Revision 4 :: IA-7
+NIST SP 800-53 Revision 5 :: IA-7
+CCI-000196
+The information system, for password-based authentication, stores only cryptographically-protected passwords.
+NIST SP 800-53 :: IA-5 (1) (c)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (c)
+
+************************************************************************************************************
+
+Group ID:
+V-258100
+Rule ID:
+SV-258100r1045201
+STIG ID:
+RHEL-09-611055
+SRG ID:
+SRG-OS-000073-GPOS-00041
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 system-auth must be configured to use a sufficient number of hashing rounds.
+Discussion:
+Passwords need to be protected at all times, and encryption is the standard method for protecting passwords. If passwords are not encrypted, they can be plainly read (i.e., clear text) and easily compromised. Passwords that are encrypted with a weak algorithm are no more protected than if they are kept in plain text.
+
+Using more hashing rounds makes password cracking attacks more difficult.
+
+Satisfies: SRG-OS-000073-GPOS-00041, SRG-OS-000120-GPOS-00061
+Check Text:
+Verify the number of rounds for the password hashing algorithm is configured with the following command:
+
+$ sudo grep rounds /etc/pam.d/system-auth
+
+password sufficient pam_unix.so sha512 rounds=100000
+
+If a matching line is not returned or "rounds" is less than 100000, this a finding.
+Fix Text:
+Configure RHEL 9 to use 100000 hashing rounds for hashing passwords.
+
+Add or modify the following line in "/etc/pam.d/system-auth" and set "rounds" to 100000.
+
+password sufficient pam_unix.so sha512 rounds=100000
+
+Note: Running authselect will overwrite this value unless a custom authselect policy is created. 
+CCI-004062
+For password-based authentication, store passwords using an approved salted key derivation function, preferably using a keyed hash.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (d)
+CCI-000803
+Implement mechanisms for authentication to a cryptographic module that meet the requirements of applicable laws, Executive Orders, directives, policies, regulations, standards, and guidance for such authentication.
+NIST SP 800-53 :: IA-7
+NIST SP 800-53A :: IA-7.1
+NIST SP 800-53 Revision 4 :: IA-7
+NIST SP 800-53 Revision 5 :: IA-7
+CCI-000196
+The information system, for password-based authentication, stores only cryptographically-protected passwords.
+NIST SP 800-53 :: IA-5 (1) (c)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (c)
+
+************************************************************************************************************
+
+Group ID:
+V-258101
+Rule ID:
+SV-258101r1045204
+STIG ID:
+RHEL-09-611060
+SRG ID:
+SRG-OS-000072-GPOS-00040
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enforce password complexity rules for the root account.
+Discussion:
+Use of a complex password helps to increase the time and resources required to compromise the password. Password complexity, or strength, is a measure of the effectiveness of a password in resisting attempts at guessing and brute-force attacks.
+
+Password complexity is one factor of several that determines how long it takes to crack a password. The more complex the password, the greater the number of possible combinations that need to be tested before the password is compromised.
+
+Satisfies: SRG-OS-000072-GPOS-00040, SRG-OS-000071-GPOS-00039, SRG-OS-000070-GPOS-00038, SRG-OS-000266-GPOS-00101, SRG-OS-000078-GPOS-00046, SRG-OS-000480-GPOS-00225, SRG-OS-000069-GPOS-00037
+Check Text:
+Verify that RHEL 9 enforces password complexity rules for the root account.
+
+Check if root user is required to use complex passwords with the following command:
+
+$ grep enforce_for_root /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf
+
+/etc/security/pwquality.conf:enforce_for_root
+
+If "enforce_for_root" is commented or missing, this is a finding.
+Fix Text:
+Configure RHEL 9 to enforce password complexity on the root account.
+
+Add or update the following line in the "/etc/security/pwquality.conf" file or a configuration file in the "/etc/security/pwquality.conf.d/" directory to contain the "enforce_for_root" parameter:
+
+enforce_for_root
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000192
+The information system enforces password complexity by the minimum number of upper case characters used.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+CCI-000193
+The information system enforces password complexity by the minimum number of lower case characters used.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+CCI-000194
+The information system enforces password complexity by the minimum number of numeric characters used.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+CCI-000195
+The information system, for password-based authentication, when new passwords are created, enforces that at least an organization-defined number of characters are changed.
+NIST SP 800-53 :: IA-5 (1) (b)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (b)
+CCI-000205
+The information system enforces minimum password length.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (i)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+CCI-001619
+The information system enforces password complexity by the minimum number of special characters used.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+
+************************************************************************************************************
+
+Group ID:
+V-258102
+Rule ID:
+SV-258102r1045207
+STIG ID:
+RHEL-09-611065
+SRG ID:
+SRG-OS-000070-GPOS-00038
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enforce password complexity by requiring that at least one lowercase character be used.
+Discussion:
+Use of a complex password helps to increase the time and resources required to compromise the password. Password complexity, or strength, is a measure of the effectiveness of a password in resisting attempts at guessing and brute-force attacks. 
+
+Password complexity is one factor of several that determines how long it takes to crack a password. The more complex the password, the greater the number of possible combinations that need to be tested before the password is compromised. Requiring a minimum number of lowercase characters makes password guessing attacks more difficult by ensuring a larger search space.
+Check Text:
+Verify that RHEL 9 enforces password complexity by requiring at least one lowercase character.
+
+Check the value for "lcredit" with the following command:
+
+$ grep lcredit /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf
+
+/etc/security/pwquality.conf:lcredit = -1
+
+If the value of "lcredit" is a positive number or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to enforce password complexity by requiring at least one lowercase character be used by setting the "lcredit" option.
+
+Add or update the following line in the "/etc/security/pwquality.conf" file or a configuration file in the "/etc/security/pwquality.conf.d/" directory to contain the "lcredit" parameter:
+
+lcredit = -1
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000193
+The information system enforces password complexity by the minimum number of lower case characters used.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+
+************************************************************************************************************
+
+Group ID:
+V-258103
+Rule ID:
+SV-258103r1045210
+STIG ID:
+RHEL-09-611070
+SRG ID:
+SRG-OS-000071-GPOS-00039
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enforce password complexity by requiring that at least one numeric character be used.
+Discussion:
+Use of a complex password helps to increase the time and resources required to compromise the password. Password complexity, or strength, is a measure of the effectiveness of a password in resisting attempts at guessing and brute-force attacks.
+
+Password complexity is one factor of several that determines how long it takes to crack a password. The more complex the password, the greater the number of possible combinations that need to be tested before the password is compromised. Requiring digits makes password guessing attacks more difficult by ensuring a larger search space.
+Check Text:
+Verify that RHEL 9 enforces password complexity by requiring at least one numeric character.
+
+Check the value for "dcredit" with the following command:
+
+$ grep dcredit /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf
+
+/etc/security/pwquality.conf:dcredit = -1
+
+If the value of "dcredit" is a positive number or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to enforce password complexity by requiring at least one numeric character be used by setting the "dcredit" option.
+
+Add or update the following line in the "/etc/security/pwquality.conf" file or a configuration file in the "/etc/security/pwquality.conf.d/" directory to contain the "dcredit" parameter:
+
+dcredit = -1
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000194
+The information system enforces password complexity by the minimum number of numeric characters used.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+
+************************************************************************************************************
+
+Group ID:
+V-258104
+Rule ID:
+SV-258104r1015104
+STIG ID:
+RHEL-09-611075
+SRG ID:
+SRG-OS-000075-GPOS-00043
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 passwords for new users or password changes must have a 24 hours minimum password lifetime restriction in /etc/login.defs.
+Discussion:
+Enforcing a minimum password lifetime helps to prevent repeated password changes to defeat the password reuse or history enforcement requirement. If users are allowed to immediately and continually change their password, then the password could be repeatedly changed in a short period of time to defeat the organization's policy regarding password reuse.
+
+Setting the minimum password age protects against users cycling back to a favorite password after satisfying the password reuse requirement.
+Check Text:
+Verify RHEL 9 enforces 24 hours as the minimum password lifetime for new user accounts.
+
+Check for the value of "PASS_MIN_DAYS" in "/etc/login.defs" with the following command: 
+
+$ grep -i pass_min_days /etc/login.defs
+
+PASS_MIN_DAYS 1
+
+If the "PASS_MIN_DAYS" parameter value is not "1" or greater, or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to enforce 24 hours as the minimum password lifetime.
+
+Add the following line in "/etc/login.defs" (or modify the line to have the required value):
+
+PASS_MIN_DAYS 1
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000198
+The information system enforces minimum password lifetime restrictions.
+NIST SP 800-53 :: IA-5 (1) (d)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (d)
+
+************************************************************************************************************
+
+Group ID:
+V-258105
+Rule ID:
+SV-258105r1045212
+STIG ID:
+RHEL-09-611080
+SRG ID:
+SRG-OS-000075-GPOS-00043
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 passwords must have a 24 hours minimum password lifetime restriction in /etc/shadow.
+Discussion:
+Enforcing a minimum password lifetime helps to prevent repeated password changes to defeat the password reuse or history enforcement requirement. If users are allowed to immediately and continually change their password, the password could be repeatedly changed in a short period of time to defeat the organization's policy regarding password reuse.
+Check Text:
+Verify that RHEL 9 has configured the minimum time period between password changes for each user account as one day or greater with the following command:
+
+$ sudo awk -F: '$4 < 1 {printf "%s %d\n", $1, $4}' /etc/shadow
+
+If any results are returned that are not associated with a system account, this is a finding.
+Fix Text:
+Configure noncompliant accounts to enforce a 24 hour minimum password lifetime:
+
+$ sudo passwd -n 1 [user]
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000198
+The information system enforces minimum password lifetime restrictions.
+NIST SP 800-53 :: IA-5 (1) (d)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (d)
+
+************************************************************************************************************
+
+Group ID:
+V-258107
+Rule ID:
+SV-258107r1045218
+STIG ID:
+RHEL-09-611090
+SRG ID:
+SRG-OS-000078-GPOS-00046
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 passwords must be created with a minimum of 15 characters.
+Discussion:
+The shorter the password, the lower the number of possible combinations that need to be tested before the password is compromised.
+
+Password complexity, or strength, is a measure of the effectiveness of a password in resisting attempts at guessing and brute-force attacks. Password length is one factor of several that helps to determine strength and how long it takes to crack a password. Use of more characters in a password helps to increase exponentially the time and/or resources required to compromise the password.
+
+RHEL 9 uses "pwquality" as a mechanism to enforce password complexity. Configurations are set in the "etc/security/pwquality.conf" file.
+
+The "minlen", sometimes noted as minimum length, acts as a "score" of complexity based on the credit components of the "pwquality" module. By setting the credit components to a negative value, not only will those components be required, but they will not count toward the total "score" of "minlen". This will enable "minlen" to require a 15-character minimum.
+
+The DOD minimum password requirement is 15 characters.
+Check Text:
+Verify that RHEL 9 enforces a minimum 15-character password length with the following command:
+
+$ grep minlen /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf
+
+minlen = 15
+
+If the command does not return a "minlen" value of "15" or greater, does not return a line, or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to enforce a minimum 15-character password length.
+
+Add or update the following line in the "/etc/security/pwquality.conf" file or a configuration file in the "/etc/security/pwquality.conf.d/" directory to contain the "minlen" parameter:
+
+minlen = 15
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000205
+The information system enforces minimum password length.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (i)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+
+************************************************************************************************************
+
+Group ID:
+V-258109
+Rule ID:
+SV-258109r1045220
+STIG ID:
+RHEL-09-611100
+SRG ID:
+SRG-OS-000266-GPOS-00101
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enforce password complexity by requiring that at least one special character be used.
+Discussion:
+Use of a complex password helps to increase the time and resources required to compromise the password. Password complexity, or strength, is a measure of the effectiveness of a password in resisting attempts at guessing and brute-force attacks. Password complexity is one factor of several that determines how long it takes to crack a password. The more complex the password, the greater the number of possible combinations that need to be tested before the password is compromised. RHEL 9 utilizes "pwquality" as a mechanism to enforce password complexity. Note that to require special characters without degrading the "minlen" value, the credit value must be expressed as a negative number in "/etc/security/pwquality.conf".
+Check Text:
+Verify that RHEL 9 enforces password complexity by requiring at least one special character with the following command:
+
+$ sudo grep ocredit /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 
+
+ocredit = -1 
+
+If the value of "ocredit" is a positive number or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to enforce password complexity by requiring at least one special character be used by setting the "ocredit" option.
+
+Add or update the following line in the "/etc/security/pwquality.conf" file or a configuration file in the "/etc/security/pwquality.conf.d/" directory to contain the "ocredit" parameter:
+
+ocredit = -1
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-001619
+The information system enforces password complexity by the minimum number of special characters used.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+
+************************************************************************************************************
+
+Group ID:
+V-258111
+Rule ID:
+SV-258111r1045226
+STIG ID:
+RHEL-09-611110
+SRG ID:
+SRG-OS-000069-GPOS-00037
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enforce password complexity by requiring that at least one uppercase character be used.
+Discussion:
+Use of a complex password helps to increase the time and resources required to compromise the password. Password complexity, or strength, is a measure of the effectiveness of a password in resisting attempts at guessing and brute-force attacks. Password complexity is one factor of several that determines how long it takes to crack a password. The more complex the password, the greater the number of possible combinations that need to be tested before the password is compromised. Requiring a minimum number of uppercase characters makes password guessing attacks more difficult by ensuring a larger search space.
+Check Text:
+Verify that RHEL 9 enforces password complexity by requiring that at least one uppercase character be used.
+
+Check the value for "ucredit" with the following command:
+
+$ grep ucredit /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf  
+
+ucredit = -1 
+
+If the value of "ucredit" is a positive number or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to enforce password complexity by requiring that at least one uppercase character be used by setting the "ucredit" option.
+
+Add or update the following line in the "/etc/security/pwquality.conf" file or a configuration file in the "/etc/security/pwquality.conf.d/" directory to contain the "ucredit" parameter:
+
+ucredit = -1
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000192
+The information system enforces password complexity by the minimum number of upper case characters used.
+NIST SP 800-53 :: IA-5 (1) (a)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (a)
+
+************************************************************************************************************
+
+Group ID:
+V-258112
+Rule ID:
+SV-258112r1045229
+STIG ID:
+RHEL-09-611115
+SRG ID:
+SRG-OS-000072-GPOS-00040
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must require the change of at least eight characters when passwords are changed.
+Discussion:
+Use of a complex password helps to increase the time and resources required to compromise the password. Password complexity, or strength, is a measure of the effectiveness of a password in resisting attempts at guessing and brute-force attacks. 
+
+Password complexity is one factor of several that determines how long it takes to crack a password. The more complex the password, the greater the number of possible combinations that need to be tested before the password is compromised. Requiring a minimum number of different characters during password changes ensures that newly changed passwords will not resemble previously compromised ones. Note that passwords changed on compromised systems will still be compromised.
+Check Text:
+Verify that RHEL 9 requires the change of at least eight of the total number of characters when passwords are changed.
+
+$ grep difok /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf
+
+difok = 8
+ 
+If the value of "difok" is set to less than "8", or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to require the change of at least eight of the total number of characters when passwords are changed by setting the "difok" option.
+
+Add or update the following line in the "/etc/security/pwquality.conf" file or a configuration file in the "/etc/security/pwquality.conf.d/" directory to contain the "difok" parameter:
+
+difok = 8
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000195
+The information system, for password-based authentication, when new passwords are created, enforces that at least an organization-defined number of characters are changed.
+NIST SP 800-53 :: IA-5 (1) (b)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (b)
+
+************************************************************************************************************
+
+Group ID:
+V-258113
+Rule ID:
+SV-258113r1045232
+STIG ID:
+RHEL-09-611120
+SRG ID:
+SRG-OS-000072-GPOS-00040
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must require the maximum number of repeating characters of the same character class be limited to four when passwords are changed.
+Discussion:
+Use of a complex password helps to increase the time and resources required to compromise the password. Password complexity, or strength, is a measure of the effectiveness of a password in resisting attempts at guessing and brute-force attacks.
+
+Password complexity is one factor of several that determines how long it takes to crack a password. The more complex a password, the greater the number of possible combinations that need to be tested before the password is compromised.
+Check Text:
+Verify that RHEL 9 requires that passwords can have a maximum of four repeating characters of the same character class.
+
+$ grep maxclassrepeat /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf
+
+maxclassrepeat = 4
+
+If the value of "maxclassrepeat" is set to "0", more than "4", or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to require the change of the number of repeating characters of the same character class when passwords are changed by setting the "maxclassrepeat" option.
+
+Add or update the following line in the "/etc/security/pwquality.conf" file or a configuration file in the "/etc/security/pwquality.conf.d/" directory to contain the "maxclassrepeat" parameter:
+
+maxclassrepeat = 4
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000195
+The information system, for password-based authentication, when new passwords are created, enforces that at least an organization-defined number of characters are changed.
+NIST SP 800-53 :: IA-5 (1) (b)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (b)
+
+************************************************************************************************************
+
+Group ID:
+V-258114
+Rule ID:
+SV-258114r1045235
+STIG ID:
+RHEL-09-611125
+SRG ID:
+SRG-OS-000072-GPOS-00040
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must require the maximum number of repeating characters be limited to three when passwords are changed.
+Discussion:
+Use of a complex password helps to increase the time and resources required to compromise the password. Password complexity, or strength, is a measure of the effectiveness of a password in resisting attempts at guessing and brute-force attacks.
+
+Password complexity is one factor of several that determines how long it takes to crack a password. The more complex a password, the greater the number of possible combinations that need to be tested before the password is compromised.
+Check Text:
+Verify that RHEL 9 requires that passwords can have a maximum of three of the same consecutive character.
+
+$ grep maxrepeat /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf
+
+maxrepeat = 3
+
+If the value of "maxrepeat" is set to more than "3", or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to require the change of the number of repeating consecutive characters when passwords are changed by setting the "maxrepeat" option.
+
+Add or update the following line in the "/etc/security/pwquality.conf" file or a configuration file in the "/etc/security/pwquality.conf.d/" directory to contain the "maxrepeat" parameter:
+
+maxrepeat = 3
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000195
+The information system, for password-based authentication, when new passwords are created, enforces that at least an organization-defined number of characters are changed.
+NIST SP 800-53 :: IA-5 (1) (b)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (b)
+
+************************************************************************************************************
+
+Group ID:
+V-258115
+Rule ID:
+SV-258115r1045238
+STIG ID:
+RHEL-09-611130
+SRG ID:
+SRG-OS-000072-GPOS-00040
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must require the change of at least four character classes when passwords are changed.
+Discussion:
+Use of a complex password helps to increase the time and resources required to compromise the password. Password complexity, or strength, is a measure of the effectiveness of a password in resisting attempts at guessing and brute-force attacks.
+
+Password complexity is one factor of several that determines how long it takes to crack a password. The more complex a password, the greater the number of possible combinations that need to be tested before the password is compromised.
+Check Text:
+Verify that RHEL 9 requires passwords to contain at least four character classes.
+
+$ grep minclass /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf
+ 
+minclass = 4
+
+If the value of "minclass" is set to less than "4", or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to require the change of at least four character classes when passwords are changed by setting the "minclass" option.
+
+Add or update the following line in the "/etc/security/pwquality.conf" file or a configuration file in the "/etc/security/pwquality.conf.d/" directory to contain the "minclass" parameter:
+
+minclass = 4
+CCI-004066
+For password-based authentication, enforce organization-defined composition and complexity rules.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (h)
+CCI-000195
+The information system, for password-based authentication, when new passwords are created, enforces that at least an organization-defined number of characters are changed.
+NIST SP 800-53 :: IA-5 (1) (b)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (b)
+
+************************************************************************************************************
+
+Group ID:
+V-258116
+Rule ID:
+SV-258116r1045240
+STIG ID:
+RHEL-09-611135
+SRG ID:
+SRG-OS-000073-GPOS-00041
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured so that user and group account administration utilities are configured to store only encrypted representations of passwords.
+Discussion:
+Passwords need to be protected at all times, and encryption is the standard method for protecting passwords. If passwords are not encrypted, they can be plainly read (i.e., clear text) and easily compromised. Passwords that are encrypted with a weak algorithm are no more protected than if they are kept in plain text.
+
+This setting ensures user and group account administration utilities are configured to store only encrypted representations of passwords. Additionally, the "crypt_style" configuration option ensures the use of a strong hashing algorithm that makes password cracking attacks more difficult.
+Check Text:
+Verify the user and group account administration utilities are configured to store only encrypted representations of passwords with the following command:
+
+$ grep crypt_style /etc/libuser.conf 
+
+crypt_style = sha512
+
+If the "crypt_style" variable is not set to "sha512", is not in the defaults section, is commented out, or does not exist, this is a finding.
+Fix Text:
+Configure RHEL 9 to use the SHA-512 algorithm for password hashing.
+
+Add or change the following line in the "[defaults]" section of "/etc/libuser.conf" file:
+
+crypt_style = sha512
+CCI-004062
+For password-based authentication, store passwords using an approved salted key derivation function, preferably using a keyed hash.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (d)
+CCI-000196
+The information system, for password-based authentication, stores only cryptographically-protected passwords.
+NIST SP 800-53 :: IA-5 (1) (c)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (c)
+
+************************************************************************************************************
+
+Group ID:
+V-258117
+Rule ID:
+SV-258117r1015116
+STIG ID:
+RHEL-09-611140
+SRG ID:
+SRG-OS-000073-GPOS-00041
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured to use the shadow file to store only encrypted representations of passwords.
+Discussion:
+Passwords need to be protected at all times, and encryption is the standard method for protecting passwords. If passwords are not encrypted, they can be plainly read (i.e., clear text) and easily compromised. Passwords that are encrypted with a weak algorithm are no more protected than if they are kept in plain text.
+
+This setting ensures user and group account administration utilities are configured to store only encrypted representations of passwords. Additionally, the "crypt_style" configuration option ensures the use of a strong hashing algorithm that makes password cracking attacks more difficult.
+Check Text:
+Verify the system's shadow file is configured to store only encrypted representations of passwords with a hash value of SHA512 with the following command:
+
+# grep -i encrypt_method /etc/login.defs
+
+ENCRYPT_METHOD SHA512
+
+If "ENCRYPT_METHOD" does not have a value of "SHA512", or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to store only SHA512 encrypted representations of passwords.
+
+Add or update the following line in the "/etc/login.defs" file:
+
+ENCRYPT_METHOD SHA512
+CCI-004062
+For password-based authentication, store passwords using an approved salted key derivation function, preferably using a keyed hash.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (d)
+CCI-000196
+The information system, for password-based authentication, stores only cryptographically-protected passwords.
+NIST SP 800-53 :: IA-5 (1) (c)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (c)
+
+************************************************************************************************************
+
+Group ID:
+V-258131
+Rule ID:
+SV-258131r1015125
+STIG ID:
+RHEL-09-631010
+SRG ID:
+SRG-OS-000066-GPOS-00034
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9, for PKI-based authentication, must validate certificates by constructing a certification path (which includes status information) to an accepted trust anchor.
+Discussion:
+Without path validation, an informed trust decision by the relying party cannot be made when presented with any certificate not already explicitly trusted.
+
+A trust anchor is an authoritative entity represented via a public key and associated data. It is used in the context of public key infrastructures, X.509 digital certificates, and DNSSEC.
+
+When there is a chain of trust, usually the top entity to be trusted becomes the trust anchor; it can be, for example, a certification authority (CA). A certification path starts with the subject certificate and proceeds through a number of intermediate certificates up to a trusted root certificate, typically issued by a trusted CA.
+
+This requirement verifies that a certification path to an accepted trust anchor is used for certificate validation and that the path includes status information. Path validation is necessary for a relying party to make an informed trust decision when presented with any certificate not already explicitly trusted. Status information for certification paths includes certificate revocation lists or online certificate status protocol responses. Validation of the certificate status information is out of scope for this requirement.
+
+Satisfies: SRG-OS-000066-GPOS-00034, SRG-OS-000384-GPOS-00167
+Check Text:
+Verify RHEL 9 for PKI-based authentication has valid certificates by constructing a certification path (which includes status information) to an accepted trust anchor.
+
+Check that the system has a valid DOD root CA installed with the following command:
+
+$ sudo openssl x509 -text -in /etc/sssd/pki/sssd_auth_ca_db.pem
+
+Example output:
+
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 1 (0x1)
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C = US, O = U.S. Government, OU = DoD, OU = PKI, CN = DoD Root CA 3
+        Validity
+        Not Before: Mar 20 18:46:41 2012 GMT
+        Not After: Dec 30 18:46:41 2029 GMT
+        Subject: C = US, O = U.S. Government, OU = DoD, OU = PKI, CN = DoD Root CA 3
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+
+If the root CA file is not a DOD-issued certificate with a valid date and installed in the "/etc/sssd/pki/sssd_auth_ca_db.pem" location, this is a finding.
+Fix Text:
+Configure RHEL 9, for PKI-based authentication, to validate certificates by constructing a certification path (which includes status information) to an accepted trust anchor.
+
+Obtain a valid copy of the DOD root CA file from the PKI CA certificate bundle from cyber.mil and copy the DoD_PKE_CA_chain.pem into the following file:
+/etc/sssd/pki/sssd_auth_ca_db.pem
+CCI-000185
+For public key-based authentication, validate certificates by constructing and verifying a certification path to an accepted trust anchor including checking certificate status information.
+NIST SP 800-53 :: IA-5 (2)
+NIST SP 800-53A :: IA-5 (2).1
+NIST SP 800-53 Revision 4 :: IA-5 (2) (a)
+NIST SP 800-53 Revision 5 :: IA-5 (2) (b) (1)
+CCI-004068
+For public key-based authentication, implement a local cache of revocation data to support path discovery and validation.
+NIST SP 800-53 Revision 5 :: IA-5 (2) (b) (2)
+CCI-001991
+The information system, for PKI-based authentication, implements a local cache of revocation data to support path discovery and validation in case of inability to access revocation information via the network.
+NIST SP 800-53 Revision 4 :: IA-5 (2) (d)
+
+************************************************************************************************************
+
+Group ID:
+V-258132
+Rule ID:
+SV-258132r1045260
+STIG ID:
+RHEL-09-631015
+SRG ID:
+SRG-OS-000068-GPOS-00036
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must map the authenticated identity to the user or group account for PKI-based authentication.
+Discussion:
+Without mapping the certificate used to authenticate to the user account, the ability to determine the identity of the individual user or group will not be available for forensic analysis.
+Check Text:
+Verify the certificate of the user or group is mapped to the corresponding user or group in the "sssd.conf" file with the following command:
+
+$ sudo find /etc/sssd/sssd.conf /etc/sssd/conf.d/ -type f -exec cat {} \;
+ 
+[certmap/testing.test/rule_name]
+matchrule =<SAN>.*EDIPI@mil
+maprule = (userCertificate;binary={cert!bin})
+domains = testing.test
+
+If the certmap section does not exist, ask the system administrator (SA) to indicate how certificates are mapped to accounts. 
+
+If there is no evidence of certificate mapping, this is a finding.
+Fix Text:
+Configure RHEL 9 to map the authenticated identity to the user or group account by adding or modifying the certmap section of the "/etc/sssd/sssd.conf" file based on the following example:
+
+[certmap/testing.test/rule_name]
+matchrule = .*EDIPI@mil
+maprule = (userCertificate;binary={cert!bin})
+domains = testing.test
+
+The "sssd" service must be restarted for the changes to take effect. To restart the "sssd" service, run the following command:
+
+$ sudo systemctl restart sssd.service
+CCI-000187
+For public key-based authentication, map the authenticated identity to the account of the individual or group.
+NIST SP 800-53 :: IA-5 (2)
+NIST SP 800-53A :: IA-5 (2).1
+NIST SP 800-53 Revision 4 :: IA-5 (2) (c)
+NIST SP 800-53 Revision 5 :: IA-5 (2) (a) (2)
+
+************************************************************************************************************
+
+Group ID:
+V-258133
+Rule ID:
+SV-258133r1045263
+STIG ID:
+RHEL-09-631020
+SRG ID:
+SRG-OS-000383-GPOS-00166
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prohibit the use of cached authenticators after one day.
+Discussion:
+If cached authentication information is out-of-date, the validity of the authentication information may be questionable.
+Check Text:
+Verify that the System Security Services Daemon (SSSD) prohibits the use of cached authentications after one day.
+
+Note: Cached authentication settings should be configured even if smart card authentication is not used on the system.
+
+Check that SSSD allows cached authentications with the following command:
+
+$ sudo grep -ir cache_credentials /etc/sssd/sssd.conf /etc/sssd/conf.d/
+
+cache_credentials = true
+
+If "cache_credentials" is set to "false" or missing from the configuration file, this is not a finding and no further checks are required.
+
+If "cache_credentials" is set to "true", check that SSSD prohibits the use of cached authentications after one day with the following command:
+
+$ sudo grep -ir offline_credentials_expiration /etc/sssd/sssd.conf /etc/sssd/conf.d/
+
+offline_credentials_expiration = 1
+
+If "offline_credentials_expiration" is not set to a value of "1", this is a finding.
+Fix Text:
+Configure the SSSD to prohibit the use of cached authentications after one day.
+
+Edit the file "/etc/sssd/sssd.conf" or a configuration file in "/etc/sssd/conf.d" and add or edit the following line just below the line [pam]:
+
+offline_credentials_expiration = 1
+CCI-002007
+Prohibit the use of cached authenticators after an organization-defined time period.
+NIST SP 800-53 Revision 4 :: IA-5 (13)
+NIST SP 800-53 Revision 5 :: IA-5 (13)
+
+************************************************************************************************************
+
+Group ID:
+V-258231
+Rule ID:
+SV-258231r1069375
+STIG ID:
+RHEL-09-671015
+SRG ID:
+SRG-OS-000073-GPOS-00041
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must employ FIPS 140-3 approved cryptographic hashing algorithms for all stored passwords.
+Discussion:
+The system must use a strong hashing algorithm to store the password.
+
+Passwords need to be protected at all times, and encryption is the standard method for protecting passwords. If passwords are not encrypted, they can be plainly read (i.e., clear text) and easily compromised.
+
+Satisfies: SRG-OS-000073-GPOS-00041, SRG-OS-000120-GPOS-00061
+Check Text:
+Verify the interactive user account passwords are using a strong password hash with the following command:
+
+$ sudo cut -d: -f2 /etc/shadow
+
+$6$kcOnRq/5$NUEYPuyL.wghQwWssXRcLRFiiru7f5JPV6GaJhNC2aK5F3PZpE/BCCtwrxRc/AInKMNX3CdMw11m9STiql12f/ 
+
+Password hashes "!" or "*" indicate inactive accounts not available for logon and are not evaluated.
+
+If any interactive user password hash does not begin with "$6$", this is a finding.
+Fix Text:
+Lock all interactive user accounts not using SHA-512 hashing until the passwords can be regenerated with SHA-512.
+CCI-004062
+For password-based authentication, store passwords using an approved salted key derivation function, preferably using a keyed hash.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (d)
+CCI-000803
+Implement mechanisms for authentication to a cryptographic module that meet the requirements of applicable laws, Executive Orders, directives, policies, regulations, standards, and guidance for such authentication.
+NIST SP 800-53 :: IA-7
+NIST SP 800-53A :: IA-7.1
+NIST SP 800-53 Revision 4 :: IA-7
+NIST SP 800-53 Revision 5 :: IA-7
+CCI-000196
+The information system, for password-based authentication, stores only cryptographically-protected passwords.
+NIST SP 800-53 :: IA-5 (1) (c)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (c)
+
+************************************************************************************************************
+
+Group ID:
+V-258233
+Rule ID:
+SV-258233r1015136
+STIG ID:
+RHEL-09-671025
+SRG ID:
+SRG-OS-000073-GPOS-00041
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 pam_unix.so module must be configured in the password-auth file to use a FIPS 140-3 approved cryptographic hashing algorithm for system authentication.
+Discussion:
+Unapproved mechanisms that are used for authentication to the cryptographic module are not verified and; therefore, cannot be relied upon to provide confidentiality or integrity, and DOD data may be compromised.
+
+RHEL 9 systems utilizing encryption are required to use FIPS-compliant mechanisms for authenticating to cryptographic modules. 
+
+FIPS 140-3 is the current standard for validating that mechanisms used to access cryptographic modules utilize authentication that meets DOD requirements. This allows for Security Levels 1, 2, 3, or 4 for use on a general-purpose computing system.
+Check Text:
+Verify that the pam_unix.so module is configured to use sha512 in /etc/pam.d/password-auth with the following command:
+
+$ grep "^password.*pam_unix.so.*sha512" /etc/pam.d/password-auth
+
+password sufficient pam_unix.so sha512
+
+If "sha512" is missing, or the line is commented out, this is a finding.
+
+If the system administrator (SA) can demonstrate that the required configuration is contained in a PAM configuration file included or substacked from the system-auth file, this is not a finding.
+Fix Text:
+Configure RHEL 9 to use a FIPS 140-3 approved cryptographic hashing algorithm for system authentication.
+
+Edit/modify the following line in the "/etc/pam.d/password-auth" file to include the sha512 option for pam_unix.so:
+
+password sufficient pam_unix.so sha512
+CCI-004062
+For password-based authentication, store passwords using an approved salted key derivation function, preferably using a keyed hash.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (d)
+CCI-000196
+The information system, for password-based authentication, stores only cryptographically-protected passwords.
+NIST SP 800-53 :: IA-5 (1) (c)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (c)
+
+
+

@@ -1,0 +1,421 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AC-3 Access Enforcement
+************************************************************************************************************
+
+Group ID:
+V-257787
+Rule ID:
+SV-257787r1117265
+STIG ID:
+RHEL-09-212010
+SRG ID:
+SRG-OS-000080-GPOS-00048
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must require a boot loader superuser password.
+Discussion:
+To mitigate the risk of unauthorized access to sensitive information by entities that have been issued certificates by DOD-approved PKIs, all DOD systems (e.g., web servers and web portals) must be properly configured to incorporate access control methods that do not rely solely on the possession of a certificate for access. Successful authentication must not automatically give an entity access to an asset or security boundary. Authorization procedures and controls must be implemented to ensure each authenticated entity also has a validated and current authorization. Authorization is the process of determining whether an entity, once authenticated, is permitted to access a specific asset. Information systems use access control policies and enforcement mechanisms to implement this requirement.
+
+Password protection on the boot loader configuration ensures users with physical access cannot trivially alter important bootloader settings. These include which kernel to use, and whether to enter single-user mode.
+Check Text:
+Verify the boot loader superuser password has been set with the following command:
+
+$ sudo grep password_pbkdf2 /etc/grub2.cfg 
+
+password_pbkdf2  <superusers-accountname>   ${GRUB2_PASSWORD}  
+
+To verify the boot loader superuser account password has been set and the password encrypted, run the following command:
+
+$ sudo cat /boot/grub2/user.cfg 
+
+GRUB2_PASSWORD=grub.pbkdf2.sha512.10000.C4E08AC72FBFF7E837FD267BFAD7AEB3D42DDC
+2C99F2A94DD5E2E75C2DC331B719FE55D9411745F82D1B6CFD9E927D61925F9BBDD1CFAA0080E0
+916F7AB46E0D.1302284FCCC52CD73BA3671C6C12C26FF50BA873293B24EE2A96EE3B57963E6D7
+0C83964B473EC8F93B07FE749AA6710269E904A9B08A6BBACB00A2D242AD828 
+
+If a "GRUB2_PASSWORD" is not set, this is a finding.
+Fix Text:
+Configure RHEL 9 to require a grub bootloader password for the grub superuser account.
+
+Generate an encrypted grub2 password for the grub superuser account with the following command:
+
+$ sudo grub2-setpassword
+Enter password:
+Confirm password:
+CCI-000213
+Enforce approved authorizations for logical access to information and system resources in accordance with applicable access control policies.
+NIST SP 800-53 :: AC-3
+NIST SP 800-53A :: AC-3.1Group ID:
+
+==========================================================================================================
+
+Group ID:
+V-257789
+Rule ID:
+SV-257789r1117265
+STIG ID:
+RHEL-09-212020
+SRG ID:
+SRG-OS-000080-GPOS-00048
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must require a unique superusers name upon booting into single-user and maintenance modes.
+Discussion:
+Having a nondefault grub superuser username makes password-guessing attacks less effective.
+Check Text:
+Verify the boot loader superuser account has been set with the following command:
+
+$ sudo grep -A1 "superusers" /etc/grub2.cfg 
+
+set superusers="<accountname>"
+export superusers
+password_pbkdf2 <accountname> ${GRUB2_PASSWORD}
+ 
+Verify <accountname> is not a common name such as root, admin, or administrator.
+
+If superusers contains easily guessable usernames, this is a finding.
+Fix Text:
+Configure RHEL 9 to have a unique username for the grub superuser account.
+
+Edit the "/etc/grub.d/01_users" file and add or modify the following lines with a nondefault username for the superuser account:
+
+set superusers="<accountname>"
+export superusers 
+
+Once the superuser account has been added, update the grub.cfg file by running:
+
+Regenerate the GRUB configuration:
+$ sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+
+Reboot the system:
+$ sudo reboot
+CCI-000213
+Enforce approved authorizations for logical access to information and system resources in accordance with applicable access control policies.
+NIST SP 800-53 :: AC-3
+NIST SP 800-53A :: AC-3.1
+NIST SP 800-53 Revision 4 :: AC-3
+NIST SP 800-53 Revision 5 :: AC-3
+
+==========================================================================================================
+
+Group ID:
+V-257801
+Rule ID:
+SV-257801r1106279
+STIG ID:
+RHEL-09-213030
+SRG ID:
+SRG-OS-000312-GPOS-00123
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enable kernel parameters to enforce discretionary access control on hardlinks.
+Discussion:
+Discretionary Access Control (DAC) is based on the notion that individual users are "owners" of objects and therefore have discretion over who should be authorized to access the object and in which mode (e.g., read or write). Ownership is usually acquired as a consequence of creating the object or via specified ownership assignment. DAC allows the owner to determine who will have access to objects they control. An example of DAC includes user-controlled file permissions.
+
+When discretionary access control policies are implemented, subjects are not constrained with regard to what actions they can take with information for which they have already been granted access. Thus, subjects that have been granted access to information are not prevented from passing (i.e., the subjects have the discretion to pass) the information to other subjects or objects. A subject that is constrained in its operation by Mandatory Access Control policies is still able to operate under the less rigorous constraints of this requirement. Thus, while Mandatory Access Control imposes constraints preventing a subject from passing information to another subject operating at a different sensitivity level, this requirement permits the subject to pass the information to any subject at the same sensitivity level. The policy is bounded by the information system boundary. Once the information is passed outside the control of the information system, additional means may be required to ensure the constraints remain in effect. While the older, more traditional definitions of discretionary access control require identity-based access control, that limitation is not required for this use of discretionary access control.
+
+By enabling the fs.protected_hardlinks kernel parameter, users can no longer create soft or hard links to files they do not own. Disallowing such hardlinks mitigate vulnerabilities based on insecure file system accessed by privileged programs, avoiding an exploitation vector exploiting unsafe use of open() or creat().
+
+The sysctl --system command will load settings from all system configuration files. All configuration files are sorted by their filename in lexicographic order, regardless of the directories in which they reside. If multiple files specify the same option, the entry in the file with the lexicographically latest name will take precedence. Files are read from directories in the following list from top to bottom. Once a file of a given filename is loaded, any file of the same name in subsequent directories is ignored.
+
+/etc/sysctl.d/*.conf
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+
+Satisfies: SRG-OS-000312-GPOS-00122, SRG-OS-000312-GPOS-00123, SRG-OS-000312-GPOS-00124, SRG-OS-000324-GPOS-00125
+Check Text:
+Verify RHEL 9 is configured to enable DAC on hardlinks.
+
+Check the status of the fs.protected_hardlinks kernel parameter.
+
+$ sudo sysctl fs.protected_hardlinks
+
+fs.protected_hardlinks = 1
+
+If "fs.protected_hardlinks" is not set to "1" or is missing, this is a finding.
+
+Check that the configuration files are present to enable this kernel parameter.
+
+$ sudo grep -r fs.protected_hardlinks /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
+
+/etc/sysctl.d/99-sysctl.conf:fs.protected_hardlinks = 1
+
+If "fs.protected_hardlinks" is not set to "1", is missing, or commented out, this is a finding.
+
+If conflicting results are returned, this is a finding.
+Fix Text:
+Add or edit the following line in a system configuration file in the "/etc/sysctl.d/" directory:
+
+fs.protected_hardlinks = 1
+
+Remove any configurations that conflict with the above from the following locations: 
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+/etc/sysctl.d/*.conf
+
+Load settings from all system configuration files with the following command:
+
+$ sudo sysctl --system
+
+CCI-002165
+Enforce organization-defined discretionary access control policies over defined subjects and objects.
+NIST SP 800-53 Revision 4 :: AC-3 (4)
+NIST SP 800-53 Revision 5 :: AC-3 (4)
+CCI-002235
+Prevent non-privileged users from executing privileged functions.
+NIST SP 800-53 Revision 4 :: AC-6 (10)
+NIST SP 800-53 Revision 5 :: AC-6 (10)
+
+==========================================================================================================
+
+Group ID:
+V-257802
+Rule ID:
+SV-257802r1106282
+STIG ID:
+RHEL-09-213035
+SRG ID:
+SRG-OS-000312-GPOS-00123
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enable kernel parameters to enforce discretionary access control on symlinks.
+Discussion:
+Discretionary Access Control (DAC) is based on the notion that individual users are "owners" of objects and therefore have discretion over who should be authorized to access the object and in which mode (e.g., read or write). Ownership is usually acquired as a consequence of creating the object or via specified ownership assignment. DAC allows the owner to determine who will have access to objects they control. An example of DAC includes user-controlled file permissions.
+
+When discretionary access control policies are implemented, subjects are not constrained with regard to what actions they can take with information for which they have already been granted access. Thus, subjects that have been granted access to information are not prevented from passing (i.e., the subjects have the discretion to pass) the information to other subjects or objects. A subject that is constrained in its operation by Mandatory Access Control policies is still able to operate under the less rigorous constraints of this requirement. Thus, while Mandatory Access Control imposes constraints preventing a subject from passing information to another subject operating at a different sensitivity level, this requirement permits the subject to pass the information to any subject at the same sensitivity level. The policy is bounded by the information system boundary. Once the information is passed outside the control of the information system, additional means may be required to ensure the constraints remain in effect. While the older, more traditional definitions of discretionary access control require identity-based access control, that limitation is not required for this use of discretionary access control.
+
+By enabling the fs.protected_symlinks kernel parameter, symbolic links are permitted to be followed only when outside a sticky world-writable directory, or when the UID of the link and follower match, or when the directory owner matches the symlink's owner. Disallowing such symlinks helps mitigate vulnerabilities based on insecure file system accessed by privileged programs, avoiding an exploitation vector exploiting unsafe use of open() or creat().
+
+The sysctl --system command will load settings from all system configuration files. All configuration files are sorted by their filename in lexicographic order, regardless of the directories in which they reside. If multiple files specify the same option, the entry in the file with the lexicographically latest name will take precedence. Files are read from directories in the following list from top to bottom. Once a file of a given filename is loaded, any file of the same name in subsequent directories is ignored.
+
+/etc/sysctl.d/*.conf
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+
+Satisfies: SRG-OS-000312-GPOS-00122, SRG-OS-000312-GPOS-00123, SRG-OS-000312-GPOS-00124, SRG-OS-000324-GPOS-00125
+Check Text:
+Verify RHEL 9 is configured to enable DAC on symlinks.
+
+Check the status of the fs.protected_symlinks kernel parameter.
+
+$ sudo sysctl fs.protected_symlinks
+
+fs.protected_symlinks = 1
+
+If "fs.protected_symlinks" is not set to "1" or is missing, this is a finding.
+
+Check that the configuration files are present to enable this kernel parameter.
+
+$ sudo grep -r fs.protected_symlinks /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
+
+/etc/sysctl.d/99-sysctl.conf:fs.protected_symlinks = 1
+
+If "fs.protected_symlinks" is not set to "1", is missing, or commented out, this is a finding.
+
+If conflicting results are returned, this is a finding.
+Fix Text:
+Configure RHEL 9 to enable DAC on symlinks.
+
+Add or edit the following line in a system configuration file in the "/etc/sysctl.d/" directory:
+
+fs.protected_symlinks = 1
+
+Remove any configurations that conflict with the above from the following locations: 
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+/etc/sysctl.d/*.conf
+
+Load settings from all system configuration files with the following command:
+
+$ sudo sysctl --system
+CCI-002165
+Enforce organization-defined discretionary access control policies over defined subjects and objects.
+NIST SP 800-53 Revision 4 :: AC-3 (4)
+NIST SP 800-53 Revision 5 :: AC-3 (4)
+CCI-002235
+Prevent non-privileged users from executing privileged functions.
+NIST SP 800-53 Revision 4 :: AC-6 (10)
+NIST SP 800-53 Revision 5 :: AC-6 (10)
+
+==========================================================================================================
+
+Group ID:
+V-258088
+Rule ID:
+SV-258088r1050789
+STIG ID:
+RHEL-09-432035
+SRG ID:
+SRG-OS-000373-GPOS-00156
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must restrict the use of the "su" command.
+Discussion:
+The "su" program allows to run commands with a substitute user and group ID. It is commonly used to run commands as the root user. Limiting access to such commands is considered a good security practice.
+
+Satisfies: SRG-OS-000373-GPOS-00156, SRG-OS-000312-GPOS-00123
+Check Text:
+Verify that RHEL 9 requires uses to be members of the "wheel" group with the following command:
+
+$ grep pam_wheel /etc/pam.d/su 
+
+auth             required        pam_wheel.so use_uid 
+
+If a line for "pam_wheel.so" does not exist, or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to require users to be in the "wheel" group to run "su" command.
+
+In file "/etc/pam.d/su", uncomment the following line:
+
+"#auth    required    pam_wheel.so use_uid"
+
+$ sed '/^[[:space:]]*#[[:space:]]*auth[[:space:]]\+required[[:space:]]\+pam_wheel\.so[[:space:]]\+use_uid$/s/^[[:space:]]*#//' -i /etc/pam.d/su
+
+If necessary, create a "wheel" group and add administrative users to the group.
+CCI-004895
+Permit users to invoke the trusted communications path for communications between the user and the organization-defined security functions, including at a minimum, authentication and re-authentication.
+NIST SP 800-53 Revision 5 :: SC-11 b
+CCI-002165
+Enforce organization-defined discretionary access control policies over defined subjects and objects.
+NIST SP 800-53 Revision 4 :: AC-3 (4)
+NIST SP 800-53 Revision 5 :: AC-3 (4)
+CCI-002038
+The organization requires users to reauthenticate upon organization-defined circumstances or situations requiring reauthentication.
+NIST SP 800-53 Revision 4 :: IA-11
+NIST SP 800-53 Revision 5 :: IA-11
+
+==========================================================================================================
+
+Group ID:
+V-258128
+Rule ID:
+SV-258128r1117265
+STIG ID:
+RHEL-09-611195
+SRG ID:
+SRG-OS-000080-GPOS-00048
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must require authentication to access emergency mode.
+Discussion:
+To mitigate the risk of unauthorized access to sensitive information by entities that have been issued certificates by DOD-approved PKIs, all DOD systems (e.g., web servers and web portals) must be properly configured to incorporate access control methods that do not rely solely on the possession of a certificate for access. Successful authentication must not automatically give an entity access to an asset or security boundary. Authorization procedures and controls must be implemented to ensure each authenticated entity also has a validated and current authorization. Authorization is the process of determining whether an entity, once authenticated, is permitted to access a specific asset. Information systems use access control policies and enforcement mechanisms to implement this requirement.
+
+This requirement prevents attackers with physical access from trivially bypassing security on the machine and gaining root access. Such accesses are further prevented by configuring the bootloader password.
+Check Text:
+Verify that RHEL 9 requires authentication for emergency mode with the following command:
+
+$ grep sulogin /usr/lib/systemd/system/emergency.service 
+
+ExecStart=-/usr/lib/systemd/systemd-sulogin-shell emergency
+
+If this line is not returned, or is commented out, this is a finding. If the output is different, this is a finding.
+Fix Text:
+Configure RHEL 9 to require authentication for emergency mode.
+
+Add or modify the following line in the "/usr/lib/systemd/system/emergency.service" file:
+
+ExecStart=-/usr/lib/systemd/systemd-sulogin-shell emergency
+CCI-000213
+Enforce approved authorizations for logical access to information and system resources in accordance with applicable access control policies.
+NIST SP 800-53 :: AC-3
+NIST SP 800-53A :: AC-3.1
+NIST SP 800-53 Revision 4 :: AC-3
+NIST SP 800-53 Revision 5 :: AC-3
+
+==========================================================================================================
+
+Group ID:
+V-258129
+Rule ID:
+SV-258129r1117265
+STIG ID:
+RHEL-09-611200
+SRG ID:
+SRG-OS-000080-GPOS-00048
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must require authentication to access single-user mode.
+Discussion:
+To mitigate the risk of unauthorized access to sensitive information by entities that have been issued certificates by DOD-approved PKIs, all DOD systems (e.g., web servers and web portals) must be properly configured to incorporate access control methods that do not rely solely on the possession of a certificate for access. Successful authentication must not automatically give an entity access to an asset or security boundary. Authorization procedures and controls must be implemented to ensure each authenticated entity also has a validated and current authorization. Authorization is the process of determining whether an entity, once authenticated, is permitted to access a specific asset. Information systems use access control policies and enforcement mechanisms to implement this requirement.
+
+This requirement prevents attackers with physical access from trivially bypassing security on the machine and gaining root access. Such accesses are further prevented by configuring the bootloader password.
+
+To modify properties, such as dependencies or timeouts, of a service that is handled by a SysV initscript, do not modify the initscript itself. Instead, create a systemd drop-in configuration file for the service. Then manage this service in the same way as a normal systemd service.
+
+For example, to extend the configuration of the network service, do not modify the /etc/rc.d/init.d/network initscript file. Instead, create new directory /etc/systemd/system/network.service.d/ and a systemd drop-in file /etc/systemd/system/network.service.d/my_config.conf. Then, put the modified values into the drop-in file. Note: systemd knows the network service as network.service, which is why the created directory must be called "network.service.d".
+Check Text:
+Verify RHEL 9 requires authentication for single-user mode with the following command:
+
+$ grep sulogin /usr/lib/systemd/system/rescue.service 
+
+ExecStart=-/usr/lib/systemd/systemd-sulogin-shell rescue
+
+If the line is not returned from the default systemd file, use the following command to look for modifications to the rescue.service:
+
+$ grep sulogin /etc/systemd/system/rescue.service.d/*.conf 
+
+If the line is not returned from either location this is a finding.
+
+Note: The configuration setting can only be in either the default location, or in the drop in file, not both locations.
+Fix Text:
+Configure RHEL 9 to require authentication for single-user mode.
+
+Create a directory for supplementary configuration files at /etc/systemd/system/rescue.service.d/
+
+Copy the original file rescue.service file to the new directory with:
+
+$ sudo cp  /usr/lib/systemd/system/rescue.service  /etc/systemd/system/rescue.service.d/rescue.service.conf
+
+Add or modify the following line in the "etc/systemd/system/rescue.service.d/rescue.service.conf" file:
+
+ExecStart=-/usr/lib/systemd/systemd-sulogin-shell rescue
+
+Apply changes to unit files without rebooting the system:
+
+$ sudo systemctl daemon-reload
+
+If the modified unit file belongs to a running service, restart the service:
+
+$ sudo  systemctl restart rescue.service
+CCI-000213
+Enforce approved authorizations for logical access to information and system resources in accordance with applicable access control policies.
+NIST SP 800-53 :: AC-3
+NIST SP 800-53A :: AC-3.1
+NIST SP 800-53 Revision 4 :: AC-3
+NIST SP 800-53 Revision 5 :: AC-3

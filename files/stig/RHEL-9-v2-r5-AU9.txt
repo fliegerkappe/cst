@@ -1,0 +1,643 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+AU-9 Protection of Audit Information
+************************************************************************************************************
+
+Group ID:
+V-257887
+Rule ID:
+SV-257887r991557
+STIG ID:
+RHEL-09-232035
+SRG ID:
+SRG-OS-000256-GPOS-00097
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit tools must have a mode of 0755 or less permissive.
+Discussion:
+Protecting audit information also includes identifying and protecting the tools used to view and manipulate log data. Therefore, protecting audit tools is necessary to prevent unauthorized operation on audit information.
+
+RHEL 9 systems providing tools to interface with audit information will leverage user permissions and roles identifying the user accessing the tools, and the corresponding rights the user enjoys, to make access decisions regarding the access to audit tools.
+
+Audit tools include, but are not limited to, vendor-provided and open source audit tools needed to successfully view and manipulate audit information system activity and records. Audit tools include custom queries and report generators.
+Check Text:
+Verify the audit tools have a mode of "0755" or less with the following command:
+
+$ stat -c "%a %n" /sbin/auditctl /sbin/aureport /sbin/ausearch /sbin/autrace /sbin/auditd /sbin/rsyslogd /sbin/augenrules
+
+755 /sbin/auditctl
+755 /sbin/aureport
+755 /sbin/ausearch
+750 /sbin/autrace
+755 /sbin/auditd
+755 /sbin/rsyslogd
+755 /sbin/augenrules
+
+If any of the audit tool files have a mode more permissive than "0755", this is a finding.
+Fix Text:
+Configure the audit tools to have a mode of "0755" by running the following command:
+
+$ sudo chmod 0755 [audit_tool]
+
+Replace "[audit_tool]" with each audit tool that has a more permissive mode than 0755.
+CCI-001493
+Protect audit tools from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+
+***********************************************************************************************************
+
+Group ID:
+V-257924
+Rule ID:
+SV-257924r991557
+STIG ID:
+RHEL-09-232220
+SRG ID:
+SRG-OS-000256-GPOS-00097
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit tools must be owned by root.
+Discussion:
+Protecting audit information also includes identifying and protecting the tools used to view and manipulate log data. Therefore, protecting audit tools is necessary to prevent unauthorized operation on audit information.
+
+RHEL 9 systems providing tools to interface with audit information will leverage user permissions and roles identifying the user accessing the tools, and the corresponding rights the user enjoys, to make access decisions regarding the access to audit tools.
+
+Audit tools include, but are not limited to, vendor-provided and open source audit tools needed to successfully view and manipulate audit information system activity and records. Audit tools include custom queries and report generators.
+Check Text:
+Verify the audit tools are owned by "root" with the following command:
+
+$ sudo stat -c "%U %n" /sbin/auditctl /sbin/aureport /sbin/ausearch /sbin/autrace /sbin/auditd /sbin/rsyslogd /sbin/augenrules
+
+root /sbin/auditctl
+root /sbin/aureport
+root /sbin/ausearch
+root /sbin/autrace
+root /sbin/auditd
+root /sbin/rsyslogd
+root /sbin/augenrules
+
+If any audit tools do not have an owner of "root", this is a finding.
+Fix Text:
+Configure the audit tools to be owned by "root" by running the following command:
+
+$ sudo chown root [audit_tool]
+
+Replace "[audit_tool]" with each audit tool not owned by "root".
+CCI-001493
+Protect audit tools from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+
+***********************************************************************************************************
+
+Group ID:
+V-257925
+Rule ID:
+SV-257925r991557
+STIG ID:
+RHEL-09-232225
+SRG ID:
+SRG-OS-000256-GPOS-00097
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit tools must be group-owned by root.
+Discussion:
+Protecting audit information also includes identifying and protecting the tools used to view and manipulate log data; therefore, protecting audit tools is necessary to prevent unauthorized operation on audit information.
+
+RHEL 9 systems providing tools to interface with audit information will leverage user permissions and roles identifying the user accessing the tools, and the corresponding rights the user enjoys, to make access decisions regarding the access to audit tools.
+
+Audit tools include, but are not limited to, vendor-provided and open source audit tools needed to successfully view and manipulate audit information system activity and records. Audit tools include custom queries and report generators.
+Check Text:
+Verify the audit tools are group owned by "root" with the following command:
+
+$ sudo stat -c "%G %n" /sbin/auditctl /sbin/aureport /sbin/ausearch /sbin/autrace /sbin/auditd /sbin/rsyslogd /sbin/augenrules
+
+root /sbin/auditctl
+root /sbin/aureport
+root /sbin/ausearch
+root /sbin/autrace
+root /sbin/auditd
+root /sbin/rsyslogd
+root /sbin/augenrules
+
+If any audit tools do not have a group owner of "root", this is a finding.
+Fix Text:
+Configure the audit tools to be group-owned by "root" by running the following command:
+
+$ sudo chgrp root [audit_tool]
+
+Replace "[audit_tool]" with each audit tool not group-owned by "root".
+CCI-001493
+Protect audit tools from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+
+***********************************************************************************************************
+
+Group ID:
+V-258165
+Rule ID:
+SV-258165r958434
+STIG ID:
+RHEL-09-653080
+SRG ID:
+SRG-OS-000057-GPOS-00027
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit logs must be group-owned by root or by a restricted logging group to prevent unauthorized read access.
+Discussion:
+Unauthorized disclosure of audit records can reveal system and configuration data to attackers, thus compromising its confidentiality.
+
+Satisfies: SRG-OS-000057-GPOS-00027, SRG-OS-000058-GPOS-00028, SRG-OS-000059-GPOS-00029, SRG-OS-000206-GPOS-00084
+Check Text:
+Verify the audit logs are group-owned by "root" or a restricted logging group. 
+
+First determine if a group other than "root" has been assigned to the audit logs with the following command:
+
+$ sudo grep log_group /etc/audit/auditd.conf
+
+Then determine where the audit logs are stored with the following command:
+
+$ sudo grep -iw log_file /etc/audit/auditd.conf
+
+log_file = /var/log/audit/audit.log
+
+Then using the location of the audit log file, determine if the audit log is group-owned by "root" using the following command:
+
+$ sudo stat -c "%G %n" /var/log/audit/audit.log
+
+root /var/log/audit/audit.log
+
+If the audit log is not group-owned by "root" or the configured alternative logging group, this is a finding.
+Fix Text:
+Change the group of the directory of "/var/log/audit" to be owned by a correct group.
+
+Identify the group that is configured to own audit log:
+
+$ sudo grep -P '^[ ]*log_group[ ]+=.*$' /etc/audit/auditd.conf
+
+Change the ownership to that group:
+
+$ sudo chgrp ${GROUP} /var/log/audit
+CCI-000162
+Protect audit information from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000163
+Protect audit information from unauthorized modification.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000164
+Protect audit information from unauthorized deletion.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-001314
+Reveal error messages only to organization-defined personnel or roles.
+NIST SP 800-53 :: SI-11 c
+NIST SP 800-53A :: SI-11.1 (iv)
+NIST SP 800-53 Revision 4 :: SI-11 b
+NIST SP 800-53 Revision 5 :: SI-11 b
+
+***********************************************************************************************************
+
+Group ID:
+V-258228 ( See AU-12)
+Rule ID:
+SV-258228r991572
+STIG ID:
+RHEL-09-654270
+SRG ID:
+SRG-OS-000462-GPOS-00206
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit system must protect logon UIDs from unauthorized change.
+Discussion:
+If modification of login user identifiers (UIDs) is not prevented, they can be changed by nonprivileged users and make auditing complicated or impossible.
+
+Satisfies: SRG-OS-000462-GPOS-00206, SRG-OS-000475-GPOS-00220, SRG-OS-000057-GPOS-00027, SRG-OS-000058-GPOS-00028, SRG-OS-000059-GPOS-00029
+Check Text:
+Verify the audit system prevents unauthorized changes to logon UIDs with the following command:
+
+$ sudo grep -i immutable /etc/audit/audit.rules
+
+--loginuid-immutable
+
+If the "--loginuid-immutable" option is not returned in the "/etc/audit/audit.rules", or the line is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 auditing to prevent modification of login UIDs once they are set by adding the following line to /etc/audit/rules.d/audit.rules:
+
+--loginuid-immutable
+
+The audit daemon must be restarted for the changes to take effect.
+CCI-000162
+Protect audit information from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000163
+Protect audit information from unauthorized modification.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000164
+Protect audit information from unauthorized deletion.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+
+***********************************************************************************************************
+
+Group ID:
+V-258229
+Rule ID:
+SV-258229r958434
+STIG ID:
+RHEL-09-654275
+SRG ID:
+SRG-OS-000057-GPOS-00027
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit system must protect auditing rules from unauthorized change.
+Discussion:
+Unauthorized disclosure of audit records can reveal system and configuration data to attackers, thus compromising its confidentiality.
+
+Audit information includes all information (e.g., audit records, audit settings, audit reports) needed to successfully audit RHEL 9 system activity.
+
+In immutable mode, unauthorized users cannot execute changes to the audit system to potentially hide malicious activity and then put the audit rules back.  A system reboot would be noticeable, and a system administrator could then investigate the unauthorized changes.
+
+Satisfies: SRG-OS-000057-GPOS-00027, SRG-OS-000058-GPOS-00028, SRG-OS-000059-GPOS-00029
+Check Text:
+Verify the audit system prevents unauthorized changes with the following command:
+
+$ sudo grep "^\s*[^#]" /etc/audit/audit.rules | tail -1
+
+-e 2
+
+If the audit system is not set to be immutable by adding the "-e 2" option to the end of "/etc/audit/audit.rules", this is a finding.
+Fix Text:
+Configure the audit system to set the audit rules to be immutable by adding the following line to end of "/etc/audit/rules.d/audit.rules"
+
+-e 2
+
+The audit daemon must be restarted for the changes to take effect.
+CCI-000162
+Protect audit information from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000163
+Protect audit information from unauthorized modification.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000164
+Protect audit information from unauthorized deletion.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+
+***********************************************************************************************************
+
+Group ID:
+V-258137
+Rule ID:
+SV-258137r1102081
+STIG ID:
+RHEL-09-651025
+SRG ID:
+SRG-OS-000256-GPOS-00097
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must use cryptographic mechanisms to protect the integrity of audit tools.
+Discussion:
+Protecting the integrity of the tools used for auditing purposes is a critical step toward ensuring the integrity of audit information. Audit information includes all information (e.g., audit records, audit settings, and audit reports) needed to successfully audit information system activity.
+
+Audit tools include, but are not limited to, vendor-provided and open-source audit tools needed to successfully view and manipulate audit information system activity and records. Audit tools include custom queries and report generators.
+
+It is not uncommon for attackers to replace the audit tools or inject code into the existing tools to provide the capability to hide or erase system activity from the audit logs.
+
+To address this risk, audit tools must be cryptographically signed to provide the capability to identify when the audit tools have been modified, manipulated, or replaced. An example is a checksum hash of the file or files.
+
+Satisfies: SRG-OS-000256-GPOS-00097, SRG-OS-000257-GPOS-00098, SRG-OS-000258-GPOS-00099, SRG-OS-000278-GPOS-00108
+Check Text:
+Check that AIDE is properly configured to protect the integrity of the audit tools with the following command:
+
+$ sudo grep /usr/sbin/au /etc/aide.conf
+
+/usr/sbin/auditctl p+i+n+u+g+s+b+acl+xattrs+sha512
+/usr/sbin/auditd p+i+n+u+g+s+b+acl+xattrs+sha512
+/usr/sbin/ausearch p+i+n+u+g+s+b+acl+xattrs+sha512
+/usr/sbin/aureport p+i+n+u+g+s+b+acl+xattrs+sha512
+/usr/sbin/autrace p+i+n+u+g+s+b+acl+xattrs+sha512
+/usr/sbin/augenrules p+i+n+u+g+s+b+acl+xattrs+sha512
+
+If AIDE is not installed, ask the system administrator (SA) how file integrity checks are performed on the system.
+
+If any of the audit tools listed above do not have a corresponding line, ask the SA to indicate what cryptographic mechanisms are being used to protect the integrity of the audit tools.  
+
+If there is no evidence of integrity protection, this is a finding.
+Fix Text:
+Add or update the following lines to "/etc/aide.conf", to protect the integrity of the audit tools.
+ 
+/usr/sbin/auditctl p+i+n+u+g+s+b+acl+xattrs+sha512
+/usr/sbin/auditd p+i+n+u+g+s+b+acl+xattrs+sha512
+/usr/sbin/ausearch p+i+n+u+g+s+b+acl+xattrs+sha512
+/usr/sbin/aureport p+i+n+u+g+s+b+acl+xattrs+sha512
+/usr/sbin/autrace p+i+n+u+g+s+b+acl+xattrs+sha512
+/usr/sbin/augenrules p+i+n+u+g+s+b+acl+xattrs+sha512
+CCI-001493
+Protect audit tools from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-001494
+Protect audit tools from unauthorized modification.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-001495
+Protect audit tools from unauthorized deletion.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-001496
+Implement cryptographic mechanisms to protect the integrity of audit tools.
+NIST SP 800-53 :: AU-9 (3)
+NIST SP 800-53A :: AU-9 (3).1
+NIST SP 800-53 Revision 4 :: AU-9 (3)
+NIST SP 800-53 Revision 5 :: AU-9 (3)
+
+***********************************************************************************************************
+
+Group ID:
+V-258166
+Rule ID:
+SV-258166r1045303
+STIG ID:
+RHEL-09-653085
+SRG ID:
+SRG-OS-000057-GPOS-00027
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit log directory must be owned by root to prevent unauthorized read access.
+Discussion:
+Unauthorized disclosure of audit records can reveal system and configuration data to attackers, thus compromising its confidentiality.
+
+Satisfies: SRG-OS-000057-GPOS-00027, SRG-OS-000058-GPOS-00028, SRG-OS-000059-GPOS-00029, SRG-OS-000206-GPOS-00084
+Check Text:
+Verify the audit logs directory is owned by "root". 
+
+Determine where the audit logs are stored with the following command:
+
+$ sudo grep -iw log_file /etc/audit/auditd.conf
+
+log_file = /var/log/audit/audit.log
+
+Using the location of the audit log file, determine if the audit log directory is owned by "root" using the following command:
+
+$ sudo stat -c '%U %n' /var/log/audit
+
+root /var/log/audit
+
+If the audit log directory is not owned by "root", this is a finding.
+Fix Text:
+Configure the audit log to be protected from unauthorized read access by setting the correct owner as "root" with the following command:
+
+$ sudo chown root /var/log/audit
+CCI-000162
+Protect audit information from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000163
+Protect audit information from unauthorized modification.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000164
+Protect audit information from unauthorized deletion.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-001314
+Reveal error messages only to organization-defined personnel or roles.
+NIST SP 800-53 :: SI-11 c
+NIST SP 800-53A :: SI-11.1 (iv)
+NIST SP 800-53 Revision 4 :: SI-11 b
+NIST SP 800-53 Revision 5 :: SI-11 b
+
+***********************************************************************************************************
+
+Group ID:
+V-258167
+Rule ID:
+SV-258167r1101918
+STIG ID:
+RHEL-09-653090
+SRG ID:
+SRG-OS-000057-GPOS-00027
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit logs file must have mode 0600 or less permissive to prevent unauthorized access to the audit log.
+Discussion:
+Only authorized personnel should be aware of errors and the details of the errors. Error messages are an indicator of an organization's operational state or can identify the RHEL 9 system or platform. Additionally, Personally Identifiable Information (PII) and operational information must not be revealed through error messages to unauthorized personnel or their designated representatives.
+
+The structure and content of error messages must be carefully considered by the organization and development team. The extent to which the information system is able to identify and handle error conditions is guided by organizational policy and operational requirements.
+
+Satisfies: SRG-OS-000057-GPOS-00027, SRG-OS-000058-GPOS-00028, SRG-OS-000059-GPOS-00029, SRG-OS-000206-GPOS-00084
+Check Text:
+Verify the audit logs have a mode of "0600". 
+
+Determine where the audit logs are stored with the following command:
+
+$ sudo find /var/log/audit/ -type f -exec stat -c '%a %n' {} \;
+
+600 /var/log/audit/audit.log
+
+Using the location of the audit log file, determine the mode of each audit log with the following command:
+
+$ sudo find /var/log/audit/ -type f -exec stat -c '%a %n' {} \;
+
+rw-------. 2 root root 237923 Jun 11 11:56 /var/log/audit/audit.log
+
+If the audit logs have a mode more permissive than "0600", this is a finding.
+Fix Text:
+Configure the audit logs to have a mode of "0600" with the following command:
+
+Replace "[audit_log_file]" with the path to each audit log file. By default, these logs are located in "/var/log/audit/.
+
+$ sudo chmod 0600 /var/log/audit/[audit_log_file]
+
+Check the group that owns the system audit logs:
+
+$ sudo grep -iw log_group /etc/audit/auditd.conf
+
+If log_group is set to a user other than root, configure the permissions the following way:
+
+$ sudo chmod 0640 $log_file
+$ sudo chmod 0440 $log_file.*
+
+Otherwise, configure the permissions the following way:
+
+$ sudo chmod 0600 $log_file
+$ sudo chmod 0400 $log_file.*
+CCI-000162
+Protect audit information from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000163
+Protect audit information from unauthorized modification.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-000164
+Protect audit information from unauthorized deletion.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+CCI-001314
+Reveal error messages only to organization-defined personnel or roles.
+NIST SP 800-53 :: SI-11 c
+NIST SP 800-53A :: SI-11.1 (iv)
+NIST SP 800-53 Revision 4 :: SI-11 b
+NIST SP 800-53 Revision 5 :: SI-11 b
+
+***********************************************************************************************************
+
+Group ID:
+V-270175
+Rule ID:
+SV-270175r1117265
+STIG ID:
+RHEL-09-232103
+SRG ID:
+SRG-OS-000080-GPOS-00048
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 "/etc/audit/" must be owned by root.
+Discussion:
+The "/etc/audit/" directory contains files that ensure the proper auditing of command execution, privilege escalation, file manipulation, and more. Protection of this directory is critical for system security.
+Check Text:
+Verify the ownership of the "/etc/audit/" directory with the following command:
+
+$ sudo stat -c "%U %n" /etc/audit/
+
+root /etc/audit/
+
+If the "/etc/audit/" directory does not have an owner of "root", this is a finding.
+Fix Text:
+Change the owner of the file "/etc/audit/" to "root" by running the following command:
+
+$ sudo chown root /etc/audit/
+CCI-000162
+Protect audit information from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+
+***********************************************************************************************************
+
+Group ID:
+V-270176
+Rule ID:
+SV-270176r1117265
+STIG ID:
+RHEL-09-232104
+SRG ID:
+SRG-OS-000080-GPOS-00048
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 "/etc/audit/" must be group-owned by root.
+Discussion:
+The "/etc/audit/" directory contains files that ensure the proper auditing of command execution, privilege escalation, file manipulation, and more. Protection of this directory is critical for system security.
+Check Text:
+Verify the group ownership of the "/etc/audit/" directory with the following command:
+
+$ sudo stat -c "%G %n" /etc/audit/
+
+root /etc/audit/
+
+If "/etc/audit/" does not have a group owner of "root", this is a finding.
+Fix Text:
+Change the group of the file "/etc/audit/" to "root" by running the following command:
+
+$ sudo chgrp root /etc/audit/
+CCI-000162
+Protect audit information from unauthorized access.
+NIST SP 800-53 :: AU-9
+NIST SP 800-53A :: AU-9.1
+NIST SP 800-53 Revision 4 :: AU-9
+NIST SP 800-53 Revision 5 :: AU-9 a
+
+

@@ -1,0 +1,1089 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+CM-5 Access Restrictions for Change
+************************************************************************************************************
+
+Group ID:
+V-257882
+Rule ID:
+SV-257882r991560
+STIG ID:
+RHEL-09-232010
+SRG ID:
+SRG-OS-000259-GPOS-00100
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 system commands must have mode 755 or less permissive.
+Discussion:
+If RHEL 9 allowed any user to make changes to software libraries, then those changes might be implemented without undergoing the appropriate testing and approvals that are part of a robust change management process.
+
+This requirement applies to RHEL 9 with software libraries that are accessible and configurable, as in the case of interpreted languages. Software libraries also include privileged programs that execute with escalated privileges.
+Check Text:
+Verify the system commands contained in the following directories have mode "755" or less permissive with the following command:
+
+$ sudo find -L /bin /sbin /usr/bin /usr/sbin /usr/libexec /usr/local/bin /usr/local/sbin -perm /022 -exec ls -l {} \;
+
+If any system commands are found to be group-writable or world-writable, this is a finding.
+Fix Text:
+Configure the system commands to be protected from unauthorized access.
+
+Run the following command, replacing "[FILE]" with any system command with a mode more permissive than "755".
+
+$ sudo chmod 755 [FILE]
+CCI-001499
+Limit privileges to change software resident within software libraries.
+NIST SP 800-53 :: CM-5 (6)
+NIST SP 800-53A :: CM-5 (6).1
+NIST SP 800-53 Revision 4 :: CM-5 (6)
+NIST SP 800-53 Revision 5 :: CM-5 (6)
+
+************************************************************************************************************
+
+Group ID:
+V-257883
+Rule ID:
+SV-257883r991560
+STIG ID:
+RHEL-09-232015
+SRG ID:
+SRG-OS-000259-GPOS-00100
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 library directories must have mode 755 or less permissive.
+Discussion:
+If RHEL 9 allowed any user to make changes to software libraries, then those changes might be implemented without undergoing the appropriate testing and approvals that are part of a robust change management process.
+
+This requirement applies to RHEL 9 with software libraries that are accessible and configurable, as in the case of interpreted languages. Software libraries also include privileged programs that execute with escalated privileges.
+Check Text:
+Verify the system-wide shared library directories have mode "755" or less permissive with the following command:
+
+$ sudo find -L /lib /lib64 /usr/lib /usr/lib64 -perm /022 -type d -exec ls -l {} \;
+
+If any system-wide shared library file is found to be group-writable or world-writable, this is a finding.
+Fix Text:
+Configure the system-wide shared library directories (/lib, /lib64, /usr/lib and /usr/lib64) to be protected from unauthorized access. 
+
+Run the following command, replacing "[DIRECTORY]" with any library directory with a mode more permissive than 755.
+
+$ sudo chmod 755 [DIRECTORY]
+CCI-001499
+Limit privileges to change software resident within software libraries.
+NIST SP 800-53 :: CM-5 (6)
+NIST SP 800-53A :: CM-5 (6).1
+NIST SP 800-53 Revision 4 :: CM-5 (6)
+NIST SP 800-53 Revision 5 :: CM-5 (6)
+
+************************************************************************************************************
+
+Group ID:
+V-257799
+Rule ID:
+SV-257799r1106273
+STIG ID:
+RHEL-09-213020
+SRG ID:
+SRG-OS-000480-GPOS-00227
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must prevent the loading of a new kernel for later execution.
+Discussion:
+Changes to any software components can have significant effects on the overall security of the operating system. This requirement ensures the software has not been tampered with and that it has been provided by a trusted vendor.
+
+Disabling kexec_load prevents an unsigned kernel image (that could be a windows kernel or modified vulnerable kernel) from being loaded. Kexec can be used subvert the entire secureboot process and should be avoided at all costs especially since it can load unsigned kernel images.
+
+The sysctl --system command will load settings from all system configuration files. All configuration files are sorted by their filename in lexicographic order, regardless of the directories in which they reside. If multiple files specify the same option, the entry in the file with the lexicographically latest name will take precedence. Files are read from directories in the following list from top to bottom. Once a file of a given filename is loaded, any file of the same name in subsequent directories is ignored.
+
+/etc/sysctl.d/*.conf
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+
+Satisfies: SRG-OS-000480-GPOS-00227, SRG-OS-000366-GPOS-00153
+Check Text:
+Verify RHEL 9 is configured to disable kernel image loading.
+
+Check the status of the kernel.kexec_load_disabled kernel parameter.
+
+$ sudo sysctl kernel.kexec_load_disabled
+
+kernel.kexec_load_disabled = 1
+
+If "kernel.kexec_load_disabled" is not set to "1" or is missing, this is a finding.
+
+Check that the configuration files are present to enable this kernel parameter.
+
+$ sudo grep -r kernel.kexec_load_disabled /run/sysctl.d/*.conf /usr/local/lib/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /lib/sysctl.d/*.conf /etc/sysctl.conf /etc/sysctl.d/*.conf
+
+/etc/sysctl.d/99-sysctl.conf:kernel.kexec_load_disabled = 1
+
+If "kernel.kexec_load_disabled" is not set to "1", is missing, or commented out, this is a finding.
+
+If conflicting results are returned, this is a finding.
+Fix Text:
+Add or edit the following line in a system configuration file in the "/etc/sysctl.d/" directory:
+
+kernel.kexec_load_disabled = 1
+
+Remove any configurations that conflict with the above from the following locations: 
+/run/sysctl.d/*.conf
+/usr/local/lib/sysctl.d/*.conf
+/usr/lib/sysctl.d/*.conf
+/lib/sysctl.d/*.conf
+/etc/sysctl.conf
+/etc/sysctl.d/*.conf
+
+Load settings from all system configuration files with the following command:
+
+$ sudo sysctl --system
+CCI-003992
+Prevent the installation of organization-defined software and firmware components without verification that the component has been digitally signed using a certificate that is recognized and approved by the organization.
+NIST SP 800-53 Revision 5 :: CM-14
+CCI-001749
+The information system prevents the installation of organization-defined software components without verification the software component has been digitally signed using a certificate that is recognized and approved by the organization.
+NIST SP 800-53 Revision 4 :: CM-5 (3)
+
+************************************************************************************************************
+
+Group ID:
+V-257819
+Rule ID:
+SV-257819r1015075
+STIG ID:
+RHEL-09-214010
+SRG ID:
+SRG-OS-000366-GPOS-00153
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must ensure cryptographic verification of vendor software packages.
+Discussion:
+Cryptographic verification of vendor software packages ensures that all software packages are obtained from a valid source and protects against spoofing that could lead to installation of malware on the system. Red Hat cryptographically signs all software packages, which includes updates, with a GPG key to verify that they are valid.
+Check Text:
+Confirm Red Hat package-signing keys are installed on the system and verify their fingerprints match vendor values.
+
+Note: For RHEL 9 software packages, Red Hat uses GPG keys labeled "release key 2" and "auxiliary key 3". The keys are defined in key file "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release" by default.
+
+List Red Hat GPG keys installed on the system:
+
+$ sudo rpm -q --queryformat "%{SUMMARY}\n" gpg-pubkey | grep -i "red hat"
+
+Red Hat, Inc. (release key 2) <security@redhat.com> public key
+Red Hat, Inc. (auxiliary key 3) <security@redhat.com> public key
+
+If Red Hat GPG keys "release key 2" and "auxiliary key 3" are not installed, this is a finding.
+
+List key fingerprints of installed Red Hat GPG keys:
+
+$ sudo gpg -q --keyid-format short --with-fingerprint /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+
+If key file "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release" is missing, this is a finding.
+
+Example output:
+
+pub   rsa4096/FD431D51 2009-10-22 [SC]
+      Key fingerprint = 567E 347A D004 4ADE 55BA  8A5F 199E 2F91 FD43 1D51
+uid                   Red Hat, Inc. (release key 2) <security@redhat.com>
+pub   rsa4096/5A6340B3 2022-03-09 [SC]
+      Key fingerprint = 7E46 2425 8C40 6535 D56D  6F13 5054 E4A4 5A63 40B3
+uid                   Red Hat, Inc. (auxiliary key 3) <security@redhat.com>
+
+Compare key fingerprints of installed Red Hat GPG keys with fingerprints listed for RHEL 9 on Red Hat "Product Signing Keys" webpage at https://access.redhat.com/security/team/key.
+
+If key fingerprints do not match, this is a finding.
+Fix Text:
+Install Red Hat package-signing keys on the system and verify their fingerprints match vendor values.
+
+Insert RHEL 9 installation disc or attach RHEL 9 installation image to the system. Mount the disc or image to make the contents accessible inside the system.
+
+Assuming the mounted location is "/media/cdrom", use the following command to copy Red Hat GPG key file onto the system:
+
+$ sudo cp /media/cdrom/RPM-GPG-KEY-redhat-release /etc/pki/rpm-gpg/
+	 
+Import Red Hat GPG keys from key file into system keyring:
+
+$ sudo rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+	 
+Using the steps listed in the Check Text, confirm the newly imported keys show as installed on the system and verify their fingerprints match vendor values.
+CCI-003992
+Prevent the installation of organization-defined software and firmware components without verification that the component has been digitally signed using a certificate that is recognized and approved by the organization.
+NIST SP 800-53 Revision 5 :: CM-14
+CCI-001749
+The information system prevents the installation of organization-defined software components without verification the software component has been digitally signed using a certificate that is recognized and approved by the organization.
+NIST SP 800-53 Revision 4 :: CM-5 (3)
+
+************************************************************************************************************
+
+Group ID:
+V-257820
+Rule ID:
+SV-257820r1044878
+STIG ID:
+RHEL-09-214015
+SRG ID:
+SRG-OS-000366-GPOS-00153
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must check the GPG signature of software packages originating from external software repositories before installation.
+Discussion:
+Changes to any software components can have significant effects on the overall security of the operating system. This requirement ensures the software has not been tampered with and that it has been provided by a trusted vendor.
+
+All software packages must be signed with a cryptographic key recognized and approved by the organization.
+
+Verifying the authenticity of software prior to installation validates the integrity of the software package received from a vendor. This verifies the software has not been tampered with and that it has been provided by a trusted vendor.
+Check Text:
+Verify that dnf always checks the GPG signature of software packages originating from external software repositories before installation:
+
+$ grep -w gpgcheck /etc/dnf/dnf.conf
+
+gpgcheck=1
+
+If "gpgcheck" is not set to "1", or if the option is missing or commented out, ask the system administrator how the GPG signatures of software packages are being verified.
+
+If there is no process to verify GPG signatures that is approved by the organization, this is a finding.
+Fix Text:
+Configure dnf to always check the GPG signature of software packages originating from external software repositories before installation.
+
+Add or update the following line in the [main] section of the /etc/dnf/dnf.conf file:
+
+gpgcheck=1
+CCI-003992
+Prevent the installation of organization-defined software and firmware components without verification that the component has been digitally signed using a certificate that is recognized and approved by the organization.
+NIST SP 800-53 Revision 5 :: CM-14
+CCI-001749
+The information system prevents the installation of organization-defined software components without verification the software component has been digitally signed using a certificate that is recognized and approved by the organization.
+NIST SP 800-53 Revision 4 :: CM-5 (3)
+
+************************************************************************************************************
+
+Group ID:
+V-257821
+Rule ID:
+SV-257821r1015077
+STIG ID:
+RHEL-09-214020
+SRG ID:
+SRG-OS-000366-GPOS-00153
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must check the GPG signature of locally installed software packages before installation.
+Discussion:
+Changes to any software components can have significant effects on the overall security of the operating system. This requirement ensures the software has not been tampered with and that it has been provided by a trusted vendor.
+
+All software packages must be signed with a cryptographic key recognized and approved by the organization.
+
+Verifying the authenticity of software prior to installation validates the integrity of the software package received from a vendor. This verifies the software has not been tampered with and that it has been provided by a trusted vendor.
+Check Text:
+Verify that dnf always checks the GPG signature of locally installed software packages before installation:
+
+$ grep localpkg_gpgcheck /etc/dnf/dnf.conf 
+
+localpkg_gpgcheck=1 
+
+If "localpkg_gpgcheck" is not set to "1", or if the option is missing or commented out, ask the system administrator how the GPG signatures of local software packages are being verified.
+
+If there is no process to verify GPG signatures that is approved by the organization, this is a finding.
+Fix Text:
+Configure dnf to always check the GPG signature of local software packages before installation.
+
+Add or update the following line in the [main] section of the /etc/dnf/dnf.conf file:
+
+localpkg_gpgcheck=1
+CCI-003992
+Prevent the installation of organization-defined software and firmware components without verification that the component has been digitally signed using a certificate that is recognized and approved by the organization.
+NIST SP 800-53 Revision 5 :: CM-14
+CCI-001749
+The information system prevents the installation of organization-defined software components without verification the software component has been digitally signed using a certificate that is recognized and approved by the organization.
+NIST SP 800-53 Revision 4 :: CM-5 (3)
+
+************************************************************************************************************
+
+Group ID:
+V-257822
+Rule ID:
+SV-257822r1044880
+STIG ID:
+RHEL-09-214025
+SRG ID:
+SRG-OS-000366-GPOS-00153
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have GPG signature verification enabled for all software repositories.
+Discussion:
+Changes to any software components can have significant effects on the overall security of the operating system. This requirement ensures the software has not been tampered with and that it has been provided by a trusted vendor.
+
+All software packages must be signed with a cryptographic key recognized and approved by the organization.
+
+Verifying the authenticity of software prior to installation validates the integrity of the software package received from a vendor. This verifies the software has not been tampered with and that it has been provided by a trusted vendor.
+Check Text:
+Verify that all software repositories defined in "/etc/yum.repos.d/" have been configured with "gpgcheck" enabled:
+
+$ grep -w gpgcheck /etc/yum.repos.d/*.repo | more
+
+gpgcheck = 1
+
+If "gpgcheck" is not set to "1" for all returned lines, this is a finding.
+Fix Text:
+Configure all software repositories defined in "/etc/yum.repos.d/" to have "gpgcheck" enabled:
+
+$ sudo sed -i 's/gpgcheck\s*=.*/gpgcheck=1/g' /etc/yum.repos.d/*
+CCI-003992
+Prevent the installation of organization-defined software and firmware components without verification that the component has been digitally signed using a certificate that is recognized and approved by the organization.
+NIST SP 800-53 Revision 5 :: CM-14
+CCI-001749
+The information system prevents the installation of organization-defined software components without verification the software component has been digitally signed using a certificate that is recognized and approved by the organization.
+NIST SP 800-53 Revision 4 :: CM-5 (3)
+
+************************************************************************************************************
+
+Group ID:
+V-257825
+Rule ID:
+SV-257825r1044888
+STIG ID:
+RHEL-09-215010
+SRG ID:
+SRG-OS-000366-GPOS-00153
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 subscription-manager package must be installed.
+Discussion:
+The Red Hat Subscription Manager application manages software subscriptions and software repositories for installed software products on the local system. It communicates with backend servers, such as the Red Hat Customer Portal or an on-premise instance of Subscription Asset Manager, to register the local system and grant access to software resources determined by the subscription entitlement.
+Check Text:
+Verify that RHEL 9 subscription-manager package is installed with the following command:
+
+$ dnf list --installed subscription-manager
+
+Example output:
+
+subscription-manager.x86_64          1.29.26-3.el9_0
+
+If the "subscription-manager" package is not installed, this is a finding.
+Fix Text:
+The  subscription-manager package can be installed with the following command:
+ 
+$ sudo dnf install subscription-manager
+CCI-003992
+Prevent the installation of organization-defined software and firmware components without verification that the component has been digitally signed using a certificate that is recognized and approved by the organization.
+NIST SP 800-53 Revision 5 :: CM-14
+CCI-001749
+The information system prevents the installation of organization-defined software components without verification the software component has been digitally signed using a certificate that is recognized and approved by the organization.
+NIST SP 800-53 Revision 4 :: CM-5 (3)
+
+************************************************************************************************************
+
+Group ID:
+V-257884
+Rule ID:
+SV-257884r1106306
+STIG ID:
+RHEL-09-232020
+SRG ID:
+SRG-OS-000259-GPOS-00100
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 library files must have mode 755 or less permissive.
+Discussion:
+If RHEL 9 allowed any user to make changes to software libraries, then those changes might be implemented without undergoing the appropriate testing and approvals that are part of a robust change management process.
+
+This requirement applies to RHEL 9 with software libraries that are accessible and configurable, as in the case of interpreted languages. Software libraries also include privileged programs that execute with escalated privileges.
+Check Text:
+Verify the systemwide shared library files contained in the directories "/lib", "/lib64", "/usr/lib", and "/usr/lib64" have mode 0755 or less permissive.
+
+Check that the systemwide shared library files have mode 0755 or less permissive with the following command:
+
+$ sudo find /lib /lib64 /usr/lib /usr/lib64 -type f -name '*.so*' -perm /022 -exec stat -c "%n %a" {} +
+
+If any output is returned, this is a finding.
+Fix Text:
+Configure the systemwide shared library files contained in the directories "/lib", "/lib64", "/usr/lib", and "/usr/lib64" to have mode 0755 or less permissive with the following command.
+
+$ sudo find /lib /lib64 /usr/lib /usr/lib64 -type f -name '*.so*' -perm /022 -exec chmod go-w {} +
+CCI-001499
+Limit privileges to change software resident within software libraries.
+NIST SP 800-53 :: CM-5 (6)
+NIST SP 800-53A :: CM-5 (6).1
+NIST SP 800-53 Revision 4 :: CM-5 (6)
+NIST SP 800-53 Revision 5 :: CM-5 (6)
+
+************************************************************************************************************
+
+Group ID:
+V-257918
+Rule ID:
+SV-257918r1044977
+STIG ID:
+RHEL-09-232190
+SRG ID:
+SRG-OS-000259-GPOS-00100
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 system commands must be owned by root.
+Discussion:
+If RHEL 9 allowed any user to make changes to software libraries, then those changes might be implemented without undergoing the appropriate testing and approvals that are part of a robust change management process.
+
+This requirement applies to RHEL 9 with software libraries that are accessible and configurable, as in the case of interpreted languages. Software libraries also include privileged programs that execute with escalated privileges.
+Check Text:
+Verify the system commands contained in the following directories are owned by "root" with the following command:
+
+$ sudo find -L /bin /sbin /usr/bin /usr/sbin /usr/libexec /usr/local/bin /usr/local/sbin ! -user root -exec stat -L -c "%U %n" {} \;
+
+If any system commands are found to not be owned by root, this is a finding.
+Fix Text:
+Configure the system commands to be protected from unauthorized access.
+
+Run the following command, replacing "[FILE]" with any system command file not owned by "root".
+
+$ sudo chown root [FILE]
+CCI-001499
+Limit privileges to change software resident within software libraries.
+NIST SP 800-53 :: CM-5 (6)
+NIST SP 800-53A :: CM-5 (6).1
+NIST SP 800-53 Revision 4 :: CM-5 (6)
+NIST SP 800-53 Revision 5 :: CM-5 (6)
+
+************************************************************************************************************
+
+Group ID:
+V-257919
+Rule ID:
+SV-257919r1044979
+STIG ID:
+RHEL-09-232195
+SRG ID:
+SRG-OS-000259-GPOS-00100
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 system commands must be group-owned by root or a system account.
+Discussion:
+If RHEL 9 allowed any user to make changes to software libraries, then those changes might be implemented without undergoing the appropriate testing and approvals that are part of a robust change management process.
+
+This requirement applies to RHEL 9 with software libraries that are accessible and configurable, as in the case of interpreted languages. Software libraries also include privileged programs that execute with escalated privileges.
+Check Text:
+Verify the system commands contained in the following directories are group-owned by "root", or a required system account, with the following command:
+
+$ sudo find -L /bin /sbin /usr/bin /usr/sbin /usr/libexec /usr/local/bin /usr/local/sbin ! -group root -exec stat -L -c "%G %n" {} \;
+
+If any system commands are returned and are not group-owned by a required system account, this is a finding.
+Fix Text:
+Configure the system commands to be protected from unauthorized access.
+
+Run the following command, replacing "[FILE]" with any system command file not group-owned by "root" or a required system account.
+
+$ sudo chgrp root [FILE]
+CCI-001499
+Limit privileges to change software resident within software libraries.
+NIST SP 800-53 :: CM-5 (6)
+NIST SP 800-53A :: CM-5 (6).1
+NIST SP 800-53 Revision 4 :: CM-5 (6)
+NIST SP 800-53 Revision 5 :: CM-5 (6)
+
+************************************************************************************************************
+
+Group ID:
+V-257920
+Rule ID:
+SV-257920r1101926
+STIG ID:
+RHEL-09-232200
+SRG ID:
+SRG-OS-000259-GPOS-00100
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 library files must be owned by root.
+Discussion:
+If RHEL 9 allowed any user to make changes to software libraries, then those changes might be implemented without undergoing the appropriate testing and approvals that are part of a robust change management process.
+
+This requirement applies to RHEL 9 with software libraries that are accessible and configurable, as in the case of interpreted languages. Software libraries also include privileged programs that execute with escalated privileges.
+Check Text:
+Verify the systemwide shared library files contained in the directories "/lib", "/lib64", "/usr/lib", and "/usr/lib64" are owned by root with the following command:
+
+$ sudo find /lib /lib64 /usr/lib /usr/lib64 -type f -name '*.so*' ! -user root -exec stat -c "%n %U" {} +
+
+If any output is returned, this is a finding.
+Fix Text:
+Configure the systemwide shared library files contained in the directories "/lib", "/lib64", "/usr/lib", and "/usr/lib64" to be owned by root with the following command:
+
+$ sudo find /lib /lib64 /usr/lib /usr/lib64 -type f -name '*.so*' ! -user root -exec chown root {} +
+CCI-001499
+Limit privileges to change software resident within software libraries.
+NIST SP 800-53 :: CM-5 (6)
+NIST SP 800-53A :: CM-5 (6).1
+NIST SP 800-53 Revision 4 :: CM-5 (6)
+NIST SP 800-53 Revision 5 :: CM-5 (6)
+
+************************************************************************************************************
+
+Group ID:
+V-257921
+Rule ID:
+SV-257921r1106308
+STIG ID:
+RHEL-09-232205
+SRG ID:
+SRG-OS-000259-GPOS-00100
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 library files must be group-owned by root or a system account.
+Discussion:
+If RHEL 9 allowed any user to make changes to software libraries, then those changes might be implemented without undergoing the appropriate testing and approvals that are part of a robust change management process.
+
+This requirement applies to RHEL 9 with software libraries that are accessible and configurable, as in the case of interpreted languages. Software libraries also include privileged programs that execute with escalated privileges.
+Check Text:
+Verify the systemwide shared library files contained in the directories "/lib", "/lib64", "/usr/lib", and "/usr/lib64" are group owned by root with the following command:
+
+$ sudo find /lib /lib64 /usr/lib /usr/lib64 -type f -name '*.so*' ! -group root -exec stat -c "%n %G" {} +
+
+If any output is returned, this is a finding.
+Fix Text:
+Configure the systemwide shared library files contained in the directories "/lib", "/lib64", "/usr/lib", and "/usr/lib64" to be group owned by root with the following command:
+
+$ sudo find /lib /lib64 /usr/lib /usr/lib64 -type f -name '*.so*' ! -group root -exec chown :root {} +
+CCI-001499
+Limit privileges to change software resident within software libraries.
+NIST SP 800-53 :: CM-5 (6)
+NIST SP 800-53A :: CM-5 (6).1
+NIST SP 800-53 Revision 4 :: CM-5 (6)
+NIST SP 800-53 Revision 5 :: CM-5 (6)
+
+************************************************************************************************************
+
+Group ID:
+V-257922
+Rule ID:
+SV-257922r1044988
+STIG ID:
+RHEL-09-232210
+SRG ID:
+SRG-OS-000259-GPOS-00100
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 library directories must be owned by root.
+Discussion:
+If RHEL 9 allowed any user to make changes to software libraries, then those changes might be implemented without undergoing the appropriate testing and approvals that are part of a robust change management process.
+
+This requirement applies to RHEL 9 with software libraries that are accessible and configurable, as in the case of interpreted languages. Software libraries also include privileged programs that execute with escalated privileges.
+Check Text:
+Verify the systemwide shared library directories are owned by "root" with the following command:
+
+$ sudo find /lib /lib64 /usr/lib /usr/lib64 ! -user root -type d -exec stat -c "%U %n" {} \;
+
+If any systemwide shared library directory is not owned by "root", this is a finding.
+Fix Text:
+Configure the systemwide shared library directories within (/lib, /lib64, /usr/lib and /usr/lib64) to be protected from unauthorized access.
+
+Run the following command, replacing "[DIRECTORY]" with any library directory not owned by "root".
+
+$ sudo chown root [DIRECTORY]
+CCI-001499
+Limit privileges to change software resident within software libraries.
+NIST SP 800-53 :: CM-5 (6)
+NIST SP 800-53A :: CM-5 (6).1
+NIST SP 800-53 Revision 4 :: CM-5 (6)
+NIST SP 800-53 Revision 5 :: CM-5 (6)
+
+************************************************************************************************************
+
+Group ID:
+V-257923
+Rule ID:
+SV-257923r1044991
+STIG ID:
+RHEL-09-232215
+SRG ID:
+SRG-OS-000259-GPOS-00100
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 library directories must be group-owned by root or a system account.
+Discussion:
+If RHEL 9 allowed any user to make changes to software libraries, then those changes might be implemented without undergoing the appropriate testing and approvals that are part of a robust change management process.
+
+This requirement applies to RHEL 9 with software libraries that are accessible and configurable, as in the case of interpreted languages. Software libraries also include privileged programs that execute with escalated privileges.
+Check Text:
+Verify the systemwide shared library directories are group-owned by "root" with the following command:
+
+$ sudo find /lib /lib64 /usr/lib /usr/lib64 ! -group root -type d -exec stat -c "%G %n" {} \;
+
+If any systemwide shared library directory is returned and is not group-owned by a required system account, this is a finding.
+Fix Text:
+Configure the systemwide shared library directories (/lib, /lib64, /usr/lib and /usr/lib64) to be protected from unauthorized access.
+
+Run the following command, replacing "[DIRECTORY]" with any library directory not group-owned by "root".
+
+$ sudo chgrp root [DIRECTORY]
+CCI-001499
+Limit privileges to change software resident within software libraries.
+NIST SP 800-53 :: CM-5 (6)
+NIST SP 800-53A :: CM-5 (6).1
+NIST SP 800-53 Revision 4 :: CM-5 (6)
+NIST SP 800-53 Revision 5 :: CM-5 (6)
+
+************************************************************************************************************
+
+Group ID:
+V-258003
+Rule ID:
+SV-258003r1045065
+STIG ID:
+RHEL-09-255135
+SRG ID:
+SRG-OS-000364-GPOS-00151
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 SSH daemon must not allow GSSAPI authentication.
+Discussion:
+Generic Security Service Application Program Interface (GSSAPI) authentication is used to provide additional authentication mechanisms to applications. Allowing GSSAPI authentication through SSH exposes the system's GSSAPI to remote hosts, increasing the attack surface of the system.
+
+Satisfies: SRG-OS-000364-GPOS-00151, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify the SSH daemon does not allow GSSAPI authentication with the following command:
+
+$ sudo /usr/sbin/sshd -dd 2>&1 | awk '/filename/ {print $4}' | tr -d '\r' | tr '\n' ' ' | xargs sudo grep -iH '^\s*gssapiauthentication'
+
+GSSAPIAuthentication no
+
+If the value is returned as "yes", the returned line is commented out, no output is returned, and the use of GSSAPI authentication has not been documented with the information system security officer (ISSO), this is a finding.
+
+If the required value is not set, this is a finding.
+Fix Text:
+Configure the SSH daemon to not allow GSSAPI authentication.
+
+Add or uncomment the following line to "/etc/ssh/sshd_config" or to a file in "/etc/ssh/sshd_config.d" and set the value to "no":
+
+GSSAPIAuthentication no
+
+The SSH service must be restarted for changes to take effect:
+
+$ sudo systemctl restart sshd.service
+CCI-001813
+Enforce access restrictions using organization-defined mechanisms.
+NIST SP 800-53 Revision 4 :: CM-5 (1)
+NIST SP 800-53 Revision 5 :: CM-5 (1) (a)
+
+************************************************************************************************************
+
+Group ID:
+V-258004
+Rule ID:
+SV-258004r1045067
+STIG ID:
+RHEL-09-255140
+SRG ID:
+SRG-OS-000364-GPOS-00151
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 SSH daemon must not allow Kerberos authentication.
+Discussion:
+Kerberos authentication for SSH is often implemented using Generic Security Service Application Program Interface (GSSAPI). If Kerberos is enabled through SSH, the SSH daemon provides a means of access to the system's Kerberos implementation. Vulnerabilities in the system's Kerberos implementations may be subject to exploitation.
+
+Satisfies: SRG-OS-000364-GPOS-00151, SRG-OS-000480-GPOS-00227
+Check Text:
+Verify the SSH daemon does not allow Kerberos authentication with the following command:
+
+$ sudo /usr/sbin/sshd -dd 2>&1 | awk '/filename/ {print $4}' | tr -d '\r' | tr '\n' ' ' | xargs sudo grep -iH '^\s*kerberosauthentication'
+
+KerberosAuthentication no
+
+If the value is returned as "yes", the returned line is commented out, no output is returned, and the use of Kerberos authentication has not been documented with the information system security officer (ISSO), this is a finding.
+Fix Text:
+Configure the SSH daemon to not allow Kerberos authentication.
+
+Add the following line in "/etc/ssh/sshd_config" or to a file in "/etc/ssh/sshd_config.d", or uncomment the line and set the value to "no":
+
+KerberosAuthentication no
+
+The SSH service must be restarted for changes to take effect:
+
+$ sudo systemctl restart sshd.service
+CCI-001813
+Enforce access restrictions using organization-defined mechanisms.
+NIST SP 800-53 Revision 4 :: CM-5 (1)
+NIST SP 800-53 Revision 5 :: CM-5 (1) (a)
+
+************************************************************************************************************
+
+Group ID:
+V-258151  (See AU-12)
+Rule ID:
+SV-258151r1045298
+STIG ID:
+RHEL-09-653010
+SRG ID:
+SRG-OS-000062-GPOS-00031
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit package must be installed.
+Discussion:
+Without establishing what type of events occurred, the source of events, where events occurred, and the outcome of events, it would be difficult to establish, correlate, and investigate the events leading up to an outage or attack.
+
+Audit record content that may be necessary to satisfy this requirement includes, for example, time stamps, source and destination addresses, user/process identifiers, event descriptions, success/fail indications, filenames involved, and access control or flow control rules invoked.
+
+Associating event types with detected events in audit logs provides a means of investigating an attack, recognizing resource utilization or capacity thresholds, or identifying an improperly configured RHEL 9 system.
+
+Satisfies: SRG-OS-000062-GPOS-00031, SRG-OS-000037-GPOS-00015, SRG-OS-000038-GPOS-00016, SRG-OS-000039-GPOS-00017, SRG-OS-000040-GPOS-00018, SRG-OS-000041-GPOS-00019, SRG-OS-000042-GPOS-00021, SRG-OS-000051-GPOS-00024, SRG-OS-000054-GPOS-00025, SRG-OS-000122-GPOS-00063, SRG-OS-000254-GPOS-00095, SRG-OS-000255-GPOS-00096, SRG-OS-000337-GPOS-00129, SRG-OS-000348-GPOS-00136, SRG-OS-000349-GPOS-00137, SRG-OS-000350-GPOS-00138, SRG-OS-000351-GPOS-00139, SRG-OS-000352-GPOS-00140, SRG-OS-000353-GPOS-00141, SRG-OS-000354-GPOS-00142, SRG-OS-000358-GPOS-00145, SRG-OS-000365-GPOS-00152, SRG-OS-000392-GPOS-00172, SRG-OS-000475-GPOS-00220, SRG-OS-000055-GPOS-00026
+Check Text:
+Verify that the RHEL 9 audit service package is installed.
+
+Check that the audit service package is installed with the following command:
+
+$ dnf list --installed audit
+
+Example output:
+
+audit-3.0.7-101.el9_0.2.x86_64
+
+If the "audit" package is not installed, this is a finding.
+Fix Text:
+Install the audit service package (if the audit service is not already installed) with the following command:
+
+$ sudo dnf install audit
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000131
+Ensure that audit records containing information that establishes when the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 b
+CCI-000132
+Ensure that audit records containing information that establishes where the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 c
+CCI-000133
+Ensure that audit records containing information that establishes the source of the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 d
+CCI-000134
+Ensure that audit records containing information that establishes the outcome of the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 e
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000154
+Provide the capability to centrally review and analyze audit records from multiple components within the system.
+NIST SP 800-53 :: AU-6 (4)
+NIST SP 800-53A :: AU-6 (4).1
+NIST SP 800-53 Revision 4 :: AU-6 (4)
+NIST SP 800-53 Revision 5 :: AU-6 (4)
+CCI-000158
+Provide the capability to process, sort, and search audit records for events of interest based on organization-defined audit fields within audit records.
+NIST SP 800-53 :: AU-7 (1)
+NIST SP 800-53A :: AU-7 (1).1
+NIST SP 800-53 Revision 4 :: AU-7 (1)
+NIST SP 800-53 Revision 5 :: AU-7 (1)
+CCI-000159
+Use internal system clocks to generate time stamps for audit records.
+NIST SP 800-53 :: AU-8
+NIST SP 800-53A :: AU-8.1
+NIST SP 800-53 Revision 4 :: AU-8 a
+NIST SP 800-53 Revision 5 :: AU-8 a
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001464
+Initiates session audits automatically at system start-up.
+NIST SP 800-53 :: AU-14 (1)
+NIST SP 800-53A :: AU-14 (1).1
+NIST SP 800-53 Revision 4 :: AU-14 (1)
+NIST SP 800-53 Revision 5 :: AU-14 (1)
+CCI-001487
+Ensure that audit records containing information that establishes the identity of any individuals, subjects, or objects/entities associated with the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 f
+CCI-003938
+Automatically generate audit records of the enforcement actions.
+NIST SP 800-53 Revision 5 :: CM-5 (1) (b)
+CCI-001875
+Provide an audit reduction capability that supports on-demand audit review and analysis.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001876
+Provide an audit reduction capability that supports on-demand reporting requirements.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001877
+Provide an audit reduction capability that supports after-the-fact investigations of incidents.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001878
+Provide a report generation capability that supports on-demand audit review and analysis.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001879
+Provide a report generation capability that supports on-demand reporting requirements.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001880
+Provide a report generation capability that supports after-the-fact investigations of security incidents.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001881
+Provide an audit reduction capability that does not alter original content or time ordering of audit records.
+NIST SP 800-53 Revision 4 :: AU-7 b
+NIST SP 800-53 Revision 5 :: AU-7 b
+CCI-001882
+Provide a report generation capability that does not alter original content or time ordering of audit records.
+NIST SP 800-53 Revision 4 :: AU-7 b
+NIST SP 800-53 Revision 5 :: AU-7 b
+CCI-001889
+Record time stamps for audit records that meet organization-defined granularity of time measurement.
+NIST SP 800-53 Revision 4 :: AU-8 b
+NIST SP 800-53 Revision 5 :: AU-8 b
+CCI-001914
+Provide the capability for organization-defined individuals or roles to change the logging to be performed on organization-defined system components based on organization-defined selectable event criteria within organization-defined time thresholds.
+NIST SP 800-53 Revision 4 :: AU-12 (3)
+NIST SP 800-53 Revision 5 :: AU-12 (3)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-001814
+The Information system supports auditing of the enforcement actions.
+CCI-001814NIST SP 800-53 Revision 4 :: CM-5 (1)
+
+************************************************************************************************************
+
+Group ID:
+V-258152 (See AU-12)
+Rule ID:
+SV-258152r1015127
+STIG ID:
+RHEL-09-653015
+SRG ID:
+SRG-OS-000062-GPOS-00031
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 audit service must be enabled.
+Discussion:
+Without establishing what type of events occurred, it would be difficult to establish, correlate, and investigate the events leading up to an outage or attack. Ensuring the "auditd" service is active ensures audit records generated by the kernel are appropriately recorded.
+
+Additionally, a properly configured audit subsystem ensures that actions of individual system users can be uniquely traced to those users so they can be held accountable for their actions.
+
+Satisfies: SRG-OS-000062-GPOS-00031, SRG-OS-000037-GPOS-00015, SRG-OS-000038-GPOS-00016, SRG-OS-000039-GPOS-00017, SRG-OS-000040-GPOS-00018, SRG-OS-000041-GPOS-00019, SRG-OS-000042-GPOS-00021, SRG-OS-000051-GPOS-00024, SRG-OS-000054-GPOS-00025, SRG-OS-000122-GPOS-00063, SRG-OS-000254-GPOS-00095, SRG-OS-000255-GPOS-00096, SRG-OS-000337-GPOS-00129, SRG-OS-000348-GPOS-00136, SRG-OS-000349-GPOS-00137, SRG-OS-000350-GPOS-00138, SRG-OS-000351-GPOS-00139, SRG-OS-000352-GPOS-00140, SRG-OS-000353-GPOS-00141, SRG-OS-000354-GPOS-00142, SRG-OS-000358-GPOS-00145, SRG-OS-000365-GPOS-00152, SRG-OS-000392-GPOS-00172, SRG-OS-000475-GPOS-00220
+Check Text:
+Verify the audit service is configured to produce audit records with the following command:
+
+$ systemctl status auditd.service
+
+auditd.service - Security Auditing Service
+Loaded:loaded (/usr/lib/systemd/system/auditd.service; enabled; vendor preset: enabled)
+Active: active (running) since Tues 2022-05-24 12:56:56 EST; 4 weeks 0 days ago
+
+If the audit service is not "active" and "running", this is a finding.
+Fix Text:
+To enable the auditd service run the following command:
+
+$ sudo systemctl enable --now auditd
+CCI-000130
+Ensure that audit records contain information that establishes what type of event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 a
+CCI-000131
+Ensure that audit records containing information that establishes when the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 b
+CCI-000132
+Ensure that audit records containing information that establishes where the event occurred.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 c
+CCI-000133
+Ensure that audit records containing information that establishes the source of the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 d
+CCI-000134
+Ensure that audit records containing information that establishes the outcome of the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 e
+CCI-000135
+Generate audit records containing the organization-defined additional information that is to be included in the audit records.
+NIST SP 800-53 :: AU-3 (1)
+NIST SP 800-53A :: AU-3 (1).1 (ii)
+NIST SP 800-53 Revision 4 :: AU-3 (1)
+NIST SP 800-53 Revision 5 :: AU-3 (1)
+CCI-000154
+Provide the capability to centrally review and analyze audit records from multiple components within the system.
+NIST SP 800-53 :: AU-6 (4)
+NIST SP 800-53A :: AU-6 (4).1
+NIST SP 800-53 Revision 4 :: AU-6 (4)
+NIST SP 800-53 Revision 5 :: AU-6 (4)
+CCI-000158
+Provide the capability to process, sort, and search audit records for events of interest based on organization-defined audit fields within audit records.
+NIST SP 800-53 :: AU-7 (1)
+NIST SP 800-53A :: AU-7 (1).1
+NIST SP 800-53 Revision 4 :: AU-7 (1)
+NIST SP 800-53 Revision 5 :: AU-7 (1)
+CCI-000169
+Provide audit record generation capability for the event types the system is capable of auditing as defined in AU-2 a on organization-defined information system components.
+NIST SP 800-53 :: AU-12 a
+NIST SP 800-53A :: AU-12.1 (ii)
+NIST SP 800-53 Revision 4 :: AU-12 a
+NIST SP 800-53 Revision 5 :: AU-12 a
+CCI-000172
+Generate audit records for the event types defined in AU-2 c that include the audit record content defined in AU-3.
+NIST SP 800-53 :: AU-12 c
+NIST SP 800-53A :: AU-12.1 (iv)
+NIST SP 800-53 Revision 4 :: AU-12 c
+NIST SP 800-53 Revision 5 :: AU-12 c
+CCI-001464
+Initiates session audits automatically at system start-up.
+NIST SP 800-53 :: AU-14 (1)
+NIST SP 800-53A :: AU-14 (1).1
+NIST SP 800-53 Revision 4 :: AU-14 (1)
+NIST SP 800-53 Revision 5 :: AU-14 (1)
+CCI-001487
+Ensure that audit records containing information that establishes the identity of any individuals, subjects, or objects/entities associated with the event.
+NIST SP 800-53 :: AU-3
+NIST SP 800-53A :: AU-3.1
+NIST SP 800-53 Revision 4 :: AU-3
+NIST SP 800-53 Revision 5 :: AU-3 f
+CCI-003938
+Automatically generate audit records of the enforcement actions.
+NIST SP 800-53 Revision 5 :: CM-5 (1) (b)
+CCI-001875
+Provide an audit reduction capability that supports on-demand audit review and analysis.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001876
+Provide an audit reduction capability that supports on-demand reporting requirements.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001877
+Provide an audit reduction capability that supports after-the-fact investigations of incidents.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001878
+Provide a report generation capability that supports on-demand audit review and analysis.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001879
+Provide a report generation capability that supports on-demand reporting requirements.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001880
+Provide a report generation capability that supports after-the-fact investigations of security incidents.
+NIST SP 800-53 Revision 4 :: AU-7 a
+NIST SP 800-53 Revision 5 :: AU-7 a
+CCI-001881
+Provide an audit reduction capability that does not alter original content or time ordering of audit records.
+NIST SP 800-53 Revision 4 :: AU-7 b
+NIST SP 800-53 Revision 5 :: AU-7 b
+CCI-001882
+Provide a report generation capability that does not alter original content or time ordering of audit records.
+NIST SP 800-53 Revision 4 :: AU-7 b
+NIST SP 800-53 Revision 5 :: AU-7 b
+CCI-001889
+Record time stamps for audit records that meet organization-defined granularity of time measurement.
+NIST SP 800-53 Revision 4 :: AU-8 b
+NIST SP 800-53 Revision 5 :: AU-8 b
+CCI-001914
+Provide the capability for organization-defined individuals or roles to change the logging to be performed on organization-defined system components based on organization-defined selectable event criteria within organization-defined time thresholds.
+NIST SP 800-53 Revision 4 :: AU-12 (3)
+NIST SP 800-53 Revision 5 :: AU-12 (3)
+CCI-002884
+Log organization-defined audit events for nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (1) (a)
+NIST SP 800-53 Revision 5 :: MA-4 (1) (a)
+CCI-004188
+Monitor the use of maintenance tools that execute with increased privilege.
+NIST SP 800-53 Revision 5 :: MA-3 (5)
+CCI-001814
+The Information system supports auditing of the enforcement actions.
+NIST SP 800-53 Revision 4 :: CM-5 (1)
+datetime="$(date +%FT%H:%M:%S)"
+
+echo -e "${NORMAL}$hostname, $severity19, $controlid, $stigid19, $ruleid19, $cci19, $datetime, ${CYN}VERIFY, (See AU-12 Audit Generation: V-258152)${NORMAL}"
+

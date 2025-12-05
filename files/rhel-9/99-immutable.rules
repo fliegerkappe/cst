@@ -1,0 +1,3 @@
+# Per STIG Red Hat Enterprise Linux 9 v2 r5: RHEL 9 audit system must protect login UIDs from unauthorized change.
+
+--loginuid-immutable

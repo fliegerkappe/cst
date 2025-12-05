@@ -1,0 +1,247 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+IA-7 Cryptographic Module Authentication
+************************************************************************************************************
+
+Group ID:
+V-257954
+Rule ID:
+SV-257954r1106315
+STIG ID:
+RHEL-09-252065
+SRG ID:
+SRG-OS-000480-GPOS-00227
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 libreswan package must be installed.
+Discussion:
+Providing the ability for remote users or systems to initiate a secure VPN connection protects information when it is transmitted over a wide area network.
+
+Satisfies: SRG-OS-000480-GPOS-00227, SRG-OS-000120-GPOS-00061
+Check Text:
+Note: If there is no operational need for Libreswan to be installed, this rule is not applicable.
+
+Verify that RHEL 9 libreswan service package is installed.
+
+Check that the libreswan service package is installed with the following command:
+
+$ dnf list --installed libreswan
+
+Example output:
+
+libreswan.x86_64          4.6-3.el9
+
+If the "libreswan" package is not installed, this is a finding.
+Fix Text:
+Install the libreswan service (if it is not already installed) with the following command:
+
+$ sudo dnf install libreswan
+CCI-000803
+Implement mechanisms for authentication to a cryptographic module that meet the requirements of applicable laws, Executive Orders, directives, policies, regulations, standards, and guidance for such authentication.
+NIST SP 800-53 :: IA-7
+NIST SP 800-53A :: IA-7.1
+NIST SP 800-53 Revision 4 :: IA-7
+NIST SP 800-53 Revision 5 :: IA-7
+
+************************************************************************************************************
+
+Group ID:
+V-258099
+Rule ID:
+SV-258099r1045198
+STIG ID:
+RHEL-09-611050
+SRG ID:
+SRG-OS-000073-GPOS-00041
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 password-auth must be configured to use a sufficient number of hashing rounds.
+Discussion:
+Passwords need to be protected at all times, and encryption is the standard method for protecting passwords. If passwords are not encrypted, they can be plainly read (i.e., clear text) and easily compromised. Passwords that are encrypted with a weak algorithm are no more protected than if they are kept in plain text.
+
+Using more hashing rounds makes password cracking attacks more difficult.
+
+Satisfies: SRG-OS-000073-GPOS-00041, SRG-OS-000120-GPOS-00061
+Check Text:
+Verify the number of rounds for the password hashing algorithm is configured with the following command:
+
+$ grep rounds /etc/pam.d/password-auth
+
+password sufficient pam_unix.so sha512 rounds=100000
+
+If a matching line is not returned or "rounds" is less than "100000", this a finding.
+Fix Text:
+Configure RHEL 9 to use 100000 hashing rounds for hashing passwords.
+
+Add or modify the following line in "/etc/pam.d/password-auth" and set "rounds" to "100000".
+
+password sufficient pam_unix.so sha512 rounds=100000
+
+Note: Running authselect will overwrite this value unless a custom authselect policy is created.
+CCI-004062
+For password-based authentication, store passwords using an approved salted key derivation function, preferably using a keyed hash.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (d)
+CCI-000803
+Implement mechanisms for authentication to a cryptographic module that meet the requirements of applicable laws, Executive Orders, directives, policies, regulations, standards, and guidance for such authentication.
+NIST SP 800-53 :: IA-7
+NIST SP 800-53A :: IA-7.1
+NIST SP 800-53 Revision 4 :: IA-7
+NIST SP 800-53 Revision 5 :: IA-7
+CCI-000196
+The information system, for password-based authentication, stores only cryptographically-protected passwords.
+NIST SP 800-53 :: IA-5 (1) (c)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (c)
+
+************************************************************************************************************
+
+Group ID:
+V-258100
+Rule ID:
+SV-258100r1045201
+STIG ID:
+RHEL-09-611055
+SRG ID:
+SRG-OS-000073-GPOS-00041
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 system-auth must be configured to use a sufficient number of hashing rounds.
+Discussion:
+Passwords need to be protected at all times, and encryption is the standard method for protecting passwords. If passwords are not encrypted, they can be plainly read (i.e., clear text) and easily compromised. Passwords that are encrypted with a weak algorithm are no more protected than if they are kept in plain text.
+
+Using more hashing rounds makes password cracking attacks more difficult.
+
+Satisfies: SRG-OS-000073-GPOS-00041, SRG-OS-000120-GPOS-00061
+Check Text:
+Verify the number of rounds for the password hashing algorithm is configured with the following command:
+
+$ sudo grep rounds /etc/pam.d/system-auth
+
+password sufficient pam_unix.so sha512 rounds=100000
+
+If a matching line is not returned or "rounds" is less than 100000, this a finding.
+Fix Text:
+Configure RHEL 9 to use 100000 hashing rounds for hashing passwords.
+
+Add or modify the following line in "/etc/pam.d/system-auth" and set "rounds" to 100000.
+
+password sufficient pam_unix.so sha512 rounds=100000
+
+Note: Running authselect will overwrite this value unless a custom authselect policy is created. 
+CCI-004062
+For password-based authentication, store passwords using an approved salted key derivation function, preferably using a keyed hash.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (d)
+CCI-000803
+Implement mechanisms for authentication to a cryptographic module that meet the requirements of applicable laws, Executive Orders, directives, policies, regulations, standards, and guidance for such authentication.
+NIST SP 800-53 :: IA-7
+NIST SP 800-53A :: IA-7.1
+NIST SP 800-53 Revision 4 :: IA-7
+NIST SP 800-53 Revision 5 :: IA-7
+CCI-000196
+The information system, for password-based authentication, stores only cryptographically-protected passwords.
+NIST SP 800-53 :: IA-5 (1) (c)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (c)
+
+************************************************************************************************************
+
+Group ID:
+V-258141
+Rule ID:
+SV-258141r1045280
+STIG ID:
+RHEL-09-652015
+SRG ID:
+SRG-OS-000480-GPOS-00227
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the packages required for encrypting offloaded audit logs installed.
+Discussion:
+The rsyslog-gnutls package provides Transport Layer Security (TLS) support for the rsyslog daemon, which enables secure remote logging.
+
+Satisfies: SRG-OS-000480-GPOS-00227, SRG-OS-000120-GPOS-00061
+Check Text:
+Verify that RHEL 9 has the rsyslog-gnutls package installed with the following command:
+
+$ dnf list --installed rsyslog-gnutls
+
+Example output:
+
+rsyslog-gnutls.x86_64          8.2102.0-101.el9_0.1
+
+If the "rsyslog-gnutls" package is not installed, this is a finding.
+Fix Text:
+The  rsyslog-gnutls package can be installed with the following command:
+ 
+$ sudo dnf install rsyslog-gnutls
+CCI-000803
+Implement mechanisms for authentication to a cryptographic module that meet the requirements of applicable laws, Executive Orders, directives, policies, regulations, standards, and guidance for such authentication.
+NIST SP 800-53 :: IA-7
+NIST SP 800-53A :: IA-7.1
+NIST SP 800-53 Revision 4 :: IA-7
+NIST SP 800-53 Revision 5 :: IA-7
+
+************************************************************************************************************
+
+Group ID:
+V-258231
+Rule ID:
+SV-258231r1069375
+STIG ID:
+RHEL-09-671015
+SRG ID:
+SRG-OS-000073-GPOS-00041
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must employ FIPS 140-3 approved cryptographic hashing algorithms for all stored passwords.
+Discussion:
+The system must use a strong hashing algorithm to store the password.
+
+Passwords need to be protected at all times, and encryption is the standard method for protecting passwords. If passwords are not encrypted, they can be plainly read (i.e., clear text) and easily compromised.
+
+Satisfies: SRG-OS-000073-GPOS-00041, SRG-OS-000120-GPOS-00061
+Check Text:
+Verify the interactive user account passwords are using a strong password hash with the following command:
+
+$ sudo cut -d: -f2 /etc/shadow
+
+$6$kcOnRq/5$NUEYPuyL.wghQwWssXRcLRFiiru7f5JPV6GaJhNC2aK5F3PZpE/BCCtwrxRc/AInKMNX3CdMw11m9STiql12f/ 
+
+Password hashes "!" or "*" indicate inactive accounts not available for logon and are not evaluated.
+
+If any interactive user password hash does not begin with "$6$", this is a finding.
+Fix Text:
+Lock all interactive user accounts not using SHA-512 hashing until the passwords can be regenerated with SHA-512.
+CCI-004062
+For password-based authentication, store passwords using an approved salted key derivation function, preferably using a keyed hash.
+NIST SP 800-53 Revision 5 :: IA-5 (1) (d)
+CCI-000803
+Implement mechanisms for authentication to a cryptographic module that meet the requirements of applicable laws, Executive Orders, directives, policies, regulations, standards, and guidance for such authentication.
+NIST SP 800-53 :: IA-7
+NIST SP 800-53A :: IA-7.1
+NIST SP 800-53 Revision 4 :: IA-7
+NIST SP 800-53 Revision 5 :: IA-7
+CCI-000196
+The information system, for password-based authentication, stores only cryptographically-protected passwords.
+NIST SP 800-53 :: IA-5 (1) (c)
+NIST SP 800-53A :: IA-5 (1).1 (v)
+NIST SP 800-53 Revision 4 :: IA-5 (1) (c)
+
+

@@ -1,0 +1,208 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+SC-10 Network Disconnect
+************************************************************************************************************
+
+Group ID:
+V-257995   (See AC-12 Session Termination: V-257995)
+Rule ID:
+SV-257995r1045053
+STIG ID:
+RHEL-09-255095
+SRG ID:
+SRG-OS-000163-GPOS-00072
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured so that all network connections associated with SSH traffic terminate after becoming unresponsive.
+Discussion:
+Terminating an unresponsive SSH session within a short time period reduces the window of opportunity for unauthorized personnel to take control of a management session enabled on the console or console port that has been left unattended. In addition, quickly terminating an idle SSH session will also free up resources committed by the managed network element.
+
+Terminating network connections associated with communications sessions includes, for example, deallocating associated TCP/IP address/port pairs at the operating system level and deallocating networking assignments at the application level if multiple application sessions are using a single operating system-level network connection. This does not mean the operating system terminates all sessions or network access; it only ends the unresponsive session and releases the resources associated with that session.
+
+RHEL 9 utilizes /etc/ssh/sshd_config for configurations of OpenSSH. Within the sshd_config, the product of the values of "ClientAliveInterval" and "ClientAliveCountMax" are used to establish the inactivity threshold. The "ClientAliveInterval" is a timeout interval in seconds, after which if no data has been received from the client, sshd will send a message through the encrypted channel to request a response from the client. The "ClientAliveCountMax" is the number of client alive messages that may be sent without sshd receiving any messages back from the client. If this threshold is met, sshd will disconnect the client. For more information on these settings and others, refer to the sshd_config man pages.
+
+Satisfies: SRG-OS-000163-GPOS-00072, SRG-OS-000279-GPOS-00109
+Check Text:
+Verify the "ClientAliveCountMax" is set to "1" by performing the following command:
+
+$ sudo /usr/sbin/sshd -dd 2>&1 | awk '/filename/ {print $4}' | tr -d '\r' | tr '\n' ' ' | xargs sudo grep -iH '^\s*clientalivecountmax'
+
+ClientAliveCountMax 1
+
+If "ClientAliveCountMax" does not exist, is not set to a value of "1" in "/etc/ssh/sshd_config", or is commented out, this is a finding.
+Fix Text:
+Note: This setting must be applied in conjunction with RHEL-09-255100 to function correctly.
+
+Configure the SSH server to terminate a user session automatically after the SSH client has become unresponsive.
+
+Modify or append the following lines in the "/etc/ssh/sshd_config" or in a file in "/etc/ssh/sshd_config.d":
+
+ClientAliveCountMax 1
+
+For the changes to take effect, the SSH daemon must be restarted.
+
+$ sudo systemctl restart sshd.service
+CCI-001133
+Terminate the network connection associated with a communications session at the end of the session or after an organization-defined time period of inactivity.
+NIST SP 800-53 :: SC-10
+NIST SP 800-53A :: SC-10.1 (ii)
+NIST SP 800-53 Revision 4 :: SC-10
+NIST SP 800-53 Revision 5 :: SC-10
+CCI-002361
+Automatically terminate a user session after organization-defined conditions or trigger events requiring session disconnect.
+NIST SP 800-53 Revision 4 :: AC-12
+NIST SP 800-53 Revision 5 :: AC-12
+
+************************************************************************************************************
+
+Group ID:
+V-257996    (See AC-11 Session Termination: V-257996)
+Rule ID:
+SV-257996r1045055
+STIG ID:
+RHEL-09-255100
+SRG ID:
+SRG-OS-000126-GPOS-00066
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must be configured so that all network connections associated with SSH traffic are terminated after 10 minutes of becoming unresponsive.
+Discussion:
+Terminating an unresponsive SSH session within a short time period reduces the window of opportunity for unauthorized personnel to take control of a management session enabled on the console or console port that has been left unattended. In addition, quickly terminating an idle SSH session will also free up resources committed by the managed network element.
+
+Terminating network connections associated with communications sessions includes, for example, deallocating associated TCP/IP address/port pairs at the operating system level and deallocating networking assignments at the application level if multiple application sessions are using a single operating system-level network connection. This does not mean the operating system terminates all sessions or network access; it only ends the unresponsive session and releases the resources associated with that session.
+
+RHEL 9 utilizes /etc/ssh/sshd_config for configurations of OpenSSH. Within the sshd_config, the product of the values of "ClientAliveInterval" and "ClientAliveCountMax" are used to establish the inactivity threshold. The "ClientAliveInterval" is a timeout interval in seconds, after which if no data has been received from the client, sshd will send a message through the encrypted channel to request a response from the client. The "ClientAliveCountMax" is the number of client alive messages that may be sent without sshd receiving any messages back from the client. If this threshold is met, sshd will disconnect the client. For more information on these settings and others, refer to the sshd_config man pages.
+
+Satisfies: SRG-OS-000126-GPOS-00066, SRG-OS-000163-GPOS-00072, SRG-OS-000279-GPOS-00109, SRG-OS-000395-GPOS-00175
+Check Text:
+Verify the "ClientAliveInterval" variable is set to a value of "600" or less by performing the following command:
+
+$ sudo /usr/sbin/sshd -dd 2>&1 | awk '/filename/ {print $4}' | tr -d '\r' | tr '\n' ' ' | xargs sudo grep -iH '^\s*clientaliveinterval'
+
+ClientAliveInterval 600
+
+If "ClientAliveInterval" does not exist, does not have a value of "600" or less in "/etc/ssh/sshd_config", or is commented out, this is a finding.
+Fix Text:
+Note: This setting must be applied in conjunction with RHEL-09-255095 to function correctly.
+
+Configure the SSH server to terminate a user session automatically after the SSH client has been unresponsive for 10 minutes.
+
+Modify or append the following lines in the "/etc/ssh/sshd_config" or in a file in "/etc/ssh/sshd_config.d":
+
+ClientAliveInterval 600
+
+For the changes to take effect, the SSH daemon must be restarted.
+
+$ sudo systemctl restart sshd.service
+CCI-001133
+Terminate the network connection associated with a communications session at the end of the session or after an organization-defined time period of inactivity.
+NIST SP 800-53 :: SC-10
+NIST SP 800-53A :: SC-10.1 (ii)
+NIST SP 800-53 Revision 4 :: SC-10
+NIST SP 800-53 Revision 5 :: SC-10
+CCI-002361
+Automatically terminate a user session after organization-defined conditions or trigger events requiring session disconnect.
+NIST SP 800-53 Revision 4 :: AC-12
+NIST SP 800-53 Revision 5 :: AC-12
+CCI-002891
+Verify session and network connection termination after the completion of nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 Revision 4 :: MA-4 (7)
+NIST SP 800-53 Revision 5 :: MA-4 (7)
+
+************************************************************************************************************
+
+Group ID:
+V-258068    (See AC-12 Session Lock: V-258068)
+Rule ID:
+SV-258068r1101950
+STIG ID:
+RHEL-09-412035
+SRG ID:
+SRG-OS-000163-GPOS-00072
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must automatically exit interactive command shell user sessions after 10 minutes of inactivity.
+Discussion:
+Terminating an idle interactive command shell user session within a short time period reduces the window of opportunity for unauthorized personnel to take control of it when left unattended in a virtual terminal or physical console.
+
+Satisfies: SRG-OS-000163-GPOS-00072, SRG-OS-000029-GPOS-00010
+Check Text:
+Verify RHEL 9 is configured to exit interactive command shell user sessions after 10 minutes of inactivity or less with the following command:
+
+$ sudo grep -i tmout /etc/profile /etc/profile.d/*.sh
+
+/etc/profile.d/tmout.sh:declare -xr TMOUT=600
+
+If "TMOUT" is not set to "600" or less in a script located in the "/etc/'profile.d/ directory, is missing or is commented out, this is a finding.
+Fix Text:
+Configure RHEL 9 to exit interactive command shell user sessions after 10 minutes of inactivity.
+
+Add or edit the following line in "/etc/profile.d/tmout.sh":
+
+#!/bin/bash
+
+declare -xr TMOUT=600
+CCI-000057
+Prevent further access to the system by initiating a device lock after organization-defined time period of inactivity; and/or requiring the user to initiate a device lock before leaving the system unattended.
+NIST SP 800-53 :: AC-11 a
+NIST SP 800-53A :: AC-11.1 (ii)
+NIST SP 800-53 Revision 4 :: AC-11 a
+NIST SP 800-53 Revision 5 :: AC-11 a
+CCI-001133
+Terminate the network connection associated with a communications session at the end of the session or after an organization-defined time period of inactivity.
+NIST SP 800-53 :: SC-10
+NIST SP 800-53A :: SC-10.1 (ii)
+NIST SP 800-53 Revision 4 :: SC-10
+NIST SP 800-53 Revision 5 :: SC-10
+
+************************************************************************************************************
+
+Group ID:
+V-258077
+Rule ID:
+SV-258077r1014874
+STIG ID:
+RHEL-09-412080
+SRG ID:
+SRG-OS-000163-GPOS-00072
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must terminate idle user sessions.
+Discussion:
+Terminating an idle session within a short time period reduces the window of opportunity for unauthorized personnel to take control of a management session enabled on the console or console port that has been left unattended.
+Check Text:
+Verify that RHEL 9 logs out sessions that are idle for 15 minutes with the following command:
+
+$ sudo grep -i ^StopIdleSessionSec /etc/systemd/logind.conf
+
+StopIdleSessionSec=900
+
+If "StopIdleSessionSec" is not configured to "900" seconds, this is a finding.
+Fix Text:
+Configure RHEL 9 to log out idle sessions by editing the /etc/systemd/logind.conf file with the following line:
+
+StopIdleSessionSec=900
+
+The "logind" service must be restarted for the changes to take effect. To restart the "logind" service, run the following command:
+
+$ sudo systemctl restart systemd-logind
+CCI-001133
+Terminate the network connection associated with a communications session at the end of the session or after an organization-defined time period of inactivity.
+NIST SP 800-53 :: SC-10
+NIST SP 800-53A :: SC-10.1 (ii)
+NIST SP 800-53 Revision 4 :: SC-10
+NIST SP 800-53 Revision 5 :: SC-10

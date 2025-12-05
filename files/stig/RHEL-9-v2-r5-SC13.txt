@@ -1,0 +1,269 @@
+Red Hat Enterprise Linux 9
+Version: 2 Release: 5 Benchmark Date: 02 Jul 2025
+
+************************************************************************************************************
+SC-13 Cryptographic Protection
+************************************************************************************************************
+
+Group ID:
+V-258230
+Rule ID:
+SV-258230r958408
+STIG ID:
+RHEL-09-671010
+SRG ID:
+SRG-OS-000033-GPOS-00014
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must enable FIPS mode.
+Discussion:
+Use of weak or untested encryption algorithms undermines the purposes of utilizing encryption to protect data. The operating system must implement cryptographic modules adhering to the higher standards approved by the federal government since this provides assurance they have been tested and validated. This includes NIST FIPS-validated cryptography for the following: Provisioning digital signatures, generating cryptographic hashes, and to protect data requiring data-at-rest protections in accordance with applicable federal laws, Executive Orders, directives, policies, regulations, and standards.
+
+Satisfies: SRG-OS-000033-GPOS-00014, SRG-OS-000125-GPOS-00065, SRG-OS-000396-GPOS-00176, SRG-OS-000423-GPOS-00187, SRG-OS-000478-GPOS-00223
+Check Text:
+Verify that RHEL 9 is in FIPS mode with the following command:
+
+$ sudo fips-mode-setup --check
+
+FIPS mode is enabled.
+
+If FIPS mode is not enabled, this is a finding.
+Fix Text:
+Configure the operating system to implement FIPS mode with the following command
+
+$ sudo fips-mode-setup --enable
+
+Reboot the system for the changes to take effect.
+CCI-000068
+Implement cryptographic mechanisms to protect the confidentiality of remote access sessions.
+NIST SP 800-53 :: AC-17 (2)
+NIST SP 800-53A :: AC-17 (2).1
+NIST SP 800-53 Revision 4 :: AC-17 (2)
+NIST SP 800-53 Revision 5 :: AC-17 (2)
+CCI-000877
+Employ strong authentication in the establishment of nonlocal maintenance and diagnostic sessions.
+NIST SP 800-53 :: MA-4 c
+NIST SP 800-53A :: MA-4.1 (iv)
+NIST SP 800-53 Revision 4 :: MA-4 c
+NIST SP 800-53 Revision 5 :: MA-4 c
+CCI-002418
+Protect the confidentiality and/or integrity of transmitted information.
+NIST SP 800-53 Revision 4 :: SC-8
+NIST SP 800-53 Revision 5 :: SC-8
+CCI-002450
+Implement organization-defined types of cryptography for each specified cryptography use.
+NIST SP 800-53 Revision 4 :: SC-13
+NIST SP 800-53 Revision 5 :: SC-13 b
+
+************************************************************************************************************
+
+Group ID:
+V-258234
+Rule ID:
+SV-258234r1051250
+STIG ID:
+RHEL-09-215100
+SRG ID:
+SRG-OS-000396-GPOS-00176
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must have the crypto-policies package installed.
+Discussion:
+Centralized cryptographic policies simplify applying secure ciphers across an operating system and the applications that run on that operating system. Use of weak or untested encryption algorithms undermines the purposes of using encryption to protect data.
+
+Satisfies: SRG-OS-000396-GPOS-00176, SRG-OS-000393-GPOS-00173, SRG-OS-000394-GPOS-00174
+Check Text:
+Verify that the RHEL 9 crypto-policies package is installed with the following command:
+
+$ dnf list --installed crypto-policies
+
+Example output:
+
+crypto-policies.noarch          20240828-2.git626aa59.el9_5
+
+If the crypto-policies package is not installed, this is a finding.
+Fix Text:
+Install the crypto-policies package (if the package is not already installed) with the following command:
+
+$ sudo dnf -y install crypto-policies
+CCI-002450
+Implement organization-defined types of cryptography for each specified cryptography use.
+NIST SP 800-53 Revision 4 :: SC-13
+NIST SP 800-53 Revision 5 :: SC-13 b
+CCI-002890
+Implement organization-defined cryptographic mechanisms to protect the integrity of nonlocal maintenance and diagnostic communications.
+NIST SP 800-53 Revision 4 :: MA-4 (6)
+NIST SP 800-53 Revision 5 :: MA-4 (6)
+CCI-003123
+Implement organization-defined cryptographic mechanisms to protect the confidentiality of nonlocal maintenance and diagnostic communications.
+NIST SP 800-53 Revision 4 :: MA-4 (6)
+NIST SP 800-53 Revision 5 :: MA-4 (6)
+
+************************************************************************************************************
+
+Group ID:
+V-258236
+Rule ID:
+SV-258236r1101920
+STIG ID:
+RHEL-09-672020
+SRG ID:
+SRG-OS-000396-GPOS-00176
+Severity:
+CAT I
+Classification
+Unclassified
+Rule Title:
+RHEL 9 cryptographic policy must not be overridden.
+Discussion:
+Centralized cryptographic policies simplify applying secure ciphers across an operating system and the applications that run on that operating system. Use of weak or untested encryption algorithms undermines the purposes of using encryption to protect data.
+
+Satisfies: SRG-OS-000396-GPOS-00176, SRG-OS-000393-GPOS-00173, SRG-OS-000394-GPOS-00174
+Check Text:
+Verify that RHEL 9 cryptographic policies are not overridden.
+
+Verify that the configured policy matches the generated policy with the following command:
+
+$ sudo update-crypto-policies --check
+
+The configured policy matches the generated policy
+
+If the returned message does not match the above, but instead matches the following, this is a finding:
+
+The configured policy does NOT match the generated policy
+
+List all of the crypto backends configured on the system with the following command:
+
+$ ls -l /etc/crypto-policies/back-ends/ 
+
+lrwxrwxrwx. 1 root root  40 Nov 13 16:29 bind.config -> /usr/share/crypto-policies/FIPS/bind.txt
+lrwxrwxrwx. 1 root root  42 Nov 13 16:29 gnutls.config -> /usr/share/crypto-policies/FIPS/gnutls.txt
+lrwxrwxrwx. 1 root root  40 Nov 13 16:29 java.config -> /usr/share/crypto-policies/FIPS/java.txt
+lrwxrwxrwx. 1 root root  46 Nov 13 16:29 javasystem.config -> /usr/share/crypto-policies/FIPS/javasystem.txt
+lrwxrwxrwx. 1 root root  40 Nov 13 16:29 krb5.config -> /usr/share/crypto-policies/FIPS/krb5.txt
+lrwxrwxrwx. 1 root root  45 Nov 13 16:29 libreswan.config -> /usr/share/crypto-policies/FIPS/libreswan.txt
+lrwxrwxrwx. 1 root root  42 Nov 13 16:29 libssh.config -> /usr/share/crypto-policies/FIPS/libssh.txt
+-rw-r--r--. 1 root root 398 Nov 13 16:29 nss.config
+lrwxrwxrwx. 1 root root  43 Nov 13 16:29 openssh.config -> /usr/share/crypto-policies/FIPS/openssh.txt
+lrwxrwxrwx. 1 root root  49 Nov 13 16:29 opensshserver.config -> /usr/share/crypto-policies/FIPS/opensshserver.txt
+lrwxrwxrwx. 1 root root  46 Nov 13 16:29 opensslcnf.config -> /usr/share/crypto-policies/FIPS/opensslcnf.txt
+lrwxrwxrwx. 1 root root  43 Nov 13 16:29 openssl.config -> /usr/share/crypto-policies/FIPS/openssl.txt
+lrwxrwxrwx. 1 root root  48 Nov 13 16:29 openssl_fips.config -> /usr/share/crypto-policies/FIPS/openssl_fips.txt
+
+If the paths do not point to the respective files under /usr/share/crypto-policies/FIPS path, this is a finding.
+
+Note: nss.config should not be symlinked.
+
+Note: If there is an operational need to use a subpolicy that causes the links to the crypto backends to break, this is a finding, and exceptions will need to be made by the authorizing official (AO) and documented with the information system security officer (ISSO).
+Fix Text:
+Configure RHEL 9 to correctly implement the systemwide cryptographic policies by reinstalling the crypto-policies package contents.
+
+Reinstall crypto-policies with the following command:
+
+$ sudo dnf -y reinstall crypto-policies
+
+Set the crypto-policy to FIPS with the following command:
+
+$ sudo update-crypto-policies --set FIPS
+
+Setting system policy to FIPS
+
+Note: Systemwide crypto policies are applied on application startup. It is recommended to restart the system for the change of policies to fully take place.
+CCI-002450
+Implement organization-defined types of cryptography for each specified cryptography use.
+NIST SP 800-53 Revision 4 :: SC-13
+NIST SP 800-53 Revision 5 :: SC-13 b
+CCI-002890
+Implement organization-defined cryptographic mechanisms to protect the integrity of nonlocal maintenance and diagnostic communications.
+NIST SP 800-53 Revision 4 :: MA-4 (6)
+NIST SP 800-53 Revision 5 :: MA-4 (6)
+CCI-003123
+Implement organization-defined cryptographic mechanisms to protect the confidentiality of nonlocal maintenance and diagnostic communications.
+NIST SP 800-53 Revision 4 :: MA-4 (6)
+NIST SP 800-53 Revision 5 :: MA-4 (6)
+
+************************************************************************************************************
+
+Group ID:
+V-258241
+Rule ID:
+SV-258241r1106302
+STIG ID:
+RHEL-09-215105
+SRG ID:
+SRG-OS-000396-GPOS-00176
+Severity:
+CAT II
+Classification
+Unclassified
+Rule Title:
+RHEL 9 must implement a FIPS 140-3-compliant systemwide cryptographic policy.
+Discussion:
+Centralized cryptographic policies simplify applying secure ciphers across an operating system and the applications that run on that operating system. Use of weak or untested encryption algorithms undermines the purposes of using encryption to protect data.
+
+Satisfies: SRG-OS-000396-GPOS-00176, SRG-OS-000393-GPOS-00173, SRG-OS-000394-GPOS-00174
+Check Text:
+Verify RHEL 9 is set to use a FIPS 140-3-compliant systemwide cryptographic policy with the following command:
+
+$ update-crypto-policies --show
+
+FIPS
+
+If the systemwide crypto policy is not set to "FIPS", this is a finding.
+
+Note: If subpolicies have been configured, they could be listed in a colon-separated list starting with "FIPS" as follows FIPS:<SUBPOLICY-NAME>. This is not a finding.
+
+Note: Subpolicies like AD-SUPPORT must be configured according to the latest guidance from the operating system vendor.
+
+Verify the current minimum crypto-policy configuration with the following commands:
+
+$ grep -E 'rsa_size|hash' /etc/crypto-policies/state/CURRENT.pol
+
+hash = SHA2-256 SHA2-384 SHA2-512 SHA2-224 SHA3-256 SHA3-384 SHA3-512 SHAKE-256
+min_rsa_size = 2048
+
+If the "hash" values do not include at least the following FIPS 140-3-compliant algorithms "SHA2-256 SHA2-384 SHA2-512 SHA2-224 SHA3-256 SHA3-384 SHA3-512 SHAKE-256", this is a finding.
+
+If there are algorithms that include "SHA1" or a hash value less than "224" this is a finding.
+
+If the "min_rsa_size" is not set to a value of at least "2048", this is a finding.
+
+If these commands do not return any output, this is a finding.
+Fix Text:
+Configure RHEL 9 to use a FIPS 140-3-compliant systemwide cryptographic policy.
+
+Create a subpolicy for enhancements to the base systemwide crypto-policy by creating the file /etc/crypto-policies/policies/modules/STIG.pmod with the following content:
+
+# Define ciphers and MACs for OpenSSH and libssh
+cipher@SSH=AES-256-GCM AES-256-CTR AES-128-GCM AES-128-CTR
+mac@SSH=HMAC-SHA2-512 HMAC-SHA2-256
+
+Apply the policy enhancements to the FIPS systemwide cryptographic policy level with the following command:
+
+$ sudo update-crypto-policies --set FIPS:STIG
+
+Note: If additional subpolicies are being employed, they must be added to the update-crypto-policies command.
+
+To make the cryptographic settings effective for already running services and applications, restart the system:
+
+$ sudo reboot
+CCI-002450
+Implement organization-defined types of cryptography for each specified cryptography use.
+NIST SP 800-53 Revision 4 :: SC-13
+NIST SP 800-53 Revision 5 :: SC-13 b
+CCI-002890
+Implement organization-defined cryptographic mechanisms to protect the integrity of nonlocal maintenance and diagnostic communications.
+NIST SP 800-53 Revision 4 :: MA-4 (6)
+NIST SP 800-53 Revision 5 :: MA-4 (6)
+CCI-003123
+Implement organization-defined cryptographic mechanisms to protect the confidentiality of nonlocal maintenance and diagnostic communications.
+NIST SP 800-53 Revision 4 :: MA-4 (6)
+NIST SP 800-53 Revision 5 :: MA-4 (6)
+
+
