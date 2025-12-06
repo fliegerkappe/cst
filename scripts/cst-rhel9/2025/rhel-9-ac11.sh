@@ -51,7 +51,8 @@ vulnid1="V-258019"
 
 title2a="RHEL 9 must prevent a user from overriding the disabling of the graphical user smart card removal action."
 title2b="Checking with: 'gsettings writable org.gnome.settings-daemon.peripherals.smartcard removal-action'."
-title2c="Expecting: ${YLO}false${BLD}"
+title2c="Expecting: ${YLO}false
+           NOTE: If \"removal-action\" is writable and the result is \"true\", this is a finding.${BLD}"
 cci2="CCI-000056 CCI-000057 CCI-000058"
 stigid2="RHEL-09-271050"
 severity2="CAT II"
@@ -168,6 +169,8 @@ fail=1
 
 datetime="$(date +%FT%H:%M:%S)"
 
+
+
 removal="$(gsettings get org.gnome.settings-daemon.peripherals.smartcard removal-action)"
 if [[ $removal == \'lock-screen\' ]]
 then
@@ -206,18 +209,29 @@ fail=1
 
 datetime="$(date +%FT%H:%M:%S)"
 
-remaction="$(gsettings writable org.gnome.settings-daemon.peripherals.smartcard removal-action)"
-if [[ $remaction == false ]]
-then
-  echo -e "${NORMAL}RESULT:    ${BLD}$remaction${NORMAL}"
-  fail=0
+isinstalled="$(dnf list --installed 2>/dev/null | grep gnome | egrep '(desktop|shell)')"
+
+if [[ $isinstalled ]]
+then	
+  remaction="$(gsettings writable org.gnome.settings-daemon.peripherals.smartcard removal-action)"
+  if [[ $remaction == false ]]
+  then
+    echo -e "${NORMAL}RESULT:    ${BLD}$remaction${NORMAL}"
+    fail=0
+  else
+    echo -e "${NORMAL}RESULT:    ${RED}$remaction${NORMAL}"
+  fi
 else
-  echo -e "${NORMAL}RESULT:    ${RED}$remaction${NORMAL}"
+  echo -e "${NORMAL}RESULT:    ${BLD}Gnome is not installed${NORMAL}"
+  fail=2
 fi
 
 if [[ $fail == 0 ]]
 then
   echo -e "${NORMAL}$hostname, $severity2, $controlid, $stigid2, $ruleid2, $cci2, $datetime, ${GRN}PASSED, RHEL 9 prevents a user from overriding the disabling of the graphical user smart card removal action.${NORMAL}"
+elif [[ $fail == 2 ]]
+then
+  echo -e "${NORMAL}$hostname, $severity2, $controlid, $stigid2, $ruleid2, $cci2, $datetime, ${GRN}N/A, The GNOME graphical user interface is not installed. This requirement is Not Applicable.${NORMAL}" 
 else
   echo -e "${NORMAL}$hostname, $severity2, $controlid, $stigid2, $ruleid2, $cci1, $datetime, ${RED}FAILED, RHEL 9 does not prevent a user from overriding the disabling of the graphical user smart card removal action.${NORMAL}"
 fi
@@ -242,11 +256,11 @@ fail=1
 IFS='
 '
 
-gnomeinstalled="$(rpm -qa | grep gnome | egrep '(desktop|session)')"
+isinstalled="$(dnf list --installed 2>/dev/null | grep gnome | egrep '(desktop|shell)')"
 
 datetime="$(date +%FT%H:%M:%S)"
 
-if [[ $gnomeinstalled ]]
+if [[ $isinstalled ]]
 then
   enabled="$(gsettings get org.gnome.desktop.screensaver lock-enabled)"
   if [[ $enabled ]]
@@ -295,11 +309,11 @@ fail=1
 IFS='
 '
 
-gnomeinstalled="$(rpm -qa | grep gnome | egrep '(desktop|session)')"
+isinstalled="$(dnf list --installed 2>/dev/null | grep gnome | egrep '(desktop|shell)')"
 
 datetime="$(date +%FT%H:%M:%S)"
 
-if [[ $gnomeinstalled ]]
+if [[ $isinstalled ]]
 then
   enabled="$(gsettings writable org.gnome.desktop.screensaver lock-enabled)"
   if [[ $enabled ]]
@@ -323,8 +337,8 @@ then
   fi
 
 else
-   echo -e "${NORMAL}RESULT:    ${BLD}GNOME server and client RPMs not found${NORMAL}"
-   echo -e "${NORMAL}$hostname, $severity4, $controlid, $stigid4, $ruleid4, $cci4, $datetime, ${GRN}N/A, GNOME is not installed${NORMAL}"
+  echo -e "${NORMAL}RESULT:    ${BLD}GNOME server and client RPMs not found${NORMAL}"
+  echo -e "${NORMAL}$hostname, $severity4, $controlid, $stigid4, $ruleid4, $cci4, $datetime, ${GRN}N/A, GNOME is not installed${NORMAL}"
 fi
 
 echo
@@ -348,11 +362,11 @@ IFS='
 '
 
 dir5="/etc/dconf/db/"
-gnomeinstalled="$(rpm -qa | grep gnome | egrep '(desktop|session)')"
+isinstalled="$(dnf list --installed 2>/dev/null | grep gnome | egrep '(desktop|shell)')"
 
 datetime="$(date +%FT%H:%M:%S)"
 
-if [[ $gnomeinstalled ]]
+if [[ $isinstalled ]]
 then
 
   delay="$(gsettings get org.gnome.desktop.session idle-delay)"
@@ -378,8 +392,8 @@ then
   fi
 
 else
-   echo -e "${NORMAL}RESULT:    ${BLD}GNOME server and client RPMs not found${NORMAL}"
-   echo -e "${NORMAL}$hostname, $severity5, $controlid, $stigid5, $ruleid5, $cci5, $datetime, ${GRN}N/A, GNOME is not installed${NORMAL}"
+  echo -e "${NORMAL}RESULT:    ${BLD}GNOME server and client RPMs not found${NORMAL}"
+  echo -e "${NORMAL}$hostname, $severity5, $controlid, $stigid5, $ruleid5, $cci5, $datetime, ${GRN}N/A, GNOME is not installed${NORMAL}"
 fi
 
 echo
@@ -404,11 +418,11 @@ fail=1
 IFS='
 '
 
-gnomeinstalled="$(rpm -qa | grep gnome | egrep '(desktop|session)')"
+isinstalled="$(dnf list --installed 2>/dev/null | grep gnome | egrep '(desktop|shell)')"
 
 datetime="$(date +%FT%H:%M:%S)"
 
-if [[ $gnomeinstalled ]]
+if [[ $isinstalled ]]
 then
   delay="$(gsettings writable org.gnome.desktop.session idle-delay)"
   if [[ $delay ]]
@@ -456,11 +470,11 @@ IFS='
 
 fail=1
 
-gnomeinstalled="$(rpm -qa | grep gnome | egrep '(desktop|session)')"
+isinstalled="$(dnf list --installed 2>/dev/null | grep gnome | egrep '(desktop|shell)')"
 
 datetime="$(date +%FT%H:%M:%S)"
 
-if [[ $gnomeinstalled ]]
+if [[ $isinstalled ]]
 then
   lockdelay="$(gsettings get org.gnome.desktop.screensaver lock-delay)"
   if [[ $lockdelay ]]
@@ -511,9 +525,9 @@ fail=1
 
 datetime="$(date +%FT%H:%M:%S)"
 
-gnomeinstalled="$(rpm -qa | grep gnome | egrep '(desktop|session)')"
+isinstalled="$(dnf list --installed 2>/dev/null | grep gnome | egrep '(desktop|shell)')"
 
-if [[ $gnomeinstalled ]]
+if [[ $isinstalled ]]
 then
   lockdelay="$(gsettings writable org.gnome.desktop.screensaver lock-delay)"
   if [[ $lockdelay ]]
@@ -563,9 +577,9 @@ IFS='
 
 datetime="$(date +%FT%H:%M:%S)"
 
-gnomeinstalled="$(rpm -qa | grep gnome | egrep '(desktop|session)')"
+isinstalled="$(dnf list --installed 2>/dev/null | grep gnome | egrep '(desktop|shell)')"
 
-if [[ $gnomeinstalled ]]
+if [[ $isinstalled ]]
 then
   picuri="$(gsettings writable org.gnome.desktop.screensaver picture-uri)"
   if [[ $picuri ]]
