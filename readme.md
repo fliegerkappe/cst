@@ -13,25 +13,25 @@
 Used to run multiple bash shell scripts to check STIG compliance
 
 Directories:
-1. main
+1. main\n
    a. runcheck.sh - the main script.
-2. conf
-   a. cst-rhel7_2023.cfg - a list of RHEL 7 scripts to run.
-   b. cst-rhel8_2024.cfg - a list of RHEL 8 scripts to run.
-   c. cst-rhel9_2025.cfg - a list of RHEL 9 scripts to run.
+2. conf\n
+   a. cst-rhel7_2023.cfg - a list of RHEL 7 scripts to run.\n
+   b. cst-rhel8_2024.cfg - a list of RHEL 8 scripts to run.\n
+   c. cst-rhel9_2025.cfg - a list of RHEL 9 scripts to run.\n
    d. exceptions.cfg - a file used to list scripts in any of the above
       config files that you want to skip.
-3. scripts
-   a. cst-rhel7/2023
-   b. cst-rhel8/2024
+3. scripts\n
+   a. cst-rhel7/2023\n
+   b. cst-rhel8/2024\n
    c. cst-rhel9/2025  (includes the "dryrun.sh")
-4. reports
-   a. [filename]-full.txt  - a detailed text report with colors when viewed in a Linux terminal.
-   b. [filename]-brief.txt - a summary text report with colors when viewed in a Linux terminal.
-   c. [filename]-brief.csv - a comma-separated text report you can import to Excel (no colors).
-   d. [filename]-score.txt - a summary text score report.
+4. reports\n
+   a. [filename]-full.txt  - a detailed text report with colors when viewed in a Linux terminal.\n
+   b. [filename]-brief.txt - a summary text report with colors when viewed in a Linux terminal.\n
+   c. [filename]-brief.csv - a comma-separated text report you can import to Excel (no colors).\n
+   d. [filename]-score.txt - a summary text score report.\n
    e. [filename]-xccdf.xml - results you can import to a STIG Viewer checklist.
-5. tmp
+5. tmp\n
    a. temporary working files that are deleted after every run.
 
 Usage:
@@ -100,6 +100,7 @@ $ sudo more [filename]-brief.txt | grep 'AC-10' | cut -d',' -f1,2,3,5,8
 
 # Get a sorted list of vulnerabilities checked by vulnerability ID - no duplicates
 $ sudo more [filename]-brief.txt | cut -d',' -f5 | sort | uniq
+
 
 
 
