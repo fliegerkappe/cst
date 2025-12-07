@@ -7,9 +7,6 @@
 ## By Dan Seeland
 ##    
 ##
-##    
-##
-##
 ################################################################
 ################################################################
 
@@ -104,4 +101,5 @@ $ sudo more [filename]-brief.txt | grep 'AC-10' | cut -d',' -f1,2,3,5,8
 
 # Get a sorted list of vulnerabilities checked by vulnerability ID - no duplicates
 $ sudo more [filename]-brief.txt | cut -d',' -f5 | sort | uniq
+
 
