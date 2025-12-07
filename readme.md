@@ -83,7 +83,7 @@ To view a live run of all scripts without generating all the reports, use the "d
 
 What do all those CCI numbers mean?
 
-In each of the reports, all of the tests refer to one or more CCIs that refer to a specific requirement. To see what those requirements are, you can either open the stig text file associated with a particular test and search for a specific test, or you can run the "getcci.sh" script located in the /cst/files directory, and pass it the associated stig text file. Starting from the /cst directory;
+In each of the reports, all of the tests refer to one or more CCIs that refer to a specific requirement. To see what those requirements are, you can either open the stig text file associated with a particular test and search for a specific CCI, or you can run the "getcci.sh" script located in the /cst/files directory, and pass it the associated stig text file. Starting from the /cst directory;
 
 # cd files
 # ./getcci.sh stig/RHEL-9-v2-r5-IA3.txt
@@ -100,5 +100,6 @@ $ sudo more [filename]-brief.txt | grep 'AC-10' | cut -d',' -f1,2,3,5,8
 
 # Get a sorted list of vulnerabilities checked by vulnerability ID - no duplicates
 $ sudo more [filename]-brief.txt | cut -d',' -f5 | sort | uniq
+
 
 
