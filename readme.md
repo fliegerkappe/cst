@@ -42,7 +42,7 @@ Usage:
    (The .csv file is viewable in Excel)  
    (The xccdf file can be imported into a STIGViewer Checklist)  
 9.	Offload the reports to an approved share or media.  
-10. It's not a good idea to leave vulnerability reports on the host you scan. To leave no trace of this tool or the reports it generates, delete the directory you created in step 2     along with all of the contents within.  
+10. It's not a good idea to leave vulnerability reports on the host you scan. If you put the CST files on the target host, delete the directory you created in step 2 along with all of the contents within.  
     
 Running only select scripts  
   
@@ -89,6 +89,7 @@ Practical Search Commands if you're in a Linux terminal session:
 
 * *Get the count of unique tests (not counting any test that tells you to "VERIFY" (See) some other test result)* *  
 **[your-host reports]$ sudo more [filename]-brief.txt | grep -v "See " | wc -l**  
+
 
 
 
