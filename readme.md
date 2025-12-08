@@ -4,7 +4,7 @@ By Dan Seeland
 Used to run multiple bash shell scripts to check STIG compliance  
 Directories:  
 1.	main  
-   a. runcheck.sh - the main script.  
+   runcheck.sh - the main script.  
 2.	conf  
    a. cst-rhel7_2023.cfg - a list of RHEL 7 scripts to run.  
    b. cst-rhel8_2024.cfg - a list of RHEL 8 scripts to run.  
@@ -22,9 +22,9 @@ Directories:
    d. [filename]-score.txt - a summary text score report.  
    e. [filename]-xccdf.xml - results you can import to a STIG Viewer checklist.  
 5.	tmp  
-   a. temporary working files that are deleted after every run.
+   Temporary working files that are deleted after every run.
 6. files  
-   a. assorted config files added or modified by the Red Hat image builder during the DISA STIG security requirements load. This is also where the "getcci.sh" is located.  
+   Assorted config files added or modified by the Red Hat image builder during the DISA STIG security requirements load. This is also where the "getcci.sh" is located.  
   
 Usage:  
 1.	Sudo to root  
@@ -89,6 +89,7 @@ Practical Search Commands if you're in a Linux terminal session:
 
 * *Get the count of unique tests (not counting any test that tells you to "VERIFY" (See) some other test result)* *  
 **[your-host reports]$ sudo more [filename]-brief.txt | grep -v "See " | wc -l**  
+
 
 
 
