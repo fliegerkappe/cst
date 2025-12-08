@@ -73,7 +73,7 @@ If you want to watch the live output of each script that "runscript.sh" pulls fr
   
 Doing a dry run using the "dryrun.sh script"  
   
-To view a live run of all scripts without generating all the reports, use the "dryrun.sh" script in the "\scripts" directory. If any of the scripts run into problems, you'll be able to see exactly which specific test is causing the problem and give you an idea how to get around it.  
+To view a live run of all scripts without generating all the reports, use the "dryrun.sh" script in the "cst/scripts" directory. If any of the scripts run into problems, you'll be able to see exactly which specific test is causing the problem and give you an idea how to get around it.  
   
 What do all those CCI numbers mean?  
   
@@ -94,6 +94,7 @@ Practical Search Commands if you're in a Linux terminal session:
 * *Get a sorted list of vulnerabilities checked by vulnerability ID - no duplicates* *  
 **[your-host reports]$ sudo more [filename]-brief.txt | cut -d',' -f5 | sort | uniq**  
   
+
 
 
 
