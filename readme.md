@@ -1,7 +1,6 @@
 Compliance Self Test (CST)  
-By Dan Seeland
-  
-Used to run multiple bash shell scripts to check STIG compliance  
+Used to run multiple bash shell scripts to check STIG compliance
+
 Directories:  
 1.	main  
    runcheck.sh - the main script.  
@@ -89,6 +88,7 @@ Practical Search Commands if you're in a Linux terminal session:
 
 * *Get the count of unique tests (not counting any test that tells you to "VERIFY" (See) some other test result)* *  
 **[your-host reports]$ sudo more [filename]-brief.txt | grep -v "See " | wc -l**  
+
 
 
 
