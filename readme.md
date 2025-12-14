@@ -23,7 +23,7 @@ Directories:
 5.	tmp  
    Temporary working files that are deleted after every run.
 6. files  
-   Assorted config files added or modified by the Red Hat image builder during the DISA STIG security requirements load. This is also where the "getcci.sh" is located.  
+   Assorted config files added or modified by the Red Hat image builder during the DISA STIG security requirements load. This is also where "getcci.sh" is located.  
   
 Usage:  
 1.	Sudo to root  
@@ -88,6 +88,7 @@ Practical Search Commands if you're in a Linux terminal session:
 
 * *Get the count of unique tests (not counting any test that tells you to "VERIFY" (See) some other test result)* *  
 **[your-host reports]$ sudo more [filename]-brief.txt | grep -v "See " | wc -l**  
+
 
 
 
