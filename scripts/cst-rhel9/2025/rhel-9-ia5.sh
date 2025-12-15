@@ -1492,9 +1492,9 @@ then
       notbeforedate="$(date -d $nbd '+%s')"
       if [[ $now < $notbeforedate ]]
       then
-	echo -e "${NORMAL}RESULT:    ${RED}$line${NORMAL}"
+        echo -e "${NORMAL}RESULT:    ${RED}$line${NORMAL}"
       else
-	notbefore=1
+        notbefore=1
         echo -e "${NORMAL}RESULT:    $line${NORMAL}"
       fi
     elif [[ $line =~ "Not After" ]]
@@ -1503,9 +1503,9 @@ then
       notafterdate="$(date -d $nad '+%s')"
       if [[ $now > $notafterdate ]]
       then
-	echo -e "${NORMAL}RESULT:    ${RED}$line${NORMAL}"
+        echo -e "${NORMAL}RESULT:    ${RED}$line${NORMAL}"
       else
-	notafter=1
+        notafter=1
         echo -e "${NORMAL}RESULT:    $line${NORMAL}"
       fi
     else
