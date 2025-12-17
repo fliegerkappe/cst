@@ -1,0 +1,86 @@
+rhel-9-vm
+2025-12-17T04:41:47
+Compliance Self Test for RHEL 9 (2025)
+CST Scripts ------------------
+rhel-9-ac10.sh
+rhel-9-ac11.sh
+rhel-9-ac12.sh
+rhel-9-ac17.sh
+rhel-9-ac18.sh
+rhel-9-ac2.sh
+rhel-9-ac3.sh
+rhel-9-ac6.sh
+rhel-9-ac7.sh
+rhel-9-ac8.sh
+rhel-9-au12.sh
+rhel-9-au14.sh
+rhel-9-au3.sh
+rhel-9-au4.sh
+rhel-9-au5.sh
+rhel-9-au6.sh
+rhel-9-au7.sh
+rhel-9-au8.sh
+rhel-9-au9.sh
+rhel-9-cm14.sh
+rhel-9-cm3.sh
+rhel-9-cm5.sh
+rhel-9-cm6.sh
+rhel-9-cm7.sh
+rhel-9-ia11.sh
+rhel-9-ia2.sh
+rhel-9-ia3.sh
+rhel-9-ia4.sh
+rhel-9-ia5.sh
+rhel-9-ia7.sh
+rhel-9-ma4.sh
+rhel-9-sc10.sh
+rhel-9-sc13.sh
+rhel-9-sc24.sh
+rhel-9-sc28.sh
+rhel-9-sc2.sh
+rhel-9-sc3.sh
+rhel-9-sc4.sh
+rhel-9-sc5.sh
+rhel-9-sc8.sh
+rhel-9-si11.sh
+rhel-9-si16.sh
+rhel-9-si2.sh
+rhel-9-si6.sh
+
+               CAT I    CAT II   CAT III          
+--------------------------------------------------
+PASSED            27       523        20          
+--------------------------------------------------
+FAILED             2        17         0          
+--------------------------------------------------
+N/A                0        11         1          
+--------------------------------------------------
+
+[0mVulnerabilities left to verify--------------------[0m
+SV-258047r1101951 AC-2 Account Management
+SV-272496r1082184 AC-6 Least Privilege
+SV-258149r1106462 AU-4 Audit Storage Capacity
+SV-258174r958424 AU-5 Response to Audit Processing Failures
+SV-257819r1015075 CM-14 Signed Components
+SV-257819r1015075 CM-5 Access Restrictions for Change
+SV-257778r991589 CM-6 Configuration Settings
+SV-258058r1045148 CM-6 Configuration Settings
+SV-257940r1106312 CM-7 Least Functionality
+SV-258132r1045260 IA-5 Authenticator Management
+
+[0mCalculating score with (570 / 589 * 100)
+--------------------------------------------------
+[0mTOTAL:    612 tests.[0m
+[0mPASSED:   570 tests passed.[0m
+[0mFAILED:   19 tests failed.[0m
+[0mN/A:      12 tests not applicable.[0m
+[0mVERIFY:   11 tests left to verify.[0m
+[0mSCORE:    [32;1m96[0m
+--------------------------------------------------
+
+Full report:  /mnt/shared/cst/reports/cst-rhel-9-vm_2025-12-17-0441-full.txt
+Brief report: /mnt/shared/cst/reports/cst-rhel-9-vm_2025-12-17-0441-brief.txt
+Score report: /mnt/shared/cst/reports/cst-rhel-9-vm_2025-12-17-0441-score.txt
+Excel report: /mnt/shared/cst/reports/cst-rhel-9-vm_2025-12-17-0441-brief.csv
+XCCDF report: /mnt/shared/cst/reports/cst-rhel-9-vm_2025-12-17-0441-xccdf.xml
+
