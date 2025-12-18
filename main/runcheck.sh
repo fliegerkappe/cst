@@ -303,7 +303,7 @@ NUMBER=`echo "\e[32;1;48m"`     # light green
     let "na = $nacnt"
 
     echo -e "${NORMAL}Calculating score with ($pass / $total * 100)"
-    echo -e "${NORMAL}Calculating score with ($pass / $total * 100)" >> $score_report_file
+    echo "Calculating score with ($pass / $total * 100)" >> $score_report_file
 
     score=`calc $pass/$total*100`
     score="$(echo $score | awk -F. '{print $1}')"
@@ -316,25 +316,25 @@ NUMBER=`echo "\e[32;1;48m"`     # light green
     echo -e "${NORMAL}VERIFY:   $verifycnt tests left to verify.${NORMAL}"
 
     echo "--------------------------------------------------" >> $score_report_file
-    echo -e "${NORMAL}TOTAL:    $testcnt tests.${NORMAL}" >> $score_report_file
-    echo -e "${NORMAL}PASSED:   $passcnt tests passed.${NORMAL}" >> $score_report_file
-    echo -e "${NORMAL}FAILED:   $failcnt tests failed.${NORMAL}" >> $score_report_file
-    echo -e "${NORMAL}N/A:      $nacnt tests not applicable.${NORMAL}" >> $score_report_file
-    echo -e "${NORMAL}VERIFY:   $verifycnt tests left to verify.${NORMAL}" >> $score_report_file
+    echo "TOTAL:    $testcnt tests." >> $score_report_file
+    echo "PASSED:   $passcnt tests passed." >> $score_report_file
+    echo "FAILED:   $failcnt tests failed." >> $score_report_file
+    echo "N/A:      $nacnt tests not applicable." >> $score_report_file
+    echo "VERIFY:   $verifycnt tests left to verify." >> $score_report_file
 
     if [[ $score ]]
     then
        if (( $score < 80 ))
        then
           echo -e "${NORMAL}SCORE:    ${RED}$score${NORMAL}"
-          echo -e "${NORMAL}SCORE:    ${RED}$score${NORMAL}" >> $score_report_file
+          echo "SCORE:    $score$" >> $score_report_file
        elif (( $score >= 80 && $score < 90 ))
        then
           echo -e "${NORMAL}SCORE:    ${YLO}$score${NORMAL}"
-          echo -e "${NORMAL}SCORE:    ${YLO}$score${NORMAL}" >> $score_report_file
+          echo "SCORE:    $score" >> $score_report_file
        else
           echo -e "${NORMAL}SCORE:    ${GRN}$score${NORMAL}"
-          echo -e "${NORMAL}SCORE:    ${GRN}$score${NORMAL}" >> $score_report_file
+          echo "SCORE:    $score" >> $score_report_file
        fi
     fi
     echo "--------------------------------------------------"
@@ -348,7 +348,6 @@ NUMBER=`echo "\e[32;1;48m"`     # light green
     sed -i 's/[[:cntrl:]]\[33\;1\;35m//g' $csv_report_file
     sed -i 's/[[:cntrl:]]\[93\;1m//g' $csv_report_file
     sed -i 's/[[:cntrl:]]\[11\;1\;44m//g' $csv_report_file
-    sed -i 's/[[:cntrl:]]\[0m//g' $csv_report_file
 
     # Comment the next line out if you want to preserve the working files. This might
     # be helpful if you need to review the output for signs of errors.
@@ -431,7 +430,7 @@ NUMBER=`echo "\e[32;1;48m"`     # light green
   echo "    <platform idref=\"cpe:/o:redhat:enterprise_linux:9\"/>" >> $xml_report_file
 
   while IFS= read -r line; do
-    if ! [[ $line =~ "RULE ID" ]]
+    if ! [[ $line =~ "RULE ID" || $line =~ "See " ]]
     then
       echo "$line" | awk -F', ' '{print "          <rule-result idref=\""$5"\" time=\""$7"\" weight=\"10\">"}' >> $xml_report_file
       echo "$line" | awk -F', ' '{print "            <result>"$8"</result>"}' >> $xml_report_file
