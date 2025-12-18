@@ -284,7 +284,7 @@ NUMBER=`echo "\e[32;1;48m"`     # light green
 
     # Output vulnerabilities that need further assessment to the 'score.txt' file
     echo >> $score_report_file
-    echo -e "${NORMAL}Vulnerabilities left to verify--------------------${NORMAL}" >> $score_report_file
+    echo "Vulnerabilities left to verify--------------------" >> $score_report_file
     for v in ${lefttocheck[@]}
     do
        echo $v >> $score_report_file
