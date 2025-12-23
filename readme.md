@@ -35,9 +35,8 @@ Usage:
 4. CD to main/  
 5. Run 'runcheck.sh'  
    **\[your-host main]# ./runcheck.sh**  
-   If you find that the terminal session closes before the script can finish, it's probably because of the idle-timeout settings on the host. If that's the case, try using either the no-hangup switch, or running it in the background.  
-   **\[your-host main]# ./runcheck.sh nohup** (or)  
-   **\[your-host main]# ./runchecksh &**  
+   If you find that the terminal session closes before the script can finish, it's probably because of the idle-timeout settings on the host. If that's the case, try using the no-hangup switch.  
+   **\[your-host main]# ./runcheck.sh nohup**  
 6. The menu appears  
    Enter the menu number for the Compliance Self Test of your choice and hit Enter.  
 7. The script names scroll down as they execute.  
@@ -94,5 +93,6 @@ Note: "tput sgr0" resets the terminal text attributes when the color on the last
   
 * *Get a count of unique tests. (any test that doesn't tell you to "VERIFY" another test result)* *  
 **\[your-host reports]$ sudo more \[filename]-brief.txt | grep -v "See " | wc -l**
+
 
 
