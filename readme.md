@@ -81,7 +81,7 @@ In each of the reports, all of the tests refer to one or more CCIs that call out
 What you'll get back are just the CCI numbers and the associated requirements called out in that file, without the rest of the STIG text in the file.  
   
 Practical Search Commands if you're in a Linux terminal session:  
-Note: * *"tput sgr0"* * resets the terminal text attributes when the color on the last word returned was not "normal".  
+Note: "tput sgr0" resets the terminal text attributes when the color on the last word returned was not "normal".  
   
 * *Get a list of failed CAT I vulnerabilities: (substitue 'CAT II,' 'CAT III', PASSED, N/A, or VERIFY)* *  
 **\[your-host reports]$ sudo more \[filename]-brief.txt | grep 'CAT I,' | grep FAILED | cut -d',' -f1,2,3,5,8; tput sgr0**  
@@ -94,4 +94,5 @@ Note: * *"tput sgr0"* * resets the terminal text attributes when the color on th
   
 * *Get a count of unique tests. (any test that doesn't tell you to "VERIFY" another test result)* *  
 **\[your-host reports]$ sudo more \[filename]-brief.txt | grep -v "See " | wc -l**
+
 
