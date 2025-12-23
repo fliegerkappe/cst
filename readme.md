@@ -32,16 +32,17 @@ Usage:
 4.	CD to main/  
 5.	Run 'runcheck.sh'  
    **[your-host main]# ./runcheck.sh**  
-   If you find that the script dies before it can finish, it's probably because of the idle-timeout settings on the host. If that's the case, try using the no-hangup switch.  
-   **[your-host main]# ./runcheck.sh nohup**  
-6.	The menu appears  
+   If you find that the terminal session closes before the script can finish, it's probably because of the idle-timeout settings on the host. If that's the case, try using either the no-hangup switch, or running it in the background.  
+   **[your-host main]# ./runcheck.sh nohup**
+  	**[your-host main]# ./runchecksh &**  
+7.	The menu appears  
    Enter the menu number for the Compliance Self Test of your choice and hit Enter.  
-7.	The script names scroll down as they execute.  
-8.	View the results in the 'reports' folder  
+8.	The script names scroll down as they execute.  
+9.	View the results in the 'reports' folder  
    (The .csv file is viewable in Excel)  
    (The xccdf file can be imported into a STIGViewer Checklist)  
-9.	Offload the reports to an approved share or media.  
-10. It's not a good idea to leave vulnerability reports on the host you scan. If you put the CST files on the target host, delete the directory you created in step 2 along with all of the contents within.  
+10.	Offload the reports to an approved share or media.  
+11. It's not a good idea to leave vulnerability reports on the host you scan. If you put the CST files on the target host, delete the directory you created in step 2 along with all of the contents within.  
     
 Running only select scripts  
   
@@ -89,6 +90,7 @@ Note: "tput sgr0" resets the terminal session font attributes when the last word
 
 * *Get the count of unique tests (not counting any test that tells you to "VERIFY" (See) some other test result)* *  
 **[your-host reports]$ sudo more [filename]-brief.txt | grep -v "See " | wc -l**  
+
 
 
 
