@@ -34,10 +34,10 @@ Usage:
 3. Extract the tar file  
 4. CD to main/  
 5. Run 'runcheck.sh'  
-   \[your-host main]# ./runcheck.sh  
+   **\[your-host main]# ./runcheck.sh**  
    If you find that the terminal session closes before the script can finish, it's probably because of the idle-timeout settings on the host. If that's the case, try using either the no-hangup switch, or running it in the background.  
-   \[your-host main]# ./runcheck.sh nohup (or)  
-   \[your-host main]# ./runchecksh \&  
+   **\[your-host main]# ./runcheck.sh nohup** (or)  
+   **\[your-host main]# ./runchecksh &**  
 6. The menu appears  
    Enter the menu number for the Compliance Self Test of your choice and hit Enter.  
 7. The script names scroll down as they execute.  
@@ -81,7 +81,7 @@ In each of the reports, all of the tests refer to one or more CCIs that call out
 What you'll get back are just the CCI numbers and the associated requirements called out in that file, without the rest of the STIG text in the file.  
   
 Practical Search Commands if you're in a Linux terminal session:  
-Note: "tput sgr0" resets the terminal text attributes when the color on the last word returned was not "normal".  
+Note: * *"tput sgr0"* * resets the terminal text attributes when the color on the last word returned was not "normal".  
   
 * *Get a list of failed CAT I vulnerabilities: (substitue 'CAT II,' 'CAT III', PASSED, N/A, or VERIFY)* *  
 **\[your-host reports]$ sudo more \[filename]-brief.txt | grep 'CAT I,' | grep FAILED | cut -d',' -f1,2,3,5,8; tput sgr0**  
@@ -94,3 +94,4 @@ Note: "tput sgr0" resets the terminal text attributes when the color on the last
   
 * *Get a count of unique tests. (any test that doesn't tell you to "VERIFY" another test result)* *  
 **\[your-host reports]$ sudo more \[filename]-brief.txt | grep -v "See " | wc -l**
+
